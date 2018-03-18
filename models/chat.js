@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 class Chat {
     constructor({ id, name, messages, participants }) {
@@ -9,4 +9,4 @@ class Chat {
     }
 }
 
-module.exports = Chat;
+exports = Chat;

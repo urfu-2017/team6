@@ -1,6 +1,6 @@
-'use strict'
+'use strict';
 
-const ProfileInfo = require('./profileInfo');
+import ProfileInfo from './profileInfo';
 
 class Profile extends ProfileInfo {
     constructor({ gid, name, phone, avatar, chats, contacts }) {
@@ -11,4 +11,4 @@ class Profile extends ProfileInfo {
     }
 }
 
-module.exports = Profile;
+exports = Profile;
