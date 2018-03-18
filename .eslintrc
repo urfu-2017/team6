@@ -1,0 +1,10 @@
+{
+  "extends": "xo/esnext",
+  "parser": "babel-eslint",
+  "rules": {
+    "semi": 0,
+    "no-mixed-spaces-and-tabs": 0,
+    "indent": ["error", 2],
+    "object-curly-spacing": 0
+  }
+}
