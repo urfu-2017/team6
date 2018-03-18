@@ -1,6 +1,6 @@
 import React from "react";
 
-export default class LoginModal extends React.Component {
+export default class GHUserModal extends React.Component {
     state = { greeting: 'Hello world!' }
 
     render() {
