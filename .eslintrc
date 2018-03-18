@@ -4,7 +4,7 @@
   "rules": {
     "semi": 0,
     "no-mixed-spaces-and-tabs": 0,
-    "indent": ["error", 2],
+    "indent": ["error", 4],
     "object-curly-spacing": 0
   }
 }
