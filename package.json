@@ -4,7 +4,9 @@
     "test": "eslint .",
     "fix": "eslint . --fix",
     "dev": "next build && nodemon server.js --exec babel-node",
-    "start": "next build && babel-node server.js"
+    "start": "next build && babel-node server.js",
+    "precommit": "npm test",
+    "prepush": "npm test"
   },
   "dependencies": {
     "dotenv": "^5.0.1",
@@ -23,13 +25,7 @@
     "eslint": "^4.19.0",
     "eslint-config-xo": "^0.20.1",
     "eslint-plugin-react": "^7.7.0",
-    "husky": "^0.14.3",
+    "husky": "0.12.0",
     "nodemon": "^1.17.2"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm test",
-      "pre-push": "npm test"
-    }
   }
 }
