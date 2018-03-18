@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default class App extends React.Component {
+export default class StartPage extends React.Component {
     state = { greeting: 'Hello world!' }
 
     render() {
