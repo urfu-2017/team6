@@ -3,6 +3,7 @@
   "parser": "babel-eslint",
   "rules": {
     "semi": [2, "never"],
+    "new-cap": 0,
     "strict": "error",
     "no-mixed-spaces-and-tabs": 0,
     "indent": ["error", 4],
