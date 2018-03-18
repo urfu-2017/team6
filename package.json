@@ -1,6 +1,8 @@
 {
   "name": "urfu-2017-team6",
   "scripts": {
+    "test": "eslint .",
+    "fix": "eslint . --fix",
     "dev": "next build && nodemon server.js --exec babel-node",
     "start": "next build && babel-node server.js"
   },
@@ -20,6 +22,7 @@
     "babel-preset-react": "^6.24.1",
     "eslint": "^4.19.0",
     "eslint-config-xo": "^0.20.1",
+    "eslint-plugin-react": "^7.7.0",
     "nodemon": "^1.17.2"
   }
 }

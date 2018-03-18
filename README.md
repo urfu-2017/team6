@@ -6,7 +6,8 @@
 npm install
 npm start
 
-http://localhost:3000
+SPA: http://localhost:{env.PORT}
+API: http://localhost:{env.PORT}/api/v1
 ```
 
 ## Обязательные фичи
