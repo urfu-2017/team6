@@ -1,14 +1,10 @@
-'use strict';
+import ProfileInfo from './profileInfo'
 
-import ProfileInfo from './profileInfo';
-
-class Profile extends ProfileInfo {
+export default class Profile extends ProfileInfo {
     constructor({ gid, name, phone, avatar, chats, contacts }) {
-        super({ gid, name, phone, avatar });
+        super({ gid, name, phone, avatar })
 
-        this.chats = chats;
-        this.contacts = contacts;
+        this.chats = chats
+        this.contacts = contacts
     }
 }
-
-exports = Profile;

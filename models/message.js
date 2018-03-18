@@ -1,12 +1,8 @@
-'use strict';
-
-class Message {
+export default class Message {
     constructor({ text, creationDate, updateDate, authorGid }) {
-        this.text = text;
-        this.creationDate = creationDate;
-        this.updateDate = updateDate;
-        this.authorGid = authorGid;
+        this.text = text
+        this.creationDate = creationDate
+        this.updateDate = updateDate
+        this.authorGid = authorGid
     }
 }
-
-exports = Message;
