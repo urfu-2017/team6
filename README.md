@@ -2,6 +2,13 @@
 
 ### team 6
 
+В корне проекта создать файл .env для переменных окружения
+```
+NODE_ENV=production
+API_KEY=наш_api_ключ
+PORT=8080
+```
+
 ```
 npm install
 npm start
