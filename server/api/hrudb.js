@@ -1,25 +1,25 @@
 import fetch from 'node-fetch'
 import querystring from 'querystring'
+import { OK, CREATED, NO_CONTENT } from 'http-status-codes'
 
-import API_KEY from '../config'
+import { API_KEY, HRUDB_BASE_URL } from '../../config'
 
-const URL = 'https://hrudb.herokuapp.com/storage/'
 const AUTH_HEADER = { Authorization: API_KEY }
 const CONTENT_TYPE_HEADER = { 'Content-Type': 'plain/text' }
 
 const _change = async (key, value, method) => {
-    const reqUrl = `${URL}${key}`
-    const headers = Object.assign({}, AUTH_HEADER, CONTENT_TYPE_HEADER)
+    const reqUrl = `${HRUDB_BASE_URL}${key}`
+    const headers = { ...AUTH_HEADER, ...CONTENT_TYPE_HEADER }
     const res = await fetch(reqUrl, { method, headers, body: value })
 
-    return res.status === 201 || res.status === 204
+    return res.status === CREATED || res.status === NO_CONTENT
 }
 
 const _get = async reqUrl => {
-    const headers = Object.assign({}, AUTH_HEADER)
+    const headers = { ...AUTH_HEADER }
     const res = await fetch(reqUrl, { method: 'GET', headers })
 
-    if (res.status === 200) {
+    if (res.status === OK) {
         const value = await res.text()
 
         return value
@@ -35,22 +35,22 @@ export const add = async (key, value) => {
 }
 
 export const get = async key => {
-    const reqUrl = `${URL}${key}`
+    const reqUrl = `${HRUDB_BASE_URL}${key}`
 
     return _get(reqUrl)
 }
 
 export const getAll = async (key, options) => {
     options = querystring.stringify(options)
-    const reqUrl = `${URL}/all/${options}`
+    const reqUrl = `${HRUDB_BASE_URL}/all/${options}`
 
     return _get(reqUrl)
 }
 
 export const remove = async key => {
-    const reqUrl = `${URL}${key}`
-    const headers = Object.assign({}, AUTH_HEADER)
+    const reqUrl = `${HRUDB_BASE_URL}${key}`
+    const headers = { ...AUTH_HEADER }
     const res = await fetch(reqUrl, { method: 'DELETE', headers })
 
-    return res.status === 204
+    return res.status === NO_CONTENT
 }
