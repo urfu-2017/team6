@@ -1,5 +1,9 @@
+const isNotAuthorizedOnAnotherPage = req => {
+    return !req.user && req.url !== '/login' && !req.url.startsWith('/auth')
+}
+
 export default (req, res, next) => {
-    if (!req.user && req.url !== '/login' && !req.url.startsWith('/auth')) {
+    if (isNotAuthorizedOnAnotherPage(req)) {
         res.redirect('/login')
     }
 
