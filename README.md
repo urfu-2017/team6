@@ -5,16 +5,18 @@
 В корне проекта создать файл .env для переменных окружения
 ```
 NODE_ENV=production
-API_KEY=наш_api_ключ
-PORT=8080
+CLIENT_ID=
+CLIENT_SECRET=
+AUTH_CALLBACK=http://localhost:8080/auth/callback
+API_KEY=
 ```
 
 ```
 npm install
 npm start
 
-SPA: http://localhost:{env.PORT}
-API: http://localhost:{env.PORT}/api/v1
+SPA: http://localhost:8080
+API: http://localhost:8080/api/v1
 ```
 
 ## Обязательные фичи

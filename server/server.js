@@ -1,9 +1,10 @@
-import express from 'express'
 import next from 'next'
+import express from 'express'
 
-import setupMiddleware from './middlewares'
-import apiRouter from './server/routes/api'
-import config from './config'
+import config from '../config'
+import apiRouter from './routes/api'
+import authRouter from './routes/auth'
+import setupMiddleware from './middlewares/index'
 
 const app = next({ dev: config.NODE_ENV !== 'production' })
 
@@ -11,8 +12,8 @@ const start = async () => {
     await app.prepare()
 
     setupMiddleware(express())
+        .use('/', authRouter(app))
         .use('/api/v1', apiRouter)
-        .get('/', (req, res) => app.render(req, res, '/', req.query))
         .listen(config.PORT)
 }
 
