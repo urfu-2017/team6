@@ -3,7 +3,7 @@ import cookieParser from 'cookie-parser'
 import expressSession from 'express-session'
 import generateToken from 'random-token'
 import authMiddleware from './authMiddleware'
-import passport from '../auth/index'
+import passport from '../auth'
 
 export default app => app
     .use(cookieParser())

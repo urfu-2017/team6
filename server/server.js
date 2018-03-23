@@ -4,7 +4,7 @@ import express from 'express'
 import config from '../config'
 import apiRouter from './routes/api'
 import authRouter from './routes/auth'
-import setupMiddleware from './middlewares/index'
+import setupMiddleware from './middlewares'
 
 const app = next({ dev: config.NODE_ENV !== 'production' })
 const requestHandler = app.getRequestHandler()

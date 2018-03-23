@@ -1,5 +1,5 @@
 import express from 'express'
-import passport from '../auth/index'
+import passport from '../auth'
 
 export default nextApp => express.Router()
     .get('/', (req, res) => nextApp.render(req, res, '/MainPage', req.query))
