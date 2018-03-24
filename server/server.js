@@ -1,7 +1,7 @@
 import next from 'next'
 import express from 'express'
 
-import config from '../config'
+import config from './config'
 import apiRouter from './routes/api'
 import authRouter from './routes/auth'
 import setupMiddleware from './middlewares'

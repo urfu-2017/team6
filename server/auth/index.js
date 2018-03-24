@@ -1,6 +1,6 @@
 import passport from 'passport'
 import GitHubStrategy from 'passport-github2'
-import config from '../../config'
+import config from '../config'
 
 passport.use(new GitHubStrategy.Strategy({
     clientID: config.CLIENT_ID,
