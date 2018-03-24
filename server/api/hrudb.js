@@ -1,56 +1,51 @@
+// @flow
+
 import fetch from 'node-fetch'
 import querystring from 'querystring'
 import { OK, CREATED, NO_CONTENT } from 'http-status-codes'
 
 import { API_KEY, HRUDB_BASE_URL } from '../../config'
 
+class HrudbInteractionError extends Error {
+    constructor() {
+        super('HruDB returned an unexpected answer.')
+    }
+}
+
 const AUTH_HEADER = { Authorization: API_KEY }
 const CONTENT_TYPE_HEADER = { 'Content-Type': 'plain/text' }
 
-const _change = async (key, value, method) => {
+const _change = async (key: string, value: ?string, method: string): Promise<void> => {
     const reqUrl = `${HRUDB_BASE_URL}${key}`
     const headers = { ...AUTH_HEADER, ...CONTENT_TYPE_HEADER }
     const res = await fetch(reqUrl, { method, headers, body: value })
 
-    return res.status === CREATED || res.status === NO_CONTENT
-}
-
-const _get = async reqUrl => {
-    const headers = { ...AUTH_HEADER }
-    const res = await fetch(reqUrl, { method: 'GET', headers })
-
-    if (res.status === OK) {
-        const value = await res.text()
-
-        return value
+    if (res.status !== CREATED && res.status !== NO_CONTENT) {
+        throw new HrudbInteractionError()
     }
 }
 
-export const update = async (key, value) => {
-    return _change(key, value, 'PUT')
+const _get = async (reqUrl: string): Promise<string> => {
+    const res = await fetch(reqUrl, { method: 'GET', headers: AUTH_HEADER })
+
+    if (res.status !== OK) {
+        throw new HrudbInteractionError()
+    }
+
+    return res.text()
 }
 
-export const add = async (key, value) => {
-    return _change(key, value, 'POST')
-}
+export const update = async (key: string, value: string): Promise<void> =>
+    _change(key, value, 'PUT')
 
-export const get = async key => {
-    const reqUrl = `${HRUDB_BASE_URL}${key}`
+export const add = async (key: string, value: string): Promise<void> =>
+    _change(key, value, 'POST')
 
-    return _get(reqUrl)
-}
+export const remove = async (key: string): Promise<void> =>
+    _change(key, null, 'DELETE')
 
-export const getAll = async (key, options) => {
-    options = querystring.stringify(options)
-    const reqUrl = `${HRUDB_BASE_URL}/all/${options}`
+export const get = async (key: string): Promise<string> =>
+    _get(`${HRUDB_BASE_URL}${key}`)
 
-    return _get(reqUrl)
-}
-
-export const remove = async key => {
-    const reqUrl = `${HRUDB_BASE_URL}${key}`
-    const headers = { ...AUTH_HEADER }
-    const res = await fetch(reqUrl, { method: 'DELETE', headers })
-
-    return res.status === NO_CONTENT
-}
+export const getAll = async (key: string, options: Map<string, string>): Promise<string> =>
+    _get(`${HRUDB_BASE_URL}/all/${querystring.stringify(options)}`)

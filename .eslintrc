@@ -1,5 +1,6 @@
 {
   "extends": ["plugin:react/recommended", "xo/esnext"],
+  "plugins": ["flowtype"],
   "parser": "babel-eslint",
   "rules": {
     "semi": [2, "never"],
@@ -7,6 +8,7 @@
     "strict": "error",
     "indent": ["error", 4],
     "object-curly-spacing": [0, "error"],
-    "no-duplicate-imports": "error"
+    "no-duplicate-imports": "error",
+    "lines-between-class-members": 0
   }
 }

@@ -1,7 +1,15 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import UserProfile from '../models/UserProfile'
 
-export default class MainPage extends React.Component {
+type Props = {
+    user: UserProfile
+}
+
+type State = {
+    counter: number
+}
+
+export default class MainPage extends React.Component<Props, State> {
     static async getInitialProps({ req }) {
         return { user: req.user }
     }
@@ -24,8 +32,4 @@ export default class MainPage extends React.Component {
             </div>
         )
     }
-}
-
-MainPage.propTypes = {
-    user: PropTypes.object
 }
