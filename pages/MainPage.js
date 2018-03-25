@@ -1,8 +1,8 @@
 import React from 'react'
-import UserProfile from '../models/UserProfile'
+import UserInfo from '../models/UserInfo'
 
 type Props = {
-    user: UserProfile
+    user: UserInfo
 }
 
 type State = {

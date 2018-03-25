@@ -1,13 +1,13 @@
 // @flow
 
-type MessageType = {
+interface MessageType {
     text: string,
     chatId: number,
     authorGid: number,
     createdAt: Date
 }
 
-export default class Message {
+export default class Message implements MessageType {
     text: string
     chatId: number
     authorGid: number

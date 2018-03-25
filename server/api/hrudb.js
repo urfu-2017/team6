@@ -4,7 +4,10 @@ import fetch from 'node-fetch'
 import querystring from 'querystring'
 import { OK, CREATED, NO_CONTENT } from 'http-status-codes'
 
-import { API_KEY, HRUDB_BASE_URL } from '../config'
+import config from '../config'
+
+const API_KEY = config.API_KEY
+const HRUDB_BASE_URL = config.HRUDB_BASE_URL
 
 class HrudbInteractionError extends Error {
     constructor() {

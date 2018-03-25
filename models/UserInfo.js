@@ -1,22 +1,25 @@
 // @flow
 
-export type UserInfoType = {
+interface UserInfoType {
     gid: number,
     name: string,
-    phone: string,
+    bio: string,
+    email: string,
     avatar: string
 }
 
-export default class UserInfo {
+export default class UserInfo implements UserInfoType {
     gid: number
     name: string
-    phone: string
+    bio: string
+    email: string
     avatar: string
 
-    constructor({ gid, name, phone, avatar }: UserInfoType) {
+    constructor({ gid, name, bio, email, avatar }: UserInfoType) {
         this.gid = gid
         this.name = name
-        this.phone = phone
+        this.bio = bio
+        this.email = email
         this.avatar = avatar
     }
 }
