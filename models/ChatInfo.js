@@ -1,28 +1,16 @@
 // @flow
 
-import Message from './Message'
-import UserInfo from './UserInfo'
-
 interface ChatInfoType {
-    id: number,
-    name: string,
-    members: Array<UserInfo>,
-    lastMessage?: Message
+    id?: number,
+    name: string
 }
 
 export default class ChatInfo implements ChatInfoType {
     id: number
     name: string
-    members: Array<UserInfo>
-    lastMessage: Message
 
-    constructor({ id, name, members = [], lastMessage }: ChatInfoType) {
+    constructor({ id = new Date().getTime(), name }: ChatInfoType) {
         this.id = id
         this.name = name
-        this.members = members
-
-        if (lastMessage instanceof Message) {
-            this.lastMessage = lastMessage
-        }
     }
 }
