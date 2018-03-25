@@ -3,8 +3,8 @@ const isNotAuthorizedOnAnotherPage = req =>
 
 export default (req, res, next) => {
     if (isNotAuthorizedOnAnotherPage(req)) {
-        res.redirect('/login')
+        return res.redirect('/login')
     }
 
-    next()
+    return next()
 }

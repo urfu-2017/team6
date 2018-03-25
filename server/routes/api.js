@@ -1,22 +1,12 @@
 import express from 'express'
+import * as profile from '../controllers/profile'
 
 const router = express.Router()
 
 /* Profile API */
-router.get('/profile')
-router.patch('/profile')
-router.get('/profile/:gid')
-router.put('/profile/contacts')
-
-/* Chats API */
-router.get('/chat/:id/common')
-router.patch('/chat/:id/common')
-
-router.get('/chat/:id/members')
-router.put('/chat/:id/members/:gid')
-router.delete('/chat/:id/members/:gid')
-
-router.get('/chat/:id/messages')
-router.put('/chat/:id/messages')
+router.get('/user/:gid', profile.fetchUser)
+router.patch('/user', profile.updateUser)
+router.patch('/user/contacts', profile.updateContacts)
+router.patch('/user/chats', profile.updateChats)
 
 export default router

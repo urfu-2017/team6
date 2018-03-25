@@ -51,4 +51,4 @@ export const get = async (key: string): Promise<string> =>
     _get(`${HRUDB_BASE_URL}${key}`)
 
 export const getAll = async (key: string, options: Map<string, string>): Promise<string> =>
-    _get(`${HRUDB_BASE_URL}/all/${querystring.stringify(options)}`)
+    _get(`${HRUDB_BASE_URL}${key}/all/${querystring.stringify(options)}`)

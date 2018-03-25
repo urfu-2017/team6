@@ -1,17 +1,15 @@
 // @flow
 
 import * as hrudb from '../hrudb'
-import UserInfo from '../../../models/UserInfo'
+import UserProfile from '../../../models/UserProfile'
 
 export default class UserAPI {
-    static async fetch(id: number): Promise<UserInfo> {
-        const userRaw: string = await hrudb.get(`user_${id}`)
-        const userObject = JSON.parse(userRaw)
-
-        return new UserInfo(userObject)
+    static async fetch(gid: number): Promise<UserProfile> {
+        const userRaw: string = await hrudb.get(`user${gid}`)
+        return JSON.parse(userRaw)
     }
 
-    static async update(user: UserInfo): Promise<void> {
-        return hrudb.update(`user_${user.gid}`, JSON.stringify(user))
+    static async update(profile: UserProfile): Promise<void> {
+        return hrudb.update(`user${profile.user.gid}`, JSON.stringify(profile))
     }
 }

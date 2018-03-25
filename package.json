@@ -4,8 +4,8 @@
     "test": "flow && eslint .",
     "fix": "eslint . --fix",
     "build": "babel",
-    "dev": "next build && nodemon ./server/server.js --exec babel-node",
-    "start": "next build && babel-node ./server/server.js",
+    "dev": "nodemon ./server/server.js --exec babel-node",
+    "start": "babel-node ./server/server.js",
     "precommit": "npm test",
     "prepush": "npm test"
   },

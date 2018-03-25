@@ -1,11 +1,11 @@
 // @flow
 
-interface UserInfoType {
+export interface UserInfoType {
     gid: number,
     name: string,
     bio: string,
     email: string,
-    avatar: string
+    avatar: string,
 }
 
 export default class UserInfo implements UserInfoType {
