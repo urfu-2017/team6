@@ -7,6 +7,7 @@ const router = express.Router()
 
 /* Profile API */
 router.get('/user', profile.fetchSelf)
+router.post('/users', profile.fetchAllUsers)
 router.get('/user/:gid', profile.fetchUser)
 router.patch('/user', profile.updateUser)
 router.patch('/user/contacts', profile.updateContacts)

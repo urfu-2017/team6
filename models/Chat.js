@@ -21,7 +21,7 @@ export default class Chat {
         if (owner instanceof UserInfo) {
             this.owner = owner
 
-            if (this.members.length === 0) {
+            if (!members.find(x => x.gid === owner.gid)) {
                 this.members.push(owner)
             }
         }

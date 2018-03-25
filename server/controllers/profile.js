@@ -44,6 +44,19 @@ export const fetchUser = async ({ params: { gid } }: {
     }
 }
 
+export const fetchAllUsers = async ({ body: gids }: {
+    body: Object,
+    gids: Array<number>
+}, res: Object) => {
+    try {
+        const fetchedProfiles: Array<UserProfile> = await Promise.all(gids.map(UserAPI.fetch))
+
+        return res.status(OK).json(fetchedProfiles.map(x => x.user))
+    } catch (e) {
+        return res.sendStatus(NOT_FOUND)
+    }
+}
+
 export const updateUser = async ({ user, body }: {
     user: UserProfile,
     body: UserInfo
