@@ -6,6 +6,8 @@ import authMiddleware from './authMiddleware'
 import passport from '../auth'
 
 export default app => app
+    .use(bodyParser.json())
+    .use(bodyParser.urlencoded({ extended: true }))
     .use(cookieParser())
     .use(expressSession({
         secret: generateToken(16),
@@ -14,6 +16,4 @@ export default app => app
     }))
     .use(passport.initialize())
     .use(passport.session())
-    .use(bodyParser.json())
-    .use(bodyParser.urlencoded({ extended: true }))
     .use(authMiddleware)
