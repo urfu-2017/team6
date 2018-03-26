@@ -19,6 +19,18 @@ const _updateKey = async (key: string, data: any, user: Object, res: Object) => 
     }
 }
 
+export const fetchSelf = async ({ user }: {
+    user: UserProfile
+}, res: Object) => {
+    try {
+        user = await UserAPI.fetch(user.user.gid)
+
+        return res.status(OK).json(user)
+    } catch (e) {
+        return res.sendStatus(NOT_FOUND)
+    }
+}
+
 export const fetchUser = async ({ params: { gid } }: {
     params: { gid: string }
 }, res: Object) => {
@@ -27,6 +39,19 @@ export const fetchUser = async ({ params: { gid } }: {
         const user: UserInfo = profile.user
 
         return res.status(OK).json(user)
+    } catch (e) {
+        return res.sendStatus(NOT_FOUND)
+    }
+}
+
+export const fetchAllUsers = async ({ body: gids }: {
+    body: Object,
+    gids: Array<number>
+}, res: Object) => {
+    try {
+        const fetchedProfiles: Array<UserProfile> = await Promise.all(gids.map(UserAPI.fetch))
+
+        return res.status(OK).json(fetchedProfiles.map(x => x.user))
     } catch (e) {
         return res.sendStatus(NOT_FOUND)
     }

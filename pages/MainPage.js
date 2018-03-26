@@ -18,9 +18,13 @@ export default class MainPage extends React.Component<Props, State> {
     state = { user: this.props.user }
 
     getUserById = async (id: number) => {
-        const response = await fetch(`/api/v1/user/${id}`, {
+        const response = await fetch(`/api/v1/users`, {
             credentials: 'include',
-            method: 'GET'
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify([id, id, id])
         })
 
         const userInfo = await response.json()
