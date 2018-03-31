@@ -1,18 +1,17 @@
 // @flow
 
 import UserInfo from './UserInfo'
-import ChatInfo from './ChatInfo'
 
 export interface UserProfileType {
     user: UserInfo,
-    contacts?: Array<UserInfo>,
-    chats?: Array<ChatInfo>
+    contacts?: Array<number>,
+    chats?: Array<number>
 }
 
 export default class UserProfile implements UserProfileType {
     user: UserInfo
-    contacts: Array<UserInfo>
-    chats: Array<ChatInfo>
+    contacts: Array<number>
+    chats: Array<number>
 
     constructor({ user, contacts = [], chats = [] }: UserProfileType) {
         this.user = user

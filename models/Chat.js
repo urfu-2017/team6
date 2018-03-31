@@ -1,27 +1,26 @@
 // @flow
 
-import UserInfo from './UserInfo'
 import ChatInfo from './ChatInfo'
 
 interface ChatType {
     common: ChatInfo,
-    owner?: UserInfo,
-    members?: Array<UserInfo>,
+    owner?: number,
+    members?: Array<number>,
 }
 
 export default class Chat {
     common: ChatInfo
-    owner: UserInfo
-    members: Array<UserInfo>
+    owner: number
+    members: Array<number>
 
     constructor({ common, owner, members = [] }: ChatType) {
         this.common = common
         this.members = members
 
-        if (owner instanceof UserInfo) {
+        if (owner) {
             this.owner = owner
 
-            if (!members.find(x => x.gid === owner.gid)) {
+            if (!members.find(member => member === owner)) {
                 this.members.push(owner)
             }
         }

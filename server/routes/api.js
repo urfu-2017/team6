@@ -15,10 +15,11 @@ router.patch('/user/chats', profile.updateChats)
 
 /* Chats API */
 router.get('/chats/:id', chats.fetchChat)
+router.post('/chats', chats.fetchAllChats)
 router.put('/chats', chats.createChat)
 router.patch('/chats', chats.updateChatInfo)
 router.delete('/chats/:id', chats.deleteChat)
-router.put('/chats/members', chats.addMemberChat)
-router.delete('/chats/members', chats.deleteMemberChat)
+router.put('/chats/members', chats.addMemberToChat)
+router.delete('/chats/members', chats.deleteMemberFromChat)
 
 export default router
