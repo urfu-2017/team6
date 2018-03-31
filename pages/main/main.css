@@ -1,0 +1,14 @@
+@import "~normalize.css";
+
+html,
+body
+{
+    background-color: #f1f1f1;
+}
+
+.main
+{
+    font-size: 14pt;
+    font-family: Arial, sans-serif;
+    color: #345469
+}

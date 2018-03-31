@@ -4,7 +4,7 @@
 
 В корне проекта создать файл .env для переменных окружения
 ```
-NODE_ENV=production
+NODE_ENV=development
 CLIENT_ID=
 CLIENT_SECRET=
 AUTH_CALLBACK=http://localhost:8080/auth/callback
