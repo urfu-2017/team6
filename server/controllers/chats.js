@@ -123,7 +123,7 @@ export const deleteMemberFromChat = async ({ body: { chat, member } }: {
         chat.members = chat.members.filter(gid => gid !== member)
 
         const profileUpdate: Promise<void> = UserAPI.fetch(member).then(profile => {
-            profile.chats.push(chat.common.id)
+            profile.chats = profile.chats.filter(chatId => chatId !== chat.common.id)
             return UserAPI.update(profile)
         })
 
