@@ -29,7 +29,7 @@ export const fetchChat = async ({ params: { id } }: {
     params: { id: string }
 }, res: Object) => {
     try {
-        const chat: Chat = await ChatsAPI.fetch(Number(id))
+        const chat: Chat | null = await ChatsAPI.fetch(Number(id))
 
         return res.status(OK).json(chat)
     } catch (e) {
@@ -43,8 +43,10 @@ export const fetchAllChats = async ({ body: ids }: {
 }, res: Object) => {
     try {
         const fetchedChats: Array<Chat> = await Promise.all(ids.map(ChatsAPI.fetch))
+        const response: Object = fetchedChats.filter(x => Boolean(x))
+            .reduce((result, chat) => ({ ...result, [chat.common.id]: chat }), {})
 
-        return res.status(OK).json(fetchedChats)
+        return res.status(OK).json(response)
     } catch (e) {
         return res.sendStatus(NOT_FOUND)
     }
