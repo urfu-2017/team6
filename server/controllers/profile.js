@@ -5,7 +5,6 @@ import { OK, NOT_MODIFIED, NOT_FOUND } from 'http-status-codes'
 import UserAPI from '../api/user'
 import UserInfo from '../../models/UserInfo'
 import UserProfile from '../../models/UserProfile'
-import ChatInfo from '../../models/ChatInfo'
 
 const _updateKey = async (key: string, data: any, user: Object, res: Object) => {
     try {
@@ -64,11 +63,11 @@ export const updateUser = async ({ user, body }: {
 
 export const updateContacts = async ({ user, body }: {
     user: UserProfile,
-    body: Array<UserInfo>
+    body: Array<number>
 }, res: Object) => _updateKey('contacts', body, user, res)
 
 export const updateChats = async ({ user, body }: {
     user: UserProfile,
-    body: Array<ChatInfo>
+    body: Array<number>
 }, res: Object) => _updateKey('chats', body, user, res)
 

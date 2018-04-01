@@ -6,20 +6,19 @@ import ChatsAPI from '../api/chats'
 import UserAPI from '../api/user'
 
 import Chat from '../../models/Chat'
-import UserInfo from '../../models/UserInfo'
 import ChatInfo from '../../models/ChatInfo'
 import UserProfile from '../../models/UserProfile'
 
 const CHAT_NOT_EXIST: number = -1
 
-const _assignChatToMembers = (chat: ChatInfo, members: Array<UserInfo>): Promise<void[]> => Promise.all(
-    members.map(member => UserAPI.fetch(member.gid).then(profile => {
-        const index = profile.chats.findIndex(x => x.id === chat.id)
+const _assignChatToMembers = (chatId: number, members: Array<number>): Promise<void[]> => Promise.all(
+    members.map(gid => UserAPI.fetch(gid).then(profile => {
+        const index = profile.chats.findIndex(id => id === chatId)
 
         if (index === CHAT_NOT_EXIST) {
-            profile.chats.push(chat)
+            profile.chats.push(chatId)
         } else {
-            profile.chats[index] = chat
+            profile.chats[index] = chatId
         }
 
         return UserAPI.update(profile)
@@ -38,28 +37,38 @@ export const fetchChat = async ({ params: { id } }: {
     }
 }
 
-export const createChat = async ({ user, body: { name, members } }: {
-    user: UserProfile,
-    body: Object,
-    name: string,
-    members: Array<UserInfo>
+export const fetchAllChats = async ({ body: ids }: {
+    ids: Array<number>,
+    body: Object
 }, res: Object) => {
     try {
-        const owner: UserInfo = user.user
+        const fetchedChats: Array<Chat> = await Promise.all(ids.map(ChatsAPI.fetch))
 
-        const chat: Chat = new Chat({
-            owner: user.user, members,
-            common: new ChatInfo({ name })
-        })
+        return res.status(OK).json(fetchedChats)
+    } catch (e) {
+        return res.sendStatus(NOT_FOUND)
+    }
+}
 
-        const chatCreate: Promise<void> = ChatsAPI.update(chat)
-        const profilesUpdate: Promise<void[]> = _assignChatToMembers(chat.common, [owner, ...members])
+export const createChat = async ({ user, body: { name, members } }: {
+    user: UserProfile,
+    name: string,
+    members: Array<number>,
+    body: Object
+}, res: Object) => {
+    try {
+        const owner: number = user.user.gid
+        const common: ChatInfo = new ChatInfo({ name })
+        const chat: Chat = new Chat({ owner, members, common })
 
-        await Promise.all([chatCreate, profilesUpdate])
+        await Promise.all([
+            ChatsAPI.update(chat),
+            _assignChatToMembers(chat.common.id, chat.members)
+        ])
 
         // TODO рассылка по сокету о созданном чате
 
-        user.chats.push(chat.common)
+        user.chats.push(chat.common.id)
 
         return res.status(OK).json(user)
     } catch (e) {
@@ -67,43 +76,35 @@ export const createChat = async ({ user, body: { name, members } }: {
     }
 }
 
-export const updateChatInfo = async ({ user, body: updatedChat }: {
+export const updateChatInfo = async ({ body }: {
     user: UserProfile,
-    body: Object,
-    updatedChat: Chat,
+    body: Chat
 }, res: Object) => {
     try {
-        const chatUpdate: Promise<void> = ChatsAPI.update(updatedChat)
-        const profilesUpdate: Promise<void[]> = _assignChatToMembers(updatedChat.common, updatedChat.members)
-
-        await Promise.all([chatUpdate, profilesUpdate])
+        await ChatsAPI.update(body)
 
         // TODO рассылка по сокету об изменении ChatInfo
 
-        const index = user.chats.findIndex(x => x.id === updatedChat.common.id)
-        user.chats[index] = updatedChat
-
-        return res.status(OK).json(user)
+        return res.sendStatus(OK)
     } catch (e) {
         return res.sendStatus(INTERNAL_SERVER_ERROR)
     }
 }
 
-export const addMemberChat = async ({ body: { chat, member } }: {
+export const addMemberToChat = async ({ body: { chat, member } }: {
     chat: Chat,
-    body: Object,
-    member: UserInfo
+    member: number,
+    body: Object
 }, res: Object) => {
     try {
         chat.members = [...chat.members, member]
 
-        const chatUpdate: Promise<void> = ChatsAPI.update(chat)
-        const profileUpdate: Promise<void> = UserAPI.fetch(member.gid).then(profile => {
-            profile.chats.push(chat.common)
+        const profileUpdate: Promise<void> = UserAPI.fetch(member).then(profile => {
+            profile.chats.push(chat.common.id)
             return UserAPI.update(profile)
         })
 
-        await Promise.all([chatUpdate, profileUpdate])
+        await Promise.all([ChatsAPI.update(chat), profileUpdate])
 
         // TODO рассылка по сокету о новом участнике
 
@@ -113,21 +114,20 @@ export const addMemberChat = async ({ body: { chat, member } }: {
     }
 }
 
-export const deleteMemberChat = async ({ body: { chat, member } }: {
+export const deleteMemberFromChat = async ({ body: { chat, member } }: {
     chat: Chat,
-    body: Object,
-    member: UserInfo
+    member: number,
+    body: Object
 }, res: Object) => {
     try {
-        chat.members = chat.members.filter(x => x.gid !== member.gid)
+        chat.members = chat.members.filter(gid => gid !== member)
 
-        const chatUpdate: Promise<void> = ChatsAPI.update(chat)
-        const profileUpdate: Promise<void> = UserAPI.fetch(member.gid).then(profile => {
-            profile.chats.push(chat.common)
+        const profileUpdate: Promise<void> = UserAPI.fetch(member).then(profile => {
+            profile.chats = profile.chats.filter(chatId => chatId !== chat.common.id)
             return UserAPI.update(profile)
         })
 
-        await Promise.all([chatUpdate, profileUpdate])
+        await Promise.all([ChatsAPI.update(chat), profileUpdate])
 
         // TODO рассылка по сокету об исключении участника
 
@@ -139,15 +139,17 @@ export const deleteMemberChat = async ({ body: { chat, member } }: {
 
 export const deleteChat = async ({ user, params: { id } }: {
     user: UserProfile,
-    params: Object,
     id: string,
+    params: Object
 }, res: Object) => {
     try {
-        await ChatsAPI.delete(Number(id))
+        const chatId: number = Number(id)
+
+        await ChatsAPI.delete(chatId)
         // TODO вероятно, удаление сообщений в чате
 
         // TODO рассылка по сокету об удалении чата
-        user.chats = user.chats.filter(chat => chat.id !== Number(id))
+        user.chats = user.chats.filter(id => id !== chatId)
 
         return res.status(OK).json(user)
     } catch (e) {
