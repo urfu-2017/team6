@@ -143,11 +143,13 @@ export const deleteChat = async ({ user, params: { id } }: {
     params: Object
 }, res: Object) => {
     try {
-        await ChatsAPI.delete(Number(id))
+        const chatId: number = Number(id)
+
+        await ChatsAPI.delete(chatId)
         // TODO вероятно, удаление сообщений в чате
 
         // TODO рассылка по сокету об удалении чата
-        user.chats = user.chats.filter(chatId => chatId !== Number(id))
+        user.chats = user.chats.filter(id => id !== chatId)
 
         return res.status(OK).json(user)
     } catch (e) {
