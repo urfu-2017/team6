@@ -8,7 +8,7 @@ interface ChatType {
     members?: Array<number>,
 }
 
-export default class Chat {
+export default class Chat implements ChatType {
     common: ChatInfo
     owner: number
     members: Array<number>
