@@ -2,6 +2,7 @@ import express from 'express'
 
 import * as profile from '../controllers/profile'
 import * as chats from '../controllers/chats'
+import * as messages from '../controllers/messages'
 
 const router = express.Router()
 
@@ -21,5 +22,9 @@ router.patch('/chats', chats.updateChatInfo)
 router.delete('/chats/:id', chats.deleteChat)
 router.put('/chats/members', chats.addMemberToChat)
 router.delete('/chats/members', chats.deleteMemberFromChat)
+
+/* Messages API */
+router.put('/messages', messages.addMessage)
+router.get('/messages/:chatId', messages.getMessages)
 
 export default router
