@@ -4,21 +4,22 @@ interface MessageType {
     text: string,
     chatId: number,
     authorGid: number,
-    createdAt: number
+    createdAt: number,
+    clusterId: number
 }
 
 export default class Message implements MessageType {
-    _: number
     text: string
     chatId: number
     authorGid: number
     createdAt: number
+    clusterId: number
 
-    constructor({ text, chatId, authorGid, createdAt = Date.now() }: MessageType) {
-        this._ = 1 / createdAt
+    constructor({ text, chatId, authorGid, createdAt = Date.now(), clusterId = -1 }: MessageType) {
         this.text = text
         this.chatId = chatId
         this.authorGid = authorGid
         this.createdAt = createdAt
+        this.clusterId = clusterId
     }
 }
