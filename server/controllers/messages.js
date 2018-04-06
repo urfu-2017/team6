@@ -34,9 +34,7 @@ export const getMessages = async ({ params: { chatId }, query: { clusterId } }: 
 }
 
 export const editMessage = async ({ body }: {
-    params: { chatId: string },
     body: Message,
-    query: { page: string }
 }, res: Object) => {
     try {
         await MessagesAPI.edit(body)
