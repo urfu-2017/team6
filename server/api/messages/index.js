@@ -1,8 +1,8 @@
 // @flow
 
-import * as hrudb from '../hrudb'
 import LRUCache from 'lru-cache'
 
+import * as hrudb from '../hrudb'
 import Event, { types, filters } from '../../../models/Event'
 import Message from '../../../models/Message'
 
