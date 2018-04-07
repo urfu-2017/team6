@@ -1,39 +1,38 @@
 import React from 'react'
+import { Provider } from 'react-redux'
+
 import Head from 'next/head'
 
+import initStore from '../../store'
+
 import UserProfile from '../../models/UserProfile'
+
+import Body from '../../components/Body'
 
 import stylesheet from './main.css'
 
 type Props = {
-    user: UserProfile
+    session: UserProfile
 }
 
-type State = {
-    counter: number
-}
-
-export default class MainPage extends React.Component<Props, State> {
+export default class Main extends React.Component<Props> {
     static async getInitialProps({ req }) {
-        return { user: req.user }
+        return { session: req.user }
     }
-
-    state = { user: this.props.user }
 
     render() {
         return (
-            <div className="main">
-                <Head>
-                    <meta name="viewport" content="width=device-width, initial-scale=1" />
-                    <meta charSet="utf-8" />
-                    <title>Kilogram messenger</title>
-                    <style dangerouslySetInnerHTML={{ __html: stylesheet.toString() }} />
-                </Head>
-                <span>My Profile: </span>
-                <pre>
-                    {JSON.stringify(this.state.user, null, 2)}
-                </pre>
-            </div>
+            <Provider store={initStore(this.props.session)}>
+                <div>
+                    <Head>
+                        <meta charSet="utf-8" />
+                        <meta name="viewport" content="width=device-width, initial-scale=1" />
+                        <title>Kilogram Messenger</title>
+                        <style dangerouslySetInnerHTML={{ __html: stylesheet.toString() }} />
+                    </Head>
+                    <Body/>
+                </div>
+            </Provider>
         )
     }
 }

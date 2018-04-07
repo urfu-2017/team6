@@ -1,0 +1,2 @@
+export const FETCH_PROFILE_ACTION = 'actions.user.FETCH_PROFILE_ACTION'
+export const FETCH_PROFILE_SUCCESS = 'actions.user.FETCH_PROFILE_SUCCESS'

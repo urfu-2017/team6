@@ -6,7 +6,7 @@
     "semi": [2, "never"],
     "new-cap": 0,
     "strict": "error",
-    "indent": ["error", 4],
+    "indent": ["error", 4, { "SwitchCase": 1 }],
     "object-curly-spacing": [0, "error"],
     "no-duplicate-imports": "error",
     "lines-between-class-members": 0,
