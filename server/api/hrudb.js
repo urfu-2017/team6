@@ -50,5 +50,5 @@ export const remove = async (key: string): Promise<void> =>
 export const get = async (key: string): Promise<string> =>
     _get(`${HRUDB_BASE_URL}${key}`)
 
-export const getAll = async (key: string, options: Object): Promise<string> =>
+export const getAll = async (key: string, options?: Object = {}): Promise<string> =>
     _get(`${HRUDB_BASE_URL}${key}/all?${querystring.stringify(options)}`)

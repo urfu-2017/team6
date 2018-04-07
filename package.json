@@ -8,7 +8,7 @@
     "prepush": "npm test",
     "build": "next build",
     "dev": "nodemon ./server/server.js --exec babel-node",
-    "start": "babel-node ./server/server.js"
+    "start": "npm run build && babel-node ./server/server.js"
   },
   "dependencies": {
     "body-parser": "^1.18.2",
@@ -18,6 +18,7 @@
     "express-session": "^1.15.6",
     "http-status-codes": "^1.3.0",
     "isomorphic-unfetch": "^2.0.0",
+    "lru-cache": "^4.1.2",
     "next": "^5.1.0",
     "node-fetch": "^2.1.1",
     "normalize.css": "^8.0.0",

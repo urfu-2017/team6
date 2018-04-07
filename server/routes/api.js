@@ -24,7 +24,9 @@ router.put('/chats/members', chats.addMemberToChat)
 router.delete('/chats/members', chats.deleteMemberFromChat)
 
 /* Messages API */
-router.put('/messages', messages.addMessage)
 router.get('/messages/:chatId', messages.getMessages)
+router.put('/messages/:chatId', messages.addMessage)
+router.patch('/messages', messages.editMessage)
+router.delete('/messages', messages.deleteMessage)
 
 export default router
