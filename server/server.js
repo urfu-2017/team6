@@ -1,22 +1,25 @@
 import next from 'next'
+import http from 'http'
 import express from 'express'
+import io from 'socket.io'
 
 import config from './config'
 import apiRouter from './routes/api'
 import authRouter from './routes/auth'
 import setupMiddleware from './middlewares'
+import SocketManager from './socket'
 
-const app = next({ dev: config.NODE_ENV !== 'production' })
-const requestHandler = app.getRequestHandler()
+const expressApp = express()
+const httpServer = http.Server(expressApp)
+const nextApp = next({ dev: config.NODE_ENV !== 'production' })
 
-const start = async () => {
-    await app.prepare()
+SocketManager.init(io(httpServer))
 
-    setupMiddleware(express())
-        .use('/', authRouter(app))
+nextApp.prepare().then(() => {
+    setupMiddleware(expressApp)
+        .use('/', authRouter(nextApp))
         .use('/api/v1', apiRouter)
-        .get('*', requestHandler)
-        .listen(config.PORT)
-}
+        .get('*', nextApp.getRequestHandler())
 
-start()
+    httpServer.listen(config.PORT)
+})

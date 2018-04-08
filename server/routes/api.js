@@ -11,17 +11,19 @@ router.get('/user', profile.fetchSelf)
 router.post('/users', profile.fetchAllUsers)
 router.get('/user/:gid', profile.fetchUser)
 router.patch('/user', profile.updateUser)
-router.patch('/user/contacts', profile.updateContacts)
-router.patch('/user/chats', profile.updateChats)
+
+/* Contacts API */
+router.put('/contacts', profile.addContacts)
+router.delete('/contacts', profile.removeContacts)
 
 /* Chats API */
 router.get('/chats/:id', chats.fetchChat)
 router.post('/chats', chats.fetchAllChats)
 router.put('/chats', chats.createChat)
-router.patch('/chats', chats.updateChatInfo)
-router.delete('/chats/:id', chats.deleteChat)
-router.put('/chats/members', chats.addMemberToChat)
-router.delete('/chats/members', chats.deleteMemberFromChat)
+router.patch('/chat', chats.updateChatInfo)
+router.delete('/chat/:id', chats.deleteChat)
+router.put('/chat/:id/members', chats.addMemberToChat)
+router.delete('/chat/:id/members', chats.deleteMemberFromChat)
 
 /* Messages API */
 router.get('/messages/:chatId', messages.getMessages)

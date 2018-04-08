@@ -9,13 +9,17 @@ import { rootSaga } from '../sagas'
 
 import UserProfile from '../models/UserProfile'
 
+let reduxStore: Store
+
 export default (session: UserProfile): Store => {
     const sagaMiddleware: SagaMiddleware = createSagaMiddleware()
     const middleware: Middleware = composeWithDevTools(applyMiddleware(sagaMiddleware))
 
-    const store: Store = createStore(initReducers(session), middleware)
+    reduxStore = createStore(initReducers(session), middleware)
 
     sagaMiddleware.run(rootSaga)
 
-    return store
+    return reduxStore
 }
+
+export const dispatch = (action: Object) => reduxStore.dispatch(action)
