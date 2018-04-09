@@ -35,8 +35,8 @@ export const fetchUser = async ({ params: { gid } }: {
 }
 
 export const fetchAllUsers = async ({ body: gids }: {
-    body: Object,
-    gids: Array<number>
+    gids: Array<number>,
+    body: Array<number>
 }, res: Object) => {
     try {
         const fetchedProfiles: Array<UserProfile> = await Promise.all(gids.map(UserAPI.fetch))
@@ -62,13 +62,14 @@ export const updateUser = async ({ user, body }: {
     }
 }
 
-export const addContacts = async ({ user, body }: {
+export const addContacts = async ({ user, body: contacts }: {
     user: UserProfile,
+    contacts: Array<number>,
     body: Array<number>
 }, res: Object) => {
     try {
-        const contacts: Array<number> = [...user.contacts, ...body]
-        const myProfile: UserProfile = new UserProfile({ ...user, contacts })
+        const updatedContacts: Array<number> = [...user.contacts, ...contacts]
+        const myProfile: UserProfile = new UserProfile({ ...user, contacts: updatedContacts })
 
         const addContactToUserProfiles = async (gid: number): Promise<void> => {
             const profile: UserProfile = await UserAPI.fetch(gid)
@@ -79,10 +80,10 @@ export const addContacts = async ({ user, body }: {
 
         await Promise.all([
             UserAPI.update(myProfile),
-            ...contacts.map(addContactToUserProfiles)
+            ...updatedContacts.map(addContactToUserProfiles)
         ])
 
-        user.contacts = contacts
+        user.contacts = updatedContacts
 
         return res.sendStatus(OK)
     } catch (e) {
@@ -96,8 +97,8 @@ export const removeContacts = async ({ user, body: contacts }: {
     body: Array<number>
 }, res: Object) => {
     try {
-        const filteredContacts: Array<number> = user.contacts.filter(x => !contacts.includes(x))
-        const myProfile: UserProfile = new UserProfile({ ...user, contacts: filteredContacts })
+        const updatedContacts: Array<number> = user.contacts.filter(x => !contacts.includes(x))
+        const myProfile: UserProfile = new UserProfile({ ...user, contacts: updatedContacts })
 
         const removeContactFromUserProfiles = async (gid: number): Promise<void> => {
             const profile: UserProfile = await UserAPI.fetch(gid)
@@ -111,7 +112,7 @@ export const removeContacts = async ({ user, body: contacts }: {
             ...contacts.map(removeContactFromUserProfiles)
         ])
 
-        user.contacts = filteredContacts
+        user.contacts = updatedContacts
 
         return res.sendStatus(OK)
     } catch (e) {
