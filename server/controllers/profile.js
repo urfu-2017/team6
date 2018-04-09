@@ -68,14 +68,18 @@ export const addContacts = async ({ user, body }: {
 }, res: Object) => {
     try {
         const contacts: Array<number> = [...user.contacts, ...body]
-        const profile: UserProfile = new UserProfile({ ...user, contacts })
+        const myProfile: UserProfile = new UserProfile({ ...user, contacts })
+
+        const addContactToUserProfiles = async (gid: number): Promise<void> => {
+            const profile: UserProfile = await UserAPI.fetch(gid)
+            profile.contacts = [...profile.contacts, user.user.gid]
+
+            return UserAPI.update(profile)
+        }
 
         await Promise.all([
-            UserAPI.update(profile),
-            contacts.map(gid => UserAPI.fetch(gid).then(profile => {
-                profile.contacts = [...profile.contacts, user.user.gid]
-                return UserAPI.update(profile)
-            }))
+            UserAPI.update(myProfile),
+            ...contacts.map(addContactToUserProfiles)
         ])
 
         user.contacts = contacts
@@ -86,23 +90,28 @@ export const addContacts = async ({ user, body }: {
     }
 }
 
-export const removeContacts = async ({ user, body }: {
+export const removeContacts = async ({ user, body: contacts }: {
     user: UserProfile,
+    contacts: Array<number>,
     body: Array<number>
 }, res: Object) => {
     try {
-        const contacts: Array<number> = user.contacts.filter(x => !body.includes(x))
-        const profile: UserProfile = new UserProfile({ ...user, contacts })
+        const filteredContacts: Array<number> = user.contacts.filter(x => !contacts.includes(x))
+        const myProfile: UserProfile = new UserProfile({ ...user, contacts: filteredContacts })
+
+        const removeContactFromUserProfiles = async (gid: number): Promise<void> => {
+            const profile: UserProfile = await UserAPI.fetch(gid)
+            profile.contacts = profile.contacts.filter(gid => gid !== myProfile.user.gid)
+
+            return UserAPI.update(profile)
+        }
 
         await Promise.all([
-            UserAPI.update(profile),
-            body.map(gid => UserAPI.fetch(gid).then(profile => {
-                profile.contacts = profile.contacts.filter(x => x !== user.user.gid)
-                return UserAPI.update(profile)
-            }))
+            UserAPI.update(myProfile),
+            ...contacts.map(removeContactFromUserProfiles)
         ])
 
-        user.contacts = contacts
+        user.contacts = filteredContacts
 
         return res.sendStatus(OK)
     } catch (e) {

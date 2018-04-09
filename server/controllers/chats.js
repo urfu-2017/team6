@@ -140,16 +140,21 @@ export const deleteChat = async ({ user, params: { id } }: {
     try {
         const chat: Chat = await ChatsAPI.fetch(Number(id))
 
-        const profilesUpdate: Promise<void[]> = Promise.all(chat.members.map(gid => UserAPI.fetch(gid)
-            .then(profile => {
-                profile.chats = profile.chats.filter(id => id !== chat.common.id)
-                return UserAPI.update(profile)
-            }))
-        )
+        const isNotRemovedChat = id => id !== chat.common.id
 
-        await Promise.all([ChatsAPI.delete(chat.common.id), profilesUpdate])
+        const removeChatFromUserProfile = async (gid: number): Promise<void> => {
+            const profile: UserProfile = await UserAPI.fetch(gid)
+            profile.chats = profile.chats.filter(isNotRemovedChat)
 
-        user.chats = user.chats.filter(id => id !== chat.common.id)
+            return UserAPI.update(profile)
+        }
+
+        await Promise.all([
+            ChatsAPI.delete(chat.common.id),
+            ...chat.members.map(removeChatFromUserProfile)
+        ])
+
+        user.chats = user.chats.filter(isNotRemovedChat)
 
         return res.sendStatus(OK)
     } catch (e) {
