@@ -3,8 +3,11 @@
 import LRUCache from 'lru-cache'
 
 import * as hrudb from '../hrudb'
-import Event, { types, filters } from '../../../models/Event'
+import Event, { types as eventTypes, filters } from '../../../models/Event'
 import Message from '../../../models/Message'
+import SocketEvent, { types as socketEventTypes } from '../../../models/SocketEvent'
+
+import socketManager from '../../socket'
 
 const CACHE_LIMIT_SIZE: number = 100 * 100 * 100
 const MESSAGES_PER_PAGE: number = 50
@@ -27,7 +30,7 @@ export default class MessagesAPI {
 
     static async add(message: Message): Promise<Message> {
         const cache: CacheType = clusterCache.get(message.chatId)
-        const eventAddKey: string = `events${message.chatId}_${cache.clustersCount}`
+        const [chatId, clustersCount] = [message.chatId, cache.clustersCount]
         cache.messagesCount++
 
         message.clusterId = cache.clustersCount
@@ -39,20 +42,26 @@ export default class MessagesAPI {
             hrudb.update(`events${message.chatId}_cluster`, `${cache.clustersCount}`)
         }
 
-        const event: Event = new Event(types.NEW_MESSAGE, message)
-        await hrudb.add(eventAddKey, JSON.stringify(event))
+        const event: Event = new Event(eventTypes.NEW_MESSAGE, message)
+        await this._addEvent(chatId, clustersCount, event)
 
         return message
     }
 
     static async edit(message: Message): Promise<void> {
-        const event: Event = new Event(types.EDIT_MESSAGE, message)
-        return hrudb.add(`events${message.chatId}_${message.clusterId}`, JSON.stringify(event))
+        const event: Event = new Event(eventTypes.EDIT_MESSAGE, message)
+        return this._addEvent(message.chatId, message.clusterId, event)
     }
 
     static async delete(message: Message): Promise<void> {
-        const event: Event = new Event(types.DELETE_MESSAGE, message.createdAt)
-        return hrudb.add(`events${message.chatId}_${message.clusterId}`, JSON.stringify(event))
+        const event: Event = new Event(eventTypes.DELETE_MESSAGE, message.createdAt)
+        return this._addEvent(message.chatId, message.clusterId, event)
+    }
+
+    static async _addEvent(chatId: number, clusterId: number, event: Event): Promise<void> {
+        return hrudb.add(`events${chatId}_${clusterId}`, JSON.stringify(event)).then(() => {
+            socketManager.sendEvent(`chat_${chatId}`, new SocketEvent(socketEventTypes.CHAT_EVENT, event))
+        })
     }
 
     static async _fetchNoCached(chatId: number, clusterId?: number): Promise<Array<Message>> {

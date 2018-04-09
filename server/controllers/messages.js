@@ -12,9 +12,9 @@ export const addMessage = async ({ user, body }: {
     try {
         body.authorGid = user.user.gid
 
-        const response: Message = await MessagesAPI.add(body)
+        await MessagesAPI.add(body)
 
-        return res.status(OK).json(response)
+        return res.sendStatus(OK)
     } catch (e) {
         return res.sendStatus(INTERNAL_SERVER_ERROR)
     }
@@ -39,7 +39,7 @@ export const editMessage = async ({ body }: {
     try {
         await MessagesAPI.edit(body)
 
-        return res.status(OK)
+        return res.sendStatus(OK)
     } catch (e) {
         return res.sendStatus(INTERNAL_SERVER_ERROR)
     }
@@ -51,7 +51,7 @@ export const deleteMessage = async ({ body }: {
     try {
         await MessagesAPI.delete(body)
 
-        return res.status(OK)
+        return res.sendStatus(OK)
     } catch (e) {
         return res.sendStatus(INTERNAL_SERVER_ERROR)
     }
