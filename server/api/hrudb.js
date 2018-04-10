@@ -1,16 +1,11 @@
 // @flow
 
+import LRU from 'lru-cache'
 import fetch from 'node-fetch'
 import querystring from 'querystring'
-import { OK, CREATED, NO_CONTENT } from 'http-status-codes'
+import { OK, CREATED, NO_CONTENT, BAD_REQUEST, NOT_FOUND } from 'http-status-codes'
 
 import config from '../config'
-
-// Class HrudbInteractionError extends Error {
-//     constructor() {
-//         super('HruDB returned an unexpected answer.')
-//     }
-// }
 
 class HrudbTimeoutError extends Error {
     constructor() {
@@ -28,8 +23,9 @@ interface RequestType {
     method: string,
     body: ?string,
     url: string,
-    headers: any,
-    validCodes: Array<number>
+    headers: Object,
+    successCodes: Array<number>,
+    errorCodes: Array<number>
 }
 
 class Request {
@@ -42,14 +38,20 @@ class Request {
     }
 }
 
-const TIMEOUT: number = 3000
-const ATTEMPT_COUNT: number = 3
-const HRUDB_BASE_URL: string = config.HRUDB_BASE_URL
+const TIMEOUT = 3000
+const ATTEMPT_COUNT = 3
+const HRUDB_BASE_URL = config.HRUDB_BASE_URL
 const AUTH_HEADER = { Authorization: config.API_KEY }
 const CONTENT_TYPE_HEADER = { 'Content-Type': 'plain/text' }
 
-const _fetchWithTimeout = (request: Request, timeoutMs: number): Promise => {
-    let isTimeout: boolean = false
+const CACHE = LRU({
+    max: 1024 * 1024 * 1024, // 1 Gb of ascii strings,
+    length: (str: string) => str.length,
+    maxAge: 1000 * 60 * 60 // 1 hour
+})
+
+const _fetchWithTimeout = (request: Request, timeoutMs: number): Promise<Object> => {
+    let isTimeout = false
     const fetchData = {
         method: request.method,
         headers: request.headers
@@ -81,10 +83,14 @@ const _fetchWithTimeout = (request: Request, timeoutMs: number): Promise => {
     })
 }
 
-const _sendRequest = async (request: Request): Promise => {
+const _sendRequest = async (request: Request): Promise<Object> => {
     for (let i = 0; i < ATTEMPT_COUNT; i++) {
         try {
             const res = await _fetchWithTimeout(request, TIMEOUT) // eslint-disable-line no-await-in-loop
+
+            if (request.errorCodes.includes(res.status)) {
+                throw new HrudbRequestError()
+            }
 
             if (request.validCodes.includes(res.status)) {
                 return res
@@ -103,51 +109,57 @@ const _change = async (key: string, value: ?string, method: string): Promise<voi
         body: value,
         url: `${HRUDB_BASE_URL}${key}`,
         headers: { ...AUTH_HEADER, ...CONTENT_TYPE_HEADER },
-        validCodes: [CREATED, NO_CONTENT]
+        validCodes: [CREATED, NO_CONTENT],
+        errorCodes: [BAD_REQUEST]
     }))
 
     if (!res) {
         // TODO: task queue
     }
 
-    // TODO: clear cache
+    CACHE.del(key)
 }
 
-const _get = async (url: string): Promise => {
+const _get = async (key: string, all: boolean = false, options: Object): Promise<Object> => {
+    if (CACHE.has(key)) {
+        return JSON.parse(CACHE.get(key))
+    }
+
+    const url: string = all ?
+        `${HRUDB_BASE_URL}${key}/all?${querystring.stringify(options)}` :
+        `${HRUDB_BASE_URL}${key}`
+
     const res = await _sendRequest(new Request({
         method: 'GET',
         body: null,
         url,
         headers: AUTH_HEADER,
-        validCodes: [OK]
+        validCodes: [OK],
+        errorCodes: [BAD_REQUEST, NOT_FOUND]
     }))
 
     if (!res) {
-        return undefined
+        throw new HrudbTimeoutError()
     }
 
     const json = await res.json()
 
-    if (json.error) {
-        throw new HrudbRequestError()
-    }
-
-    // TODO: cache
+    CACHE.set(key, JSON.stringify(json))
 
     return json
 }
 
-export const update = async (key: string, value: string): Promise<void> =>
+export const update = (key: string, value: string): Promise<void> =>
     _change(key, value, 'PUT')
 
-export const add = async (key: string, value: string): Promise<void> =>
+export const add = (key: string, value: string): Promise<void> =>
     _change(key, value, 'POST')
 
-export const remove = async (key: string): Promise<void> =>
+export const remove = (key: string): Promise<void> =>
     _change(key, null, 'DELETE')
 
-export const get = async (key: string): Promise<string> =>
-    _get(`${HRUDB_BASE_URL}${key}`)
+export const get = (key: string): Promise<Object> =>
+    _get(key)
 
-export const getAll = async (key: string, options?: Object = {}): Promise<string> =>
-    _get(`${HRUDB_BASE_URL}${key}/all?${querystring.stringify(options)}`)
+export const getAll = (key: string, options?: Object = {}): Promise<Object> =>
+    _get(key, true, options)
