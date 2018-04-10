@@ -38,8 +38,8 @@ class Request {
     }
 }
 
-const TIMEOUT = 3000
 const ATTEMPT_COUNT = 3
+const FETCH_TIMEOUT = 1000 * 3
 const HRUDB_BASE_URL = config.HRUDB_BASE_URL
 const AUTH_HEADER = { Authorization: config.API_KEY }
 const CONTENT_TYPE_HEADER = { 'Content-Type': 'plain/text' }
@@ -86,7 +86,7 @@ const _fetchWithTimeout = (request: Request, timeoutMs: number): Promise<Object>
 const _sendRequest = async (request: Request): Promise<Object> => {
     for (let i = 0; i < ATTEMPT_COUNT; i++) {
         try {
-            const res = await _fetchWithTimeout(request, TIMEOUT) // eslint-disable-line no-await-in-loop
+            const res = await _fetchWithTimeout(request, FETCH_TIMEOUT) // eslint-disable-line no-await-in-loop
 
             if (request.errorCodes.includes(res.status)) {
                 throw new HrudbRequestError()
@@ -114,7 +114,7 @@ const _change = async (key: string, value: ?string, method: string): Promise<voi
     }))
 
     if (!res) {
-        // TODO: task queue
+        throw new HrudbTimeoutError()
     }
 
     CACHE.del(key)
