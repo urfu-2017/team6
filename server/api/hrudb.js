@@ -120,9 +120,9 @@ const _change = async (key: string, value: ?string, method: string): Promise<voi
     CACHE.del(key)
 }
 
-const _get = async (key: string, all: boolean = false, options: Object): Promise<Object> => {
+const _get = async (key: string, all: boolean = false, options: Object): Promise<string> => {
     if (CACHE.has(key)) {
-        return JSON.parse(CACHE.get(key))
+        return CACHE.get(key)
     }
 
     const url: string = all ?
@@ -142,11 +142,11 @@ const _get = async (key: string, all: boolean = false, options: Object): Promise
         throw new HrudbTimeoutError()
     }
 
-    const json = await res.json()
+    const value = await res.text()
 
-    CACHE.set(key, JSON.stringify(json))
+    CACHE.set(key, value)
 
-    return json
+    return value
 }
 
 export const update = (key: string, value: string): Promise<void> =>
@@ -158,8 +158,8 @@ export const add = (key: string, value: string): Promise<void> =>
 export const remove = (key: string): Promise<void> =>
     _change(key, null, 'DELETE')
 
-export const get = (key: string): Promise<Object> =>
+export const get = (key: string): Promise<string> =>
     _get(key)
 
-export const getAll = (key: string, options?: Object = {}): Promise<Object> =>
+export const getAll = (key: string, options?: Object = {}): Promise<string> =>
     _get(key, true, options)
