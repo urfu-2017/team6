@@ -6,36 +6,135 @@ import { OK, CREATED, NO_CONTENT } from 'http-status-codes'
 
 import config from '../config'
 
-const API_KEY = config.API_KEY
-const HRUDB_BASE_URL = config.HRUDB_BASE_URL
+// Class HrudbInteractionError extends Error {
+//     constructor() {
+//         super('HruDB returned an unexpected answer.')
+//     }
+// }
 
-class HrudbInteractionError extends Error {
+class HrudbTimeoutError extends Error {
     constructor() {
-        super('HruDB returned an unexpected answer.')
+        super('HruDB exceeded time limit.')
     }
 }
 
-const AUTH_HEADER = { Authorization: API_KEY }
+class HrudbRequestError extends Error {
+    constructor() {
+        super('Invalid request.')
+    }
+}
+
+interface RequestType {
+    method: string,
+    body: ?string,
+    url: string,
+    headers: any,
+    validCodes: Array<number>
+}
+
+class Request {
+    constructor({ method, body, url, headers, validCodes }: RequestType) {
+        this.method = method
+        this.body = body
+        this.url = url
+        this.headers = headers
+        this.validCodes = validCodes
+    }
+}
+
+const TIMEOUT: number = 3000
+const ATTEMPT_COUNT: number = 3
+const HRUDB_BASE_URL: string = config.HRUDB_BASE_URL
+const AUTH_HEADER = { Authorization: config.API_KEY }
 const CONTENT_TYPE_HEADER = { 'Content-Type': 'plain/text' }
 
-const _change = async (key: string, value: ?string, method: string): Promise<void> => {
-    const reqUrl = `${HRUDB_BASE_URL}${key}`
-    const headers = { ...AUTH_HEADER, ...CONTENT_TYPE_HEADER }
-    const res = await fetch(reqUrl, { method, headers, body: value })
+const _fetchWithTimeout = (request: Request, timeoutMs: number): Promise => {
+    let isTimeout: boolean = false
+    const fetchData = {
+        method: request.method,
+        headers: request.headers
+    }
 
-    if (res.status !== CREATED && res.status !== NO_CONTENT) {
-        throw new HrudbInteractionError()
+    if (request.body) {
+        fetchData.body = request.body
+    }
+
+    return new Promise((res, rej) => {
+        const timeout = setTimeout(() => {
+            isTimeout = true
+            rej(new HrudbTimeoutError())
+        }, timeoutMs)
+
+        fetch(request.url, fetchData)
+            .then(resp => {
+                clearTimeout(timeout)
+                if (!isTimeout) {
+                    res(resp)
+                }
+            })
+            .catch(err => {
+                if (isTimeout) {
+                    return
+                }
+                rej(err)
+            })
+    })
+}
+
+const _sendRequest = async (request: Request): Promise => {
+    for (let i = 0; i < ATTEMPT_COUNT; i++) {
+        try {
+            const res = await _fetchWithTimeout(request, TIMEOUT) // eslint-disable-line no-await-in-loop
+
+            if (request.validCodes.includes(res.status)) {
+                return res
+            }
+        } catch (err) {
+            if (err.name !== 'HrudbTimeoutError') {
+                throw err
+            }
+        }
     }
 }
 
-const _get = async (reqUrl: string): Promise<string> => {
-    const res = await fetch(reqUrl, { method: 'GET', headers: AUTH_HEADER })
+const _change = async (key: string, value: ?string, method: string): Promise<void> => {
+    const res = await _sendRequest(new Request({
+        method,
+        body: value,
+        url: `${HRUDB_BASE_URL}${key}`,
+        headers: { ...AUTH_HEADER, ...CONTENT_TYPE_HEADER },
+        validCodes: [CREATED, NO_CONTENT]
+    }))
 
-    if (res.status !== OK) {
-        throw new HrudbInteractionError()
+    if (!res) {
+        // TODO: task queue
     }
 
-    return res.text()
+    // TODO: clear cache
+}
+
+const _get = async (url: string): Promise => {
+    const res = await _sendRequest(new Request({
+        method: 'GET',
+        body: null,
+        url,
+        headers: AUTH_HEADER,
+        validCodes: [OK]
+    }))
+
+    if (!res) {
+        return undefined
+    }
+
+    const json = await res.json()
+
+    if (json.error) {
+        throw new HrudbRequestError()
+    }
+
+    // TODO: cache
+
+    return json
 }
 
 export const update = async (key: string, value: string): Promise<void> =>
