@@ -29,12 +29,13 @@ interface RequestType {
 }
 
 class Request {
-    constructor({ method, body, url, headers, validCodes }: RequestType) {
+    constructor({ method, body, url, headers, validCodes, errorCodes }: RequestType) {
         this.method = method
         this.body = body
         this.url = url
         this.headers = headers
         this.validCodes = validCodes
+        this.errorCodes = errorCodes
     }
 }
 
@@ -88,12 +89,12 @@ const _sendRequest = async (request: Request): Promise<Object> => {
         try {
             const res = await _fetchWithTimeout(request, FETCH_TIMEOUT) // eslint-disable-line no-await-in-loop
 
-            if (request.errorCodes.includes(res.status)) {
-                throw new HrudbRequestError()
-            }
-
             if (request.validCodes.includes(res.status)) {
                 return res
+            }
+
+            if (request.errorCodes.includes(res.status)) {
+                throw new HrudbRequestError()
             }
         } catch (err) {
             if (err.name !== 'HrudbTimeoutError') {
