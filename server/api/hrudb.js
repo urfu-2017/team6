@@ -51,43 +51,20 @@ const CACHE = LRU({
     maxAge: 1000 * 60 * 60 // 1 hour
 })
 
-const _fetchWithTimeout = (request: Request, timeoutMs: number): Promise<Object> => {
-    let isTimeout = false
+const _sendRequest = async (request: Request): Promise<Object> => {
     const fetchData = {
         method: request.method,
-        headers: request.headers
+        headers: request.headers,
+        timeout: FETCH_TIMEOUT
     }
 
     if (request.body) {
         fetchData.body = request.body
     }
 
-    return new Promise((res, rej) => {
-        const timeout = setTimeout(() => {
-            isTimeout = true
-            rej(new HrudbTimeoutError())
-        }, timeoutMs)
-
-        fetch(request.url, fetchData)
-            .then(resp => {
-                clearTimeout(timeout)
-                if (!isTimeout) {
-                    res(resp)
-                }
-            })
-            .catch(err => {
-                if (isTimeout) {
-                    return
-                }
-                rej(err)
-            })
-    })
-}
-
-const _sendRequest = async (request: Request): Promise<Object> => {
     for (let i = 0; i < ATTEMPT_COUNT; i++) {
         try {
-            const res = await _fetchWithTimeout(request, FETCH_TIMEOUT) // eslint-disable-line no-await-in-loop
+            const res = await fetch(request.url, fetchData) // eslint-disable-line no-await-in-loop
 
             if (request.validCodes.includes(res.status)) {
                 return res
@@ -97,7 +74,7 @@ const _sendRequest = async (request: Request): Promise<Object> => {
                 throw new HrudbRequestError()
             }
         } catch (err) {
-            if (err.name !== 'HrudbTimeoutError') {
+            if (err.name === 'HrudbRequestError') {
                 throw err
             }
         }
