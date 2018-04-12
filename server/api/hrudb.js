@@ -51,7 +51,7 @@ const CACHE = LRU({
     maxAge: 1000 * 60 * 60 // 1 hour
 })
 
-const _sendRequest = async (request: Request): Promise<Object> => {
+const _sendRequest = async (request: Request, retryOnTimeout: boolean = true): Promise<Object> => {
     const fetchData = {
         method: request.method,
         headers: request.headers,
@@ -77,6 +77,10 @@ const _sendRequest = async (request: Request): Promise<Object> => {
             if (err.name === 'HrudbRequestError') {
                 throw err
             }
+
+            if (!retryOnTimeout) {
+                return
+            }
         }
     }
 }
@@ -89,7 +93,7 @@ const _change = async (key: string, value: ?string, method: string): Promise<voi
         headers: { ...AUTH_HEADER, ...CONTENT_TYPE_HEADER },
         validCodes: [CREATED, NO_CONTENT],
         errorCodes: [BAD_REQUEST]
-    }))
+    }), false)
 
     if (!res) {
         throw new HrudbTimeoutError()
