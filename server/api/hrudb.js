@@ -102,12 +102,12 @@ const _change = async (key: string, value: ?string, method: string): Promise<voi
     CACHE.del(key)
 }
 
-const _get = async (key: string, all?: boolean = false, options?: Object): Promise<string> => {
+const _get = async (key: string, all?: boolean = false, options?: Object = {}): Promise<string> => {
     if (CACHE.has(key)) {
         return CACHE.get(key)
     }
 
-    const url: string = all && options ?
+    const url: string = all ?
         `${HRUDB_BASE_URL}${key}/all?${querystring.stringify(options)}` :
         `${HRUDB_BASE_URL}${key}`
 
@@ -142,5 +142,5 @@ export const remove = (key: string): Promise<void> =>
 export const get = (key: string): Promise<string> =>
     _get(key)
 
-export const getAll = (key: string, options?: Object = {}): Promise<string> =>
+export const getAll = (key: string, options?: Object): Promise<string> =>
     _get(key, true, options)
