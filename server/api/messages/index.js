@@ -28,8 +28,8 @@ export default class MessagesAPI {
             this._fetchNoCached(chatId, clusterId)
     }
 
-    static async add(message: Message): Promise<Message> {
-        const cache: CacheType = clusterCache.get(message.chatId)
+    static async add(message: Message): Promise<void> {
+        const cache: CacheType = clusterCache.get(String(message.chatId))
         const [chatId, clustersCount] = [message.chatId, cache.clustersCount]
         cache.messagesCount++
 
@@ -43,9 +43,7 @@ export default class MessagesAPI {
         }
 
         const event: Event = new Event(eventTypes.NEW_MESSAGE, message)
-        await this._addEvent(chatId, clustersCount, event)
-
-        return message
+        return this._addEvent(chatId, clustersCount, event)
     }
 
     static async edit(message: Message): Promise<void> {
@@ -54,7 +52,7 @@ export default class MessagesAPI {
     }
 
     static async delete(message: Message): Promise<void> {
-        const event: Event = new Event(eventTypes.DELETE_MESSAGE, message.createdAt)
+        const event: Event = new Event(eventTypes.DELETE_MESSAGE, message)
         return this._addEvent(message.chatId, message.clusterId, event)
     }
 

@@ -16,11 +16,12 @@ export const addMessage = async ({ user, body }: {
 
         return res.sendStatus(OK)
     } catch (e) {
+        console.log(e)
         return res.sendStatus(INTERNAL_SERVER_ERROR)
     }
 }
 
-export const getMessages = async ({ params: { chatId }, query: { clusterId } }: {
+export const fetchMessages = async ({ params: { chatId }, query: { clusterId } }: {
     params: { chatId: string },
     query: { clusterId?: string }
 }, res: Object) => {
@@ -28,6 +29,21 @@ export const getMessages = async ({ params: { chatId }, query: { clusterId } }: 
         const messages: Array<Message> = await MessagesAPI.fetch(Number(chatId), Number(clusterId))
 
         return res.status(OK).json(messages)
+    } catch (e) {
+        return res.sendStatus(INTERNAL_SERVER_ERROR)
+    }
+}
+
+export const fetchAllMessages = async ({ body: ids }: {
+    ids: Array<number>,
+    body: Array<number>
+}, res: Object) => {
+    try {
+        const response: Object = {}
+        await Promise.all(ids.map(id => MessagesAPI.fetch(id)
+            .then(messages => response[id] = messages)))
+
+        return res.status(OK).json(response)
     } catch (e) {
         return res.sendStatus(INTERNAL_SERVER_ERROR)
     }

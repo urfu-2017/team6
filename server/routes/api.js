@@ -26,7 +26,8 @@ router.put('/chat/:id/members', chats.addMemberToChat)
 router.delete('/chat/:id/members', chats.deleteMemberFromChat)
 
 /* Messages API */
-router.get('/messages/:chatId', messages.getMessages)
+router.post('/messages', messages.fetchAllMessages)
+router.get('/messages/:chatId', messages.fetchMessages)
 router.put('/messages/:chatId', messages.addMessage)
 router.patch('/messages', messages.editMessage)
 router.delete('/messages', messages.deleteMessage)
