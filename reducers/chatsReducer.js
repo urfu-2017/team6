@@ -1,16 +1,18 @@
-// @flow
-
 import * as actions from '../actions/chatsActions'
 
 import Chat from '../models/Chat'
 import ChatInfo from '../models/ChatInfo'
 
-type ActionType = {
-    type: string,
-    payload: Object & Chat & ChatInfo & { chatId: number, gid: number }
+type StateType = {
+    [key: number]: Chat
 }
 
-export default (state: Object = {}, { type, payload }: ActionType) => {
+type ActionType = {
+    type: string,
+    payload: StateType | Chat | ChatInfo | number | { chatId: number, gid: number }
+}
+
+export default (state: StateType = {}, { type, payload }: ActionType): StateType => {
     const newState = {...state}
 
     switch (type) {

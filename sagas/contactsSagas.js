@@ -10,15 +10,18 @@ import UserInfo from '../models/UserInfo'
 const fetchContacts = function * ({ payload } : {
     payload: Array<number>
 }) {
-    const contacts: Array<UserInfo> = yield call(API.fetchContacts, payload)
+    const contacts: Object = yield call(API.fetchContacts, payload)
     yield put({ type: actions.FETCH_ALL_SUCCESS, payload: contacts })
 }
 
 const addContacts = function * ({ payload } : {
     payload: Array<UserInfo>
 }) {
-    const contacts: Array<UserInfo> = yield select(state => state.contacts)
-    yield put({ type: actions.ADD_SUCCESS, payload })
+    const contacts: Object = yield select(state => state.contacts)
+    yield put({
+        type: actions.ADD_SUCCESS,
+        payload: payload.reduce((res, cur) => ({ ...res, [cur.user.gid]: cur.user }), {})
+    })
 
     const response = yield call(API.addContacts, payload.map(x => x.gid))
 
@@ -30,7 +33,7 @@ const addContacts = function * ({ payload } : {
 const removeContacts = function * ({ payload } : {
     payload: Array<number>
 }) {
-    const contacts: Array<UserInfo> = yield select(state => state.contacts)
+    const contacts: Object = yield select(state => state.contacts)
     yield put({ type: actions.REMOVE_SUCCESS, payload })
 
     const response = yield call(API.removeContacts, payload)

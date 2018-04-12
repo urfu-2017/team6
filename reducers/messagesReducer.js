@@ -1,15 +1,17 @@
-// @flow
-
 import * as actions from '../actions/messagesActions'
 
 import Message from '../models/Message'
 
-type ActionType = {
-    type: string,
-    payload: { chatId: number, messages: Array<Message> } & Message & Object
+type StateType = {
+    [key: number]: Array<Message>
 }
 
-export default (state: Object = {}, { type, payload }: ActionType) => {
+type ActionType = {
+    type: string,
+    payload: StateType | Message | { chatId: number, messages: Array<Message> }
+}
+
+export default (state: StateType = {}, { type, payload }: ActionType): StateType => {
     const newState = {...state}
     let index
 
@@ -21,7 +23,7 @@ export default (state: Object = {}, { type, payload }: ActionType) => {
             newState[payload.chatId].push(payload)
             return newState
         case actions.SOCKET_NEW_MESSAGE:
-        case actions.SOCKET_EDIT_MESSAGE: // eslint-disable-line no-case-declarations
+        case actions.SOCKET_EDIT_MESSAGE:
             index = newState[payload.chatId].findIndex(x => x.createdAt === payload.createdAt)
 
             if (index === -1) {
@@ -31,7 +33,7 @@ export default (state: Object = {}, { type, payload }: ActionType) => {
             }
 
             return newState
-        case actions.SOCKET_DELETE_MESSAGE: // eslint-disable-line no-case-declarations
+        case actions.SOCKET_DELETE_MESSAGE:
             index = newState[payload.chatId].findIndex(x => x.createdAt === payload.createdAt)
             delete newState[payload.chatId][index]
             return newState
