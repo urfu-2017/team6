@@ -139,6 +139,7 @@ export default class APIClient {
             method: 'POST',
             body: JSON.stringify(message)
         })
+
         return response.json()
     }
 }

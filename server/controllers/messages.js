@@ -78,7 +78,7 @@ export const getMeta = async ({ body }: {
 }, res: Object) => {
     try {
         const metaData: Object = await MessagesAPI.getMeta(body)
-        return res.sendStatus(OK).json(metaData)
+        return res.status(OK).json(metaData)
     } catch (e) {
         return res.sendStatus(INTERNAL_SERVER_ERROR)
     }

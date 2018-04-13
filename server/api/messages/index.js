@@ -60,9 +60,7 @@ export default class MessagesAPI {
 
     static async getMeta(message: Message): Promise<Object> {
         const { body: html, url } = await got(message.text)
-        const metadata = await metascraper({ html, url })
-
-        return metadata
+        return metascraper({ html, url })
     }
 
     static async _addEvent(chatId: number, clusterId: number, event: Event): Promise<void> {
