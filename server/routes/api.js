@@ -31,5 +31,6 @@ router.get('/messages/:chatId', messages.fetchMessages)
 router.put('/messages/:chatId', messages.addMessage)
 router.patch('/messages', messages.editMessage)
 router.delete('/messages', messages.deleteMessage)
+router.post('/messages/meta', messages.getMeta)
 
 export default router
