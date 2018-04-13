@@ -2,17 +2,16 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import io from 'socket.io-client'
-import Modal from 'react-responsive-modal'
 
 import Menu from './Menu'
 import Chat from '../models/Chat'
+import ChatFormModal from './ChatFormModal'
 import ContactFormModal from './ContactFormModal'
 
 import UserProfile from '../models/UserProfile'
 import UserInfo from '../models/UserInfo'
 
 import * as userActions from '../actions/userActions'
-import * as chatsActions from '../actions/chatsActions'
 
 type Props = {
     session: UserProfile,
@@ -48,9 +47,7 @@ class Body extends React.Component<Props> {
 
     onChatAdd = () => this.onChatAddClose()
 
-    onContactAdd = () => {
-        this.onContactAddClose()
-    }
+    onContactAdd = () => this.onContactAddClose()
 
     render() {
         const contactsArray = Object.values(this.props.contacts)
@@ -68,24 +65,15 @@ class Body extends React.Component<Props> {
                     onAddContactClick={this.onContactAddClick}
                     selectedTab={this.props.selectedTab}
                 />
+
                 <div className="content">
                     { this.props.children }
                 </div>
 
-                <Modal onClose={this.onChatAddClose} open={this.state.addChatModalOpen}>
-                    <div className="modal-content">
-                        <h2>Создать чат</h2>
-                        <div>
-                            <label>
-                                Название
-                                <input type="text" ref={ref => this.inputChatName = ref} />
-                            </label>
-                        </div>
-                        <div>
-                            <button onClick={this.onChatAdd} className="button button-success">Найти</button>
-                        </div>
-                    </div>
-                </Modal>
+                <ChatFormModal
+                    onClose={this.onChatAddClose}
+                    visible={this.state.addChatModalOpen}
+                />
 
                 <ContactFormModal
                     onClose={this.onContactAddClose}
