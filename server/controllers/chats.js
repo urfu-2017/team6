@@ -13,7 +13,7 @@ export const fetchChat = async ({ params: { id } }: {
     params: { id: string }
 }, res: Object) => {
     try {
-        const chat: Chat | null = await ChatsAPI.fetch(Number(id))
+        const chat: Chat = await ChatsAPI.fetch(Number(id))
 
         return res.status(OK).json(chat)
     } catch (e) {
@@ -36,17 +36,13 @@ export const fetchAllChats = async ({ body: ids }: {
     }
 }
 
-export const createChat = async ({ user, body: { name, members = [] } }: {
+export const createChat = async ({ user, body: chat }: {
     user: UserProfile,
-    body: {
-        name: string,
-        members: Array<number>
-    }
+    chat: Chat,
+    body: Chat
 }, res: Object) => {
     try {
-        const owner: number = user.user.gid
-        const common: ChatInfo = new ChatInfo({ name })
-        const chat: Chat = new Chat({ owner, members, common })
+        chat.owner = user.user.gid
 
         const assignChatToMembers: Promise<void[]> = Promise.all(
             chat.members.map(gid => UserAPI.fetch(gid)

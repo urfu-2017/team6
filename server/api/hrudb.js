@@ -21,14 +21,21 @@ class HrudbRequestError extends Error {
 
 interface RequestType {
     method: string,
-    body: ?string,
+    body?: ?string,
     url: string,
     headers: Object,
-    successCodes: Array<number>,
+    validCodes: Array<number>,
     errorCodes: Array<number>
 }
 
 class Request {
+    method: string
+    body: ?string
+    url: string
+    headers: Object
+    validCodes: Array<number>
+    errorCodes: Array<number>
+
     constructor({ method, body, url, headers, validCodes, errorCodes }: RequestType) {
         this.method = method
         this.body = body
@@ -51,15 +58,12 @@ const CACHE = LRU({
     maxAge: 1000 * 60 * 60 // 1 hour
 })
 
-const _sendRequest = async (request: Request, retryOnTimeout: boolean = true): Promise<Object> => {
+const _sendRequest = async (request: Request, retryOnTimeout: boolean = true): Promise<?Object> => {
     const fetchData = {
         method: request.method,
         headers: request.headers,
-        timeout: FETCH_TIMEOUT
-    }
-
-    if (request.body) {
-        fetchData.body = request.body
+        timeout: retryOnTimeout ? FETCH_TIMEOUT : null,
+        body: request.body || null
     }
 
     for (let i = 0; i < ATTEMPT_COUNT; i++) {
@@ -76,10 +80,6 @@ const _sendRequest = async (request: Request, retryOnTimeout: boolean = true): P
         } catch (err) {
             if (err.name === 'HrudbRequestError') {
                 throw err
-            }
-
-            if (!retryOnTimeout) {
-                return
             }
         }
     }
@@ -102,7 +102,7 @@ const _change = async (key: string, value: ?string, method: string): Promise<voi
     CACHE.del(key)
 }
 
-const _get = async (key: string, all: boolean = false, options: Object): Promise<string> => {
+const _get = async (key: string, all?: boolean = false, options?: Object = {}): Promise<string> => {
     if (CACHE.has(key)) {
         return CACHE.get(key)
     }
@@ -113,7 +113,6 @@ const _get = async (key: string, all: boolean = false, options: Object): Promise
 
     const res = await _sendRequest(new Request({
         method: 'GET',
-        body: null,
         url,
         headers: AUTH_HEADER,
         validCodes: [OK],
@@ -143,5 +142,5 @@ export const remove = (key: string): Promise<void> =>
 export const get = (key: string): Promise<string> =>
     _get(key)
 
-export const getAll = (key: string, options?: Object = {}): Promise<string> =>
+export const getAll = (key: string, options?: Object): Promise<string> =>
     _get(key, true, options)

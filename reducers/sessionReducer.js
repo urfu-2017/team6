@@ -1,17 +1,22 @@
 // @flow
 
 import * as actions from '../actions/userActions'
+
 import UserProfile from '../models/UserProfile'
+import UserInfo from '../models/UserInfo'
 
 type ActionType = {
     type: string,
-    payload: UserProfile
+    payload: UserProfile & UserInfo
 }
 
-export default (session: UserProfile) => (state: UserProfile = session, { type, payload }: ActionType) => {
+export default (session: UserProfile) => (state: UserProfile = session, { type, payload }: ActionType): UserProfile => {
     switch (type) {
         case actions.FETCH_PROFILE_SUCCESS:
             return payload
+        case actions.UPDATE_USER_SUCCESS:
+        case actions.UPDATE_USER_FAILED:
+            return new UserProfile({ ...state, user: payload })
         default:
             return state
     }
