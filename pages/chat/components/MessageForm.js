@@ -1,4 +1,4 @@
-import Message from '../models/Message'
+import Message from '../../../models/Message'
 import React from 'react'
 
 class MessageForm extends React.Component<Props> {

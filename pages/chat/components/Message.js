@@ -2,12 +2,12 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import io from 'socket.io-client'
-import Chat from '../models/Chat'
+import Chat from '../../../models/Chat'
 import fetch from 'isomorphic-unfetch'
 
-import { FETCH_PROFILE_ACTION } from '../actions/userActions'
-import UserInfo from '../models/UserInfo'
-import Message from '../models/Message'
+import { FETCH_PROFILE_ACTION } from '../../../actions/userActions'
+import UserInfo from '../../../models/UserInfo'
+import Message from '../../../models/Message'
 
 type Props = {
     message: Message,

@@ -2,9 +2,9 @@ import {connect} from 'react-redux'
 import React from 'react'
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs'
 import Chat from '../models/Chat'
-import ChatItem from './ChatItem'
+import ChatItem from '../pages/chat/components/ChatItem'
 import UserInfo from '../models/UserInfo'
-import ContactItem from './ContactItem'
+import ContactItem from '../pages/contact/components/ContactItem'
 
 type Props = {
     chats: Chat[],

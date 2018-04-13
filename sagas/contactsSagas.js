@@ -20,7 +20,7 @@ const addContacts = function * ({ payload } : {
     const contacts: Object = yield select(state => state.contacts)
     yield put({
         type: actions.ADD_SUCCESS,
-        payload: payload.reduce((res, cur) => ({ ...res, [cur.user.gid]: cur.user }), {})
+        payload: payload.reduce((res, cur) => ({ ...res, [cur.gid]: cur }), {})
     })
 
     const response = yield call(API.addContacts, payload.map(x => x.gid))

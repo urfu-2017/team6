@@ -4,8 +4,6 @@
     "lint": "eslint .",
     "flow": "flow",
     "test": "npm run flow && npm run lint",
-    "precommit": "npm test",
-    "prepush": "npm test",
     "build": "next build",
     "dev": "nodemon ./server/server.js --exec babel-node",
     "start": "npm run build && babel-node ./server/server.js"

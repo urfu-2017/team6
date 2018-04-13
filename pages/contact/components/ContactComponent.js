@@ -1,10 +1,10 @@
 import {connect} from 'react-redux'
-import Message from '../models/Message'
+import Message from '../../../models/Message'
 import React from 'react'
-import UserProfile from '../models/UserProfile'
-import MessageItem from './Message'
-import ChatInfoComponent from './ChatInfoComponent'
-import MessageForm from './MessageForm'
+import UserProfile from '../../../models/UserProfile'
+import MessageItem from '../../chat/components/Message'
+import ChatInfoComponent from '../../chat/components/ChatInfoComponent'
+import MessageForm from '../../chat/components/MessageForm'
 
 type Props = {
     contact: UserInfo,

@@ -1,6 +1,6 @@
-import Message from '../models/Message'
+import Message from '../../../models/Message'
 import React from 'react'
-import Chat from '../models/Chat'
+import Chat from '../../../models/Chat'
 
 type Props = {
     chatInfo: Chat

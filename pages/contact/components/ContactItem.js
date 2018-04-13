@@ -1,7 +1,7 @@
 import React from 'react'
-import Chat from '../models/Chat'
+import Chat from '../../../models/Chat'
 import {connect} from 'react-redux'
-import UserInfo from '../models/UserInfo'
+import UserInfo from '../../../models/UserInfo'
 
 type Props = {
     contact: UserInfo,

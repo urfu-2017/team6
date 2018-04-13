@@ -2,14 +2,17 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 import io from 'socket.io-client'
-import UserProfile from '../models/UserProfile'
-import fetch from 'isomorphic-unfetch'
+import Modal from 'react-responsive-modal'
 
-import { FETCH_PROFILE_ACTION } from '../actions/userActions'
-import UserInfo from '../models/UserInfo'
 import Menu from './Menu'
 import Chat from '../models/Chat'
-import Modal from 'react-responsive-modal'
+import ContactFormModal from './ContactFormModal'
+
+import UserProfile from '../models/UserProfile'
+import UserInfo from '../models/UserInfo'
+
+import * as userActions from '../actions/userActions'
+import * as chatsActions from '../actions/chatsActions'
 
 type Props = {
     session: UserProfile,
@@ -25,12 +28,9 @@ type Props = {
 }
 
 class Body extends React.Component<Props> {
-    constructor() {
-        super()
-        this.state = {
-            addChatModalOpen: false,
-            addContactModalOpen: false
-        }
+    state = {
+        addChatModalOpen: false,
+        addContactModalOpen: false
     }
 
     componentDidMount() {
@@ -38,38 +38,36 @@ class Body extends React.Component<Props> {
         this.props.fetchSelf(this.socket)
     }
 
-    onChatAddClick = () => {
-        this.setState({addChatModalOpen: true})
-    }
+    onChatAddClick = () => this.setState({ addChatModalOpen: true })
 
-    onConctactAddClick = () => {
-        this.setState({addContactModalOpen: true})
-    }
+    onContactAddClick = () => this.setState({ addContactModalOpen: true })
 
-    onChatAddClose = () => {
-        this.setState({addChatModalOpen: false})
-    }
+    onChatAddClose = () => this.setState({ addChatModalOpen: false })
 
-    onContactAddClose = () => {
-        this.setState({addContactModalOpen: false})
-    }
+    onContactAddClose = () => this.setState({ addContactModalOpen: false })
 
-    onChatAdd = () => {
-        this.onChatAddClose()
-    }
+    onChatAdd = () => this.onChatAddClose()
 
-    onConctactAdd = () => {
-        this.onConctactAddClose()
+    onContactAdd = () => {
+        this.onContactAddClose()
     }
 
     render() {
+        const contactsArray = Object.values(this.props.contacts)
+        const chatsArray = Object.values(this.props.chats)
         return (
             <div className="main">
-                <Menu chats={this.props.chats} contacts={this.props.contacts}
-                    selectedChatId={this.props.selectedChatId} selectChat={this.props.selectChat}
-                    selectedContactId={this.props.selectedContactId} selectContact={this.props.selectContact}
-                    onAddChatClick={this.onChatAddClick} onAddContactClick={this.onConctactAddClick}
-                    selectedTab={this.props.selectedTab}/>
+                <Menu
+                    chats={chatsArray}
+                    contacts={contactsArray}
+                    selectedChatId={this.props.selectedChatId}
+                    selectChat={this.props.selectChat}
+                    selectedContactId={this.props.selectedContactId}
+                    selectContact={this.props.selectContact}
+                    onAddChatClick={this.onChatAddClick}
+                    onAddContactClick={this.onContactAddClick}
+                    selectedTab={this.props.selectedTab}
+                />
                 <div className="content">
                     { this.props.children }
                 </div>
@@ -80,33 +78,19 @@ class Body extends React.Component<Props> {
                         <div>
                             <label>
                                 Название
-                                <input type="text" />
+                                <input type="text" ref={ref => this.inputChatName = ref} />
                             </label>
                         </div>
                         <div>
-                            <button onClick={this.onChatAdd} className="button button-success">Добавить</button>
+                            <button onClick={this.onChatAdd} className="button button-success">Найти</button>
                         </div>
                     </div>
                 </Modal>
 
-                <Modal onClose={this.onContactAddClose} open={this.state.addContactModalOpen}>
-                    <div className="modal-content">
-                        <h2>Создать контакт</h2>
-                        <div>
-                            <label>
-                                Github ID
-                                <input type="text" />
-                            </label>
-                            <label>
-                                Имя
-                                <input type="text" />
-                            </label>
-                        </div>
-                        <div>
-                            <button className="button button-success">Добавить</button>
-                        </div>
-                    </div>
-                </Modal>
+                <ContactFormModal
+                    onClose={this.onContactAddClose}
+                    visible={this.state.addContactModalOpen}
+                />
             </div>
         )
     }
@@ -114,41 +98,8 @@ class Body extends React.Component<Props> {
 
 export default connect(state => ({
     session: state.session,
-    chats: [
-        {
-            common: {
-                name: 'a',
-                id: 1
-            },
-            members: [1, 2],
-            owner: 1
-        }, {
-            common: {
-                name: 'a2',
-                id: 2
-            },
-            members: [1, 2],
-            owner: 1
-        }
-    ],
-    contacts: [
-        {
-
-            name: 'a',
-            gid: 1,
-            bio: 'bio',
-            email: 'asd@asd.asd',
-            avatar: 'sad'
-        },
-        {
-
-            name: 'a2',
-            gid: 2,
-            bio: 'bio',
-            email: 'asd@asd.asd',
-            avatar: 'sad'
-        }
-    ]
+    chats: state.chats,
+    contacts: state.contacts
 }), dispatch => ({
-    fetchSelf: socket => dispatch({ type: FETCH_PROFILE_ACTION, payload: socket })
+    fetchSelf: socket => dispatch({ type: userActions.FETCH_PROFILE_ACTION, payload: socket })
 }))(Body)

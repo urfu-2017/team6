@@ -10,10 +10,10 @@ import UserProfile from '../../models/UserProfile'
 
 import Body from '../../components/Body'
 
-import stylesheet from '../main/main.css'
+import stylesheet from '../chat/main.css'
 import Message from '../../models/Message'
-import ChatComponent from '../../components/ChatComponent'
-import ContactComponent from '../../components/ContactComponent'
+import ChatComponent from '../chat/components/ChatComponent'
+import ContactComponent from './components/ContactComponent'
 
 type Props = {
     session: UserProfile,
