@@ -2,6 +2,7 @@ import React from 'react'
 import { Provider } from 'react-redux'
 
 import Head from 'next/head'
+import Link from "next/link";
 
 import initStore from '../../store'
 
@@ -27,10 +28,16 @@ export default class Main extends React.Component<Props> {
                     <Head>
                         <meta charSet="utf-8" />
                         <meta name="viewport" content="width=device-width, initial-scale=1" />
+                        <link rel="stylesheet" href="/_next/static/style.css" />
                         <title>Kilogram Messenger</title>
                         <style dangerouslySetInnerHTML={{ __html: stylesheet.toString() }} />
                     </Head>
-                    <Body/>
+                    <Body>
+                        <div>shit</div>
+                        <Link href="chat">
+                            chat
+                        </Link>
+                    </Body>
                 </div>
             </Provider>
         )
