@@ -16,12 +16,15 @@ export default class Chat implements ChatType {
     constructor({ common, owner, members = [] }: ChatType) {
         this.common = common
         this.members = members
+        this.setOwner(owner)
+    }
 
-        if (owner) {
-            this.owner = owner
+    setOwner(gid?: number) {
+        if (gid) {
+            this.owner = gid
 
-            if (!members.find(member => member === owner)) {
-                this.members.push(owner)
+            if (!this.members.find(member => member === gid)) {
+                this.members.push(gid)
             }
         }
     }

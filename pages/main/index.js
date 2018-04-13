@@ -2,7 +2,7 @@ import React from 'react'
 import { Provider } from 'react-redux'
 
 import Head from 'next/head'
-import Link from "next/link";
+import Link from 'next/link'
 
 import initStore from '../../store'
 

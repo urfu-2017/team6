@@ -7,9 +7,9 @@ import fetch from 'isomorphic-unfetch'
 
 import { FETCH_PROFILE_ACTION } from '../actions/userActions'
 import UserInfo from '../models/UserInfo'
-import Menu from "./Menu";
-import Chat from "../models/Chat";
-import Modal from "react-responsive-modal";
+import Menu from './Menu'
+import Chat from '../models/Chat'
+import Modal from 'react-responsive-modal'
 
 type Props = {
     session: UserProfile,
@@ -66,10 +66,10 @@ class Body extends React.Component<Props> {
         return (
             <div className="main">
                 <Menu chats={this.props.chats} contacts={this.props.contacts}
-                      selectedChatId={this.props.selectedChatId} selectChat={this.props.selectChat}
-                      selectedContactId={this.props.selectedContactId} selectContact={this.props.selectContact}
-                      onAddChatClick={this.onChatAddClick} onAddContactClick={this.onConctactAddClick}
-                      selectedTab={this.props.selectedTab}/>
+                    selectedChatId={this.props.selectedChatId} selectChat={this.props.selectChat}
+                    selectedContactId={this.props.selectedContactId} selectContact={this.props.selectContact}
+                    onAddChatClick={this.onChatAddClick} onAddContactClick={this.onConctactAddClick}
+                    selectedTab={this.props.selectedTab}/>
                 <div className="content">
                     { this.props.children }
                 </div>
@@ -117,14 +117,14 @@ export default connect(state => ({
     chats: [
         {
             common: {
-                name: "a",
+                name: 'a',
                 id: 1
             },
             members: [1, 2],
             owner: 1
-        },{
+        }, {
             common: {
-                name: "a2",
+                name: 'a2',
                 id: 2
             },
             members: [1, 2],
@@ -134,20 +134,20 @@ export default connect(state => ({
     contacts: [
         {
 
-            name: "a",
+            name: 'a',
             gid: 1,
-            bio: "bio",
-            email: "asd@asd.asd",
-            avatar: "sad"
+            bio: 'bio',
+            email: 'asd@asd.asd',
+            avatar: 'sad'
         },
         {
 
-            name: "a2",
+            name: 'a2',
             gid: 2,
-            bio: "bio",
-            email: "asd@asd.asd",
-            avatar: "sad"
-        },
+            bio: 'bio',
+            email: 'asd@asd.asd',
+            avatar: 'sad'
+        }
     ]
 }), dispatch => ({
     fetchSelf: socket => dispatch({ type: FETCH_PROFILE_ACTION, payload: socket })

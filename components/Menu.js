@@ -1,10 +1,10 @@
-import {connect} from "react-redux";
-import React from "react";
-import {Tab, Tabs, TabList, TabPanel} from "react-tabs";
-import Chat from "../models/Chat";
-import ChatItem from "./ChatItem";
-import UserInfo from "../models/UserInfo";
-import ContactItem from "./ContactItem";
+import {connect} from 'react-redux'
+import React from 'react'
+import {Tab, Tabs, TabList, TabPanel} from 'react-tabs'
+import Chat from '../models/Chat'
+import ChatItem from './ChatItem'
+import UserInfo from '../models/UserInfo'
+import ContactItem from './ContactItem'
 
 type Props = {
     chats: Chat[],
@@ -33,10 +33,11 @@ export class Menu extends React.Component<Props> {
     selectTab = tab => this.setState({selectedTab: tab})
 
     onAddClick = () => {
-        if (this.state.selectedTab === 0)
+        if (this.state.selectedTab === 0) {
             this.props.onAddChatClick()
-        else
+        } else {
             this.props.onAddContactClick()
+        }
     }
 
     render() {

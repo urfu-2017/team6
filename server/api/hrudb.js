@@ -21,14 +21,21 @@ class HrudbRequestError extends Error {
 
 interface RequestType {
     method: string,
-    body: ?string,
+    body?: ?string,
     url: string,
     headers: Object,
-    successCodes: Array<number>,
+    validCodes: Array<number>,
     errorCodes: Array<number>
 }
 
 class Request {
+    method: string
+    body: ?string
+    url: string
+    headers: Object
+    validCodes: Array<number>
+    errorCodes: Array<number>
+
     constructor({ method, body, url, headers, validCodes, errorCodes }: RequestType) {
         this.method = method
         this.body = body
@@ -51,43 +58,17 @@ const CACHE = LRU({
     maxAge: 1000 * 60 * 60 // 1 hour
 })
 
-const _fetchWithTimeout = (request: Request, timeoutMs: number): Promise<Object> => {
-    let isTimeout = false
+const _sendRequest = async (request: Request, retryOnTimeout: boolean = true): Promise<?Object> => {
     const fetchData = {
         method: request.method,
-        headers: request.headers
+        headers: request.headers,
+        timeout: retryOnTimeout ? FETCH_TIMEOUT : null,
+        body: request.body || null
     }
 
-    if (request.body) {
-        fetchData.body = request.body
-    }
-
-    return new Promise((res, rej) => {
-        const timeout = setTimeout(() => {
-            isTimeout = true
-            rej(new HrudbTimeoutError())
-        }, timeoutMs)
-
-        fetch(request.url, fetchData)
-            .then(resp => {
-                clearTimeout(timeout)
-                if (!isTimeout) {
-                    res(resp)
-                }
-            })
-            .catch(err => {
-                if (isTimeout) {
-                    return
-                }
-                rej(err)
-            })
-    })
-}
-
-const _sendRequest = async (request: Request): Promise<Object> => {
     for (let i = 0; i < ATTEMPT_COUNT; i++) {
         try {
-            const res = await _fetchWithTimeout(request, FETCH_TIMEOUT) // eslint-disable-line no-await-in-loop
+            const res = await fetch(request.url, fetchData) // eslint-disable-line no-await-in-loop
 
             if (request.validCodes.includes(res.status)) {
                 return res
@@ -97,7 +78,7 @@ const _sendRequest = async (request: Request): Promise<Object> => {
                 throw new HrudbRequestError()
             }
         } catch (err) {
-            if (err.name !== 'HrudbTimeoutError') {
+            if (err.name === 'HrudbRequestError') {
                 throw err
             }
         }
@@ -112,7 +93,7 @@ const _change = async (key: string, value: ?string, method: string): Promise<voi
         headers: { ...AUTH_HEADER, ...CONTENT_TYPE_HEADER },
         validCodes: [CREATED, NO_CONTENT],
         errorCodes: [BAD_REQUEST]
-    }))
+    }), false)
 
     if (!res) {
         throw new HrudbTimeoutError()
@@ -121,7 +102,7 @@ const _change = async (key: string, value: ?string, method: string): Promise<voi
     CACHE.del(key)
 }
 
-const _get = async (key: string, all: boolean = false, options: Object): Promise<string> => {
+const _get = async (key: string, all?: boolean = false, options?: Object = {}): Promise<string> => {
     if (CACHE.has(key)) {
         return CACHE.get(key)
     }
@@ -132,7 +113,6 @@ const _get = async (key: string, all: boolean = false, options: Object): Promise
 
     const res = await _sendRequest(new Request({
         method: 'GET',
-        body: null,
         url,
         headers: AUTH_HEADER,
         validCodes: [OK],
@@ -162,5 +142,5 @@ export const remove = (key: string): Promise<void> =>
 export const get = (key: string): Promise<string> =>
     _get(key)
 
-export const getAll = (key: string, options?: Object = {}): Promise<string> =>
+export const getAll = (key: string, options?: Object): Promise<string> =>
     _get(key, true, options)

@@ -15,11 +15,10 @@ type Props = {
 }
 
 class MessageItem extends React.Component<Props> {
-
     render() {
-        let {message} = this.props
+        const {message} = this.props
         return (
-            <div className={this.props.mine ? "message message-right" : "message"}>
+            <div className={this.props.mine ? 'message message-right' : 'message'}>
                 <div className="message__author">
                     {message.authorGid}
                 </div>

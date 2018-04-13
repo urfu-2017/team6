@@ -40,8 +40,9 @@ export const fetchAllUsers = async ({ body: gids }: {
 }, res: Object) => {
     try {
         const fetchedProfiles: Array<UserProfile> = await Promise.all(gids.map(UserAPI.fetch))
+        const response: Object = fetchedProfiles.reduce((res, cur) => ({ ...res, [cur.user.gid]: cur.user }), {})
 
-        return res.status(OK).json(fetchedProfiles.map(x => x.user))
+        return res.status(OK).json(response)
     } catch (e) {
         return res.sendStatus(NOT_FOUND)
     }

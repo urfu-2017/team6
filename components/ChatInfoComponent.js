@@ -1,15 +1,14 @@
-import Message from "../models/Message";
-import React from "react";
-import Chat from "../models/Chat";
+import Message from '../models/Message'
+import React from 'react'
+import Chat from '../models/Chat'
 
 type Props = {
     chatInfo: Chat
 }
 
 class MessageItem extends React.Component<Props> {
-
     render() {
-        let {chatInfo} = this.props
+        const {chatInfo} = this.props
         return (
             <div className="chat__info">
                 <div className="chat__name">

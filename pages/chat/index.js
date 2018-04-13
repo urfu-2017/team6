@@ -10,9 +10,9 @@ import UserProfile from '../../models/UserProfile'
 
 import Body from '../../components/Body'
 
-import stylesheet from "../main/main.css";
-import Message from "../../models/Message";
-import ChatComponent from "../../components/ChatComponent";
+import stylesheet from '../main/main.css'
+import Message from '../../models/Message'
+import ChatComponent from '../../components/ChatComponent'
 
 type Props = {
     session: UserProfile,
@@ -30,14 +30,15 @@ class ChatPage extends React.Component<Props> {
     }
 
     static async getInitialProps({ req }) {
-        return { session: {}  }
+        return { session: {} }
     }
 
     selectChat = chatId => {
         const href = `/chat?id=${chatId}`
         const as = href
-        if (chatId !== this.state.selectedChatId)
+        if (chatId !== this.state.selectedChatId) {
             Router.replace(href, as, {shallow: true})
+        }
         this.setState({selectedChatId: chatId}, () => this.forceUpdate())
     };
 

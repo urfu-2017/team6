@@ -1,10 +1,10 @@
-import {connect} from "react-redux";
-import Message from "../models/Message";
-import React from "react";
-import UserProfile from "../models/UserProfile";
-import MessageItem from "./Message";
-import ChatInfoComponent from "./ChatInfoComponent";
-import MessageForm from "./MessageForm";
+import {connect} from 'react-redux'
+import Message from '../models/Message'
+import React from 'react'
+import UserProfile from '../models/UserProfile'
+import MessageItem from './Message'
+import ChatInfoComponent from './ChatInfoComponent'
+import MessageForm from './MessageForm'
 
 type Props = {
     contact: UserInfo,
@@ -34,8 +34,8 @@ class ContactComponent extends React.Component<Props> {
 export default connect(state => ({
     contact: {
         gid: 12,
-        name: "contact",
-        bio: "Бандит, грабитель банков и дрессировщик собак",
-        email: "dog@dog.dog"
+        name: 'contact',
+        bio: 'Бандит, грабитель банков и дрессировщик собак',
+        email: 'dog@dog.dog'
     }
 }))(ContactComponent)
