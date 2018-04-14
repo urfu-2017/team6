@@ -82,6 +82,12 @@ a:hover {
     width: 30%;
     box-shadow: 5px 0 25px 0 #00000017;
     position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.menu__tabs {
+    height: 100%;
 }
 
 .menu__row {
@@ -412,6 +418,32 @@ a:hover {
 .link-metadata__body_url {
     opacity: .5;
     font-size: 7pt;
+}
+
+.profile-card {
+    display: flex;
+    background: #94a9be;
+    height: 65px;
+}
+
+.profile-card__avatar img {
+    width: 60px;
+    height: 100%;
+}
+
+.profile-card__body {
+    padding: 4px 8px;
+    color: white;
+}
+
+.profile-card__body_name {
+    font-size: 10pt;
+}
+
+.profile-card__body_bio,
+.profile-card__body_email {
+    font-size: 8pt;
+    opacity: .75;
 }
 
 @media only

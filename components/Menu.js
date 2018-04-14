@@ -5,6 +5,7 @@ import Chat from '../models/Chat'
 import ChatItem from '../pages/chat/components/ChatItem'
 import UserInfo from '../models/UserInfo'
 import ContactItem from '../pages/contact/components/ContactItem'
+import Profile from './Profile'
 
 type Props = {
     chats: Chat[],
@@ -44,7 +45,7 @@ export class Menu extends React.Component<Props, State> {
         const chatsArray: Chat[] = Object.values(this.props.chats)
         return (
             <div className="menu">
-                <Tabs defaultIndex={this.props.selectedTab} onSelect={this.selectTab}>
+                <Tabs className="menu__tabs" defaultIndex={this.props.selectedTab} onSelect={this.selectTab}>
                     <TabList>
                         <Tab>Диалоги</Tab>
                         <Tab>Контакты</Tab>
@@ -65,6 +66,7 @@ export class Menu extends React.Component<Props, State> {
                         />)}
                     </TabPanel>
                 </Tabs>
+                <Profile />
             </div>
         )
     }
