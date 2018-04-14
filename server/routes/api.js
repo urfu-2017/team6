@@ -11,6 +11,7 @@ router.get('/user', profile.fetchSelf)
 router.post('/users', profile.fetchAllUsers)
 router.get('/user/:gid', profile.fetchUser)
 router.patch('/user', profile.updateUser)
+router.get('/user/:gid/avatar', profile.getAvatar)
 
 /* Contacts API */
 router.put('/contacts', profile.addContacts)

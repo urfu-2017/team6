@@ -3,6 +3,7 @@
 import * as hrudb from '../hrudb'
 import UserProfile from '../../../models/UserProfile'
 import SocketEvent, { types } from '../../../models/SocketEvent'
+import Identicon from 'identicon.js'
 
 import socketManager from '../../socket'
 
@@ -22,5 +23,14 @@ export default class UserAPI {
                 )
             }
         })
+    }
+
+    static getAvatar(gid: string): Buffer {
+        gid = (Number(gid) * Math.pow(10, (15 - gid.length))).toString()
+        const img = 'data:image/jpg;base64,' + new Identicon(gid, 150).toString()
+        const data = img.replace(/^data:image\/\w+;base64,/, '')
+        const buf = new Buffer(data, 'base64')
+
+        return buf
     }
 }
