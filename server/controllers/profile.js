@@ -120,3 +120,16 @@ export const removeContacts = async ({ user, body: contacts }: {
         return res.sendStatus(NOT_MODIFIED)
     }
 }
+
+export const getAvatar = async ({ params: { gid } }: {
+    params: { gid: string }
+}, res: Object) => {
+    try {
+        const avatar: string = await UserAPI.getAvatar(gid)
+
+        return res.status(OK).json(avatar)
+    } catch (e) {
+        console.info(e)
+        return res.sendStatus(NOT_FOUND)
+    }
+}
