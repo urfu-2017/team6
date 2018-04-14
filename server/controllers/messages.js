@@ -73,13 +73,14 @@ export const deleteMessage = async ({ body }: {
     }
 }
 
-export const getMeta = async ({ body }: {
-    body: Message,
+export const getMeta = async ({ body: { url } }: {
+    body: { url: string },
 }, res: Object) => {
     try {
-        const metaData: Object = await MessagesAPI.getMeta(body)
+        const metaData: Object = await MessagesAPI.getMeta(url)
         return res.status(OK).json(metaData)
     } catch (e) {
+        console.log(e)
         return res.sendStatus(INTERNAL_SERVER_ERROR)
     }
 }

@@ -33,9 +33,9 @@ export class ChatItem extends React.Component<Props> {
                 <p className="menu-row__title">
                     <GroupIcon/> {chat.common.name}
                 </p>
-                <p className="menu-row__message">
+                <div className="menu-row__message">
                     {message ? <p><b>{author.name || '...'}:</b> {message.text}</p> : <i>сообщений нет</i>}
-                </p>
+                </div>
             </div>
         )
     }

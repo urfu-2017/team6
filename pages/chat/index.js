@@ -47,7 +47,7 @@ export default class Main extends React.Component<Props, State> {
             Router.replace(href, href, { shallow: true })
         }
 
-        this.setState({ selectedChatId: chatId }, () => this.forceUpdate())
+        this.setState({ selectedChatId: chatId })
     }
 
     selectContact = contactId => {

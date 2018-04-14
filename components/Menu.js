@@ -55,7 +55,7 @@ export class Menu extends React.Component<Props, State> {
                             key={c.common.id}
                             select={this.props.selectChat}
                             chat={c}
-                            selected={this.props.selectedChatId === c.common.id}
+                            selected={Number(this.props.selectedChatId) === c.common.id}
                         />)}
                     </TabPanel>
                     <TabPanel>
@@ -72,5 +72,5 @@ export class Menu extends React.Component<Props, State> {
 
 export default connect(state => ({
     chats: state.chats,
-    contacts: state.contacts,
+    contacts: state.contacts
 }))(Menu)

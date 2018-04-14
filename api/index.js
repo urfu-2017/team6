@@ -134,10 +134,10 @@ export default class APIClient {
         })
     }
 
-    static async fetchMeta(message: Message): Promise<Object> {
+    static async fetchMeta(url: string): Promise<Object> {
         const response = await fetch(`${BASE_URL}/messages/meta`, {...BASE_OPTIONS,
             method: 'POST',
-            body: JSON.stringify(message)
+            body: JSON.stringify({ url })
         })
 
         return response.json()

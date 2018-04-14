@@ -21,6 +21,14 @@ p {
     padding: 0;
 }
 
+a:link, a:visited, a:active {
+    color: #338aa0;
+}
+
+a:hover {
+    color: #628b96;
+}
+
 #__next, .root {
     width: 100%;
     height: 100%;
@@ -186,12 +194,12 @@ p {
 }
 
 .message-right .message-box {
-    background-color: #94a9be;
-    color: white;
+    background-color: #e4ecf4;
 }
 
 .message-box {
-    padding: 10px;
+    max-width: 50%;
+    padding: 4px 10px;
     background: #fafafa;
     border-radius: 5px;
     box-shadow: 0 1px 5px 0 #0000001c;
@@ -203,7 +211,7 @@ p {
 
 .message__avatar {
     display: flex;
-    align-items: center;
+    align-items: start;
     padding: 0 6px;
 }
 
@@ -370,6 +378,40 @@ p {
 
 .user-item-selected {
     background: gray;
+}
+
+.link-metadata {
+    background-color: #0000000a;
+    display: flex;
+    margin: 4px -10px -4px;
+    border-bottom: 1px solid #fff;
+}
+
+.link-metadata__image {
+    display: flex;
+}
+
+.link-metadata__image img {
+    width: 90px;
+    height: 100%;
+    object-fit: cover;
+}
+
+.link-metadata__body {
+    padding: 2px 8px;
+}
+
+.link-metadata__body_title {
+    font-size: 11pt;
+}
+
+.link-metadata__body_description {
+    font-size: 8pt;
+}
+
+.link-metadata__body_url {
+    opacity: .5;
+    font-size: 7pt;
 }
 
 @media only

@@ -2,14 +2,9 @@
 import APIClient from '../api/index'
 import Message from '../models/Message'
 
-export const metaParse = async function ({ message }: {
-    message: Message
-}) {
-    if (isUrl(message.text)) {
-        return APIClient.fetchMeta(message)
-    }
+const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig // eslint-disable-line no-useless-escape
+
+export const metaParse = async (message: Message) => {
+    return Promise.all(message.text.match(urlRegex).map(APIClient.fetchMeta))
 }
 
-function isUrl(value: string) {
-    return !value || (new RegExp('^(?:(?:ht|f)tps?://)?(?:[\\-\\w]+:[\\-\\w]+@)?(?:[0-9a-z][\\-0-9a-z]*[0-9a-z]\\.)+[a-z]{2,6}(?::\\d{1,5})?(?:[?/\\\\#][?!^$.(){}:|=[\\]+\\-/\\\\*;&~#@,%\\wА-Яа-я]*)?$', 'i')).test(value)
-}

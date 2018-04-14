@@ -58,8 +58,8 @@ export default class MessagesAPI {
         return this._addEvent(message.chatId, message.clusterId, event)
     }
 
-    static async getMeta(message: Message): Promise<Object> {
-        const { body: html, url } = await got(message.text)
+    static async getMeta(targetUrl: string): Promise<Object> {
+        const { body: html, url } = await got(targetUrl)
         return metascraper({ html, url })
     }
 
