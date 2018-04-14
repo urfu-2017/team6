@@ -5,7 +5,7 @@ import MarkdownRenderer from 'react-markdown-renderer'
 
 import Message from '../../../models/Message'
 import UserInfo from '../../../models/UserInfo'
-
+import noavatar from '../../../utils/noavatar'
 import { metaParse } from '../../../utils/metaparse'
 
 type Props = {
@@ -47,7 +47,7 @@ class MessageItem extends React.Component<Props, State> {
                 className={this.props.mine ? 'message message-right' : 'message'}
             >
                 <div className="message__avatar">
-                    <img src={author.avatar} title={author.name}/>
+                    <img src={noavatar(author.gid)} title={author.name}/>
                 </div>
                 <div className="message-box">
                     <div className="message-box__text">

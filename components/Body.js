@@ -8,9 +8,12 @@ import ChatFormModal from './ChatFormModal'
 import ContactFormModal from './ContactFormModal'
 
 import * as userActions from '../actions/userActions'
+import UserProfile from '../models/UserProfile'
 
 type Props = {
+    initialSession: Function,
     fetchSelf: Function,
+    session: UserProfile,
     children: React.Children,
     selectedTab: Number,
     selectChat: Function,
@@ -23,6 +26,10 @@ class Body extends React.Component<Props> {
     state = {
         addChatModalOpen: false,
         addContactModalOpen: false
+    }
+
+    componentWillMount() {
+        this.props.initialSession(this.props.session)
     }
 
     componentDidMount() {
@@ -48,8 +55,6 @@ class Body extends React.Component<Props> {
                 <Menu
                     selectedChatId={this.props.selectedChatId}
                     selectChat={this.props.selectChat}
-                    selectedContactId={this.props.selectedContactId}
-                    selectContact={this.props.selectContact}
                     onAddChatClick={this.onChatAddClick}
                     onAddContactClick={this.onContactAddClick}
                     selectedTab={this.props.selectedTab}
@@ -74,5 +79,6 @@ class Body extends React.Component<Props> {
 }
 
 export default connect(null, dispatch => ({
+    initialSession: payload => dispatch({ type: userActions.INITIAL_SESSION_ACTION, payload }),
     fetchSelf: socket => dispatch({ type: userActions.FETCH_PROFILE_ACTION, payload: socket })
 }))(Body)

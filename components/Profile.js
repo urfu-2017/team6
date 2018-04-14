@@ -1,9 +1,10 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import UserInfo from '../models/UserInfo'
+import noavatar from '../utils/noavatar'
 
 type Props = {
-    user: UserInfo,
+    user: UserInfo
 }
 
 class Profile extends React.Component<Props> {
@@ -12,7 +13,7 @@ class Profile extends React.Component<Props> {
         return (
             <div className="profile-card">
                 <div className="profile-card__avatar">
-                    <img src={user.avatar}/>
+                    <img src={noavatar(user.gid)}/>
                 </div>
                 <div className="profile-card__body">
                     <p className="profile-card__body_name">{user.name}</p>

@@ -1,8 +1,6 @@
 // @flow
 
-import { combineReducers, Reducer } from 'redux'
-
-import UserProfile from '../models/UserProfile'
+import { combineReducers } from 'redux'
 
 import sessionReducer from './sessionReducer'
 import contactsReducer from './contactsReducer'
@@ -10,8 +8,8 @@ import chatsReducer from './chatsReducer'
 import messagesReducer from './messagesReducer'
 import chatsMembersReducer from './chatsMembersReducer'
 
-export default (session: UserProfile): Reducer => combineReducers({
-    session: sessionReducer(session),
+export default combineReducers({
+    session: sessionReducer,
     contacts: contactsReducer,
     chats: chatsReducer,
     chatsMembers: chatsMembersReducer,

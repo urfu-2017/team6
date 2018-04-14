@@ -50,19 +50,9 @@ export default class Main extends React.Component<Props, State> {
         this.setState({ selectedChatId: chatId })
     }
 
-    selectContact = contactId => {
-        const href = `/contact?id=${contactId}`
-
-        if (contactId !== this.state.selectedContactId) {
-            Router.replace(href, href, { shallow: true })
-        }
-
-        this.setState({ selectedContactId: contactId })
-    }
-
     render() {
         return (
-            <Provider store={initStore(this.props.session)}>
+            <Provider store={initStore()}>
                 <div className="root">
                     <Head>
                         <meta charSet="utf-8" />
@@ -71,11 +61,10 @@ export default class Main extends React.Component<Props, State> {
                         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css"/>
                     </Head>
                     <Body
+                        session={this.props.session}
                         selectedTab={0}
                         selectChat={this.selectChat}
                         selectedChatId={this.state.selectedChatId}
-                        selectContact={this.selectContact}
-                        selectedContactId={this.state.selectedContactId}
                     >
                         <ChatBody chatId={Number(this.state.selectedChatId)}/>
                         <style dangerouslySetInnerHTML={{ __html: stylesheet.toString() }} />
