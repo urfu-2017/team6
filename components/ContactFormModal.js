@@ -41,16 +41,20 @@ class ContactFormModal extends React.Component<Props, State> {
         return (
             <Modal onClose={this.props.onClose} open={this.props.visible}>
                 <div className="modal-content">
-                    <h2>Новый контакт</h2>
+                    <p className="modal-content_title">Новый контакт</p>
                     <div>
-                        Github ID
-                        <input type="number" ref={ref => this.inputGithubID = ref} />
+                        <input
+                            type="number"
+                            ref={ref => this.inputGithubID = ref}
+                            placeholder="Введите Github ID..."
+                            className="input-text"
+                        />
                     </div>
-                    <div>
-                        <button onClick={this.onUserSearch} className="button button-success">Найти</button>
+                    <div style={{ float: 'right', marginTop: '6px' }}>
+                        <button onClick={this.onUserSearch} className="button button-default">Найти</button>
                     </div>
                     {this.state.message && (
-                        <div>{this.state.message}</div>
+                        <p>{this.state.message}</p>
                     )}
 
                     {this.state.user && (

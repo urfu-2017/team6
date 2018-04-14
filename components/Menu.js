@@ -1,5 +1,5 @@
-import {connect} from 'react-redux'
 import React from 'react'
+import { connect } from 'react-redux'
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs'
 import Chat from '../models/Chat'
 import ChatItem from '../pages/chat/components/ChatItem'
@@ -18,19 +18,18 @@ type Props = {
     selectedTab: Number
 }
 
-export class Menu extends React.Component<Props> {
-    constructor() {
-        super()
-        this.state = {
-            selectedTab: null
-        }
-    }
+type State = {
+    selectedTab: number
+}
+
+export class Menu extends React.Component<Props, State> {
+    state = { selectedTab: null }
 
     componentDidMount() {
         this.selectTab(this.props.selectedTab)
     }
 
-    selectTab = tab => this.setState({selectedTab: tab})
+    selectTab = tab => this.setState({ selectedTab: tab })
 
     onAddClick = () => {
         if (this.state.selectedTab === 0) {
@@ -41,20 +40,29 @@ export class Menu extends React.Component<Props> {
     }
 
     render() {
+        const contactsArray: UserInfo[] = Object.values(this.props.contacts)
+        const chatsArray: Chat[] = Object.values(this.props.chats)
         return (
             <div className="menu">
-                <Tabs defaultIndex={this.props.selectedTab } onSelect={this.selectTab}>
+                <Tabs defaultIndex={this.props.selectedTab} onSelect={this.selectTab}>
                     <TabList>
-                        <Tab>Chats</Tab>
-                        <Tab>Contacts</Tab>
-                        <button className="button" onClick={this.onAddClick}>Добавить</button>
+                        <Tab>Диалоги</Tab>
+                        <Tab>Контакты</Tab>
+                        <button className="menu__tabs_add" onClick={this.onAddClick}>+</button>
                     </TabList>
-
                     <TabPanel>
-                        {this.props.chats.map(c => <ChatItem select={this.props.selectChat} key={c.common.id} chat={c} selected={this.props.selectedChatId == c.common.id}/>)}
+                        {chatsArray.map(c => <ChatItem
+                            key={c.common.id}
+                            select={this.props.selectChat}
+                            chat={c}
+                            selected={this.props.selectedChatId === c.common.id}
+                        />)}
                     </TabPanel>
                     <TabPanel>
-                        {this.props.contacts.map(c => <ContactItem key={c.gid} contact={c} select={this.props.selectContact} selected={this.props.selectedContactId == c.gid} />)}
+                        {contactsArray.map(c => <ContactItem
+                            key={c.gid}
+                            contact={c}
+                        />)}
                     </TabPanel>
                 </Tabs>
             </div>
@@ -62,4 +70,7 @@ export class Menu extends React.Component<Props> {
     }
 }
 
-export default Menu
+export default connect(state => ({
+    chats: state.chats,
+    contacts: state.contacts,
+}))(Menu)

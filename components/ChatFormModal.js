@@ -28,11 +28,17 @@ class ChatFormModal extends React.Component<Props> {
         return (
             <Modal onClose={this.props.onClose} open={this.props.visible}>
                 <div className="modal-content">
-                    <h2>Новый чат</h2>
+                    <p className="modal-content_title">Новый чат</p>
                     <div>
-                        Название
-                        <input type="text" ref={ref => this.inputName = ref} />
-                        <button onClick={this.onChatCreate} className="button button-success">Создать</button>
+                        <input
+                            type="text"
+                            ref={ref => this.inputName = ref}
+                            placeholder="Введите названия комнаты..."
+                            className="input-text"
+                        />
+                    </div>
+                    <div style={{ float: 'right', marginTop: '6px' }}>
+                        <button onClick={this.onChatCreate} className="button button-default">Создать</button>
                     </div>
                 </div>
             </Modal>

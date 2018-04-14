@@ -28,7 +28,7 @@ export default class APIClient {
         })
     }
 
-    static async fetchContacts(gids: Array<number>): Promise<Array<UserInfo>> {
+    static async fetchContacts(gids: Array<number>): Promise<Object> {
         const response = await fetch(`${BASE_URL}/users`, {...BASE_OPTIONS,
             method: 'POST',
             body: JSON.stringify(gids)

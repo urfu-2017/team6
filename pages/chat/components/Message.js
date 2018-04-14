@@ -1,33 +1,29 @@
 import React from 'react'
 import { connect } from 'react-redux'
-
-import io from 'socket.io-client'
-import Chat from '../../../models/Chat'
-import fetch from 'isomorphic-unfetch'
-
-import { FETCH_PROFILE_ACTION } from '../../../actions/userActions'
-import UserInfo from '../../../models/UserInfo'
 import Message from '../../../models/Message'
+import UserInfo from '../../../models/UserInfo'
 
 type Props = {
+    users: Object,
     message: Message,
     mine: Boolean
 }
 
 class MessageItem extends React.Component<Props> {
     render() {
-        const {message} = this.props
+        const { message, users } = this.props
+        const author: UserInfo = users[message.authorGid] || {}
         return (
-            <div className={this.props.mine ? 'message message-right' : 'message'}>
-                <div className="message__author">
-                    {message.authorGid}
+            <div
+                style={{ opacity: message.clusterId < 0 ? 0.5 : 1 }}
+                className={this.props.mine ? 'message message-right' : 'message'}
+            >
+                <div className="message__avatar">
+                    <img src={author.avatar} title={author.name}/>
                 </div>
-                <div className="message__box">
-                    <div className="message__text">
+                <div className="message-box">
+                    <div className="message-box__text">
                         {message.text}
-                    </div>
-                    <div className="message__time">
-                        {message.createdAt}
                     </div>
                 </div>
             </div>
@@ -35,4 +31,6 @@ class MessageItem extends React.Component<Props> {
     }
 }
 
-export default MessageItem
+export default connect(state => ({
+    users: state.chatsMembers
+}))(MessageItem)

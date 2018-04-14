@@ -4,19 +4,12 @@ import { connect } from 'react-redux'
 import io from 'socket.io-client'
 
 import Menu from './Menu'
-import Chat from '../models/Chat'
 import ChatFormModal from './ChatFormModal'
 import ContactFormModal from './ContactFormModal'
-
-import UserProfile from '../models/UserProfile'
-import UserInfo from '../models/UserInfo'
 
 import * as userActions from '../actions/userActions'
 
 type Props = {
-    session: UserProfile,
-    chats: Chat[],
-    contacts: UserInfo[],
     fetchSelf: Function,
     children: React.Children,
     selectedTab: Number,
@@ -50,13 +43,9 @@ class Body extends React.Component<Props> {
     onContactAdd = () => this.onContactAddClose()
 
     render() {
-        const contactsArray = Object.values(this.props.contacts)
-        const chatsArray = Object.values(this.props.chats)
         return (
             <div className="main">
                 <Menu
-                    chats={chatsArray}
-                    contacts={contactsArray}
                     selectedChatId={this.props.selectedChatId}
                     selectChat={this.props.selectChat}
                     selectedContactId={this.props.selectedContactId}
@@ -67,7 +56,7 @@ class Body extends React.Component<Props> {
                 />
 
                 <div className="content">
-                    { this.props.children }
+                    {this.props.children}
                 </div>
 
                 <ChatFormModal
@@ -84,10 +73,6 @@ class Body extends React.Component<Props> {
     }
 }
 
-export default connect(state => ({
-    session: state.session,
-    chats: state.chats,
-    contacts: state.contacts
-}), dispatch => ({
+export default connect(null, dispatch => ({
     fetchSelf: socket => dispatch({ type: userActions.FETCH_PROFILE_ACTION, payload: socket })
 }))(Body)

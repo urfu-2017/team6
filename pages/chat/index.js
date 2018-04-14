@@ -7,7 +7,7 @@ import Router from 'next/router'
 import initStore from '../../store'
 
 import Body from '../../components/Body'
-import ChatComponent from './components/ChatComponent'
+import ChatBody from './components/ChatBody'
 
 import UserProfile from '../../models/UserProfile'
 import Message from '../../models/Message'
@@ -29,7 +29,10 @@ export default class Main extends React.Component<Props, State> {
         return { session: req.user }
     }
 
-    state = { selectedChatId: null}
+    state = {
+        selectedChatId: null,
+        selectedContactId: null
+    }
 
     componentDidMount() {
         if (this.props.url.query.id) {
@@ -47,7 +50,15 @@ export default class Main extends React.Component<Props, State> {
         this.setState({ selectedChatId: chatId }, () => this.forceUpdate())
     }
 
-    selectContact = contactId => Router.push(`/contact?id=${contactId}`)
+    selectContact = contactId => {
+        const href = `/contact?id=${contactId}`
+
+        if (contactId !== this.state.selectedContactId) {
+            Router.replace(href, href, { shallow: true })
+        }
+
+        this.setState({ selectedContactId: contactId })
+    }
 
     render() {
         return (
@@ -57,16 +68,17 @@ export default class Main extends React.Component<Props, State> {
                         <meta charSet="utf-8" />
                         <meta name="viewport" content="width=device-width, initial-scale=1" />
                         <title>Kilogram Messenger</title>
-                        <style dangerouslySetInnerHTML={{ __html: stylesheet.toString() }} />
+                        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css"/>
                     </Head>
                     <Body
                         selectedTab={0}
                         selectChat={this.selectChat}
                         selectedChatId={this.state.selectedChatId}
                         selectContact={this.selectContact}
-                        selectedContactId={null}
+                        selectedContactId={this.state.selectedContactId}
                     >
-                        <ChatComponent />
+                        <ChatBody chatId={Number(this.state.selectedChatId)}/>
+                        <style dangerouslySetInnerHTML={{ __html: stylesheet.toString() }} />
                     </Body>
                 </div>
             </Provider>

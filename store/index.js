@@ -12,6 +12,10 @@ import UserProfile from '../models/UserProfile'
 let reduxStore: Store
 
 export default (session: UserProfile): Store => {
+    if (reduxStore) {
+        return reduxStore
+    }
+
     const sagaMiddleware: SagaMiddleware = createSagaMiddleware()
     const middleware: Middleware = composeWithDevTools(applyMiddleware(sagaMiddleware))
 
