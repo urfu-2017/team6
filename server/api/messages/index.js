@@ -1,6 +1,8 @@
 // @flow
 
 import LRUCache from 'lru-cache'
+import metascraper from 'metascraper'
+import got from 'got'
 
 import * as hrudb from '../hrudb'
 import Event, { types as eventTypes, filters } from '../../../models/Event'
@@ -54,6 +56,11 @@ export default class MessagesAPI {
     static async delete(message: Message): Promise<void> {
         const event: Event = new Event(eventTypes.DELETE_MESSAGE, message)
         return this._addEvent(message.chatId, message.clusterId, event)
+    }
+
+    static async getMeta(message: Message): Promise<Object> {
+        const { body: html, url } = await got(message.text)
+        return metascraper({ html, url })
     }
 
     static async _addEvent(chatId: number, clusterId: number, event: Event): Promise<void> {
