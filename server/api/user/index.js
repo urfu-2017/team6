@@ -25,10 +25,12 @@ export default class UserAPI {
         })
     }
 
-    static getAvatar(gid: string) {
+    static getAvatar(gid: string): Buffer {
         gid = (Number(gid) * Math.pow(10, (15 - gid.length))).toString()
-        const data = '"' + new Identicon(gid, 300).toString() + '"'
+        const img = 'data:image/jpg;base64,' + new Identicon(gid, 150).toString()
+        const data = img.replace(/^data:image\/\w+;base64,/, '')
+        const buf = new Buffer(data, 'base64')
 
-        return JSON.parse(data)
+        return buf
     }
 }

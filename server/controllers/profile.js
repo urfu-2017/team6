@@ -125,9 +125,7 @@ export const getAvatar = async ({ params: { gid } }: {
     params: { gid: string }
 }, res: Object) => {
     try {
-        const avatar: string = await UserAPI.getAvatar(gid)
-
-        return res.status(OK).json(avatar)
+        return res.status(OK).send(await UserAPI.getAvatar(gid))
     } catch (e) {
         console.info(e)
         return res.sendStatus(NOT_FOUND)
