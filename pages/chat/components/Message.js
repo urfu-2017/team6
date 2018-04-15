@@ -7,11 +7,13 @@ import Message from '../../../models/Message'
 import UserInfo from '../../../models/UserInfo'
 import noavatar from '../../../utils/noavatar'
 import { metaParse } from '../../../utils/metaparse'
+import { SHOW_PROFILE_MODAL } from '../../../actions/viewActions'
 
 type Props = {
     users: Object,
     message: Message,
-    mine: Boolean
+    mine: Boolean,
+    showProfile: Function
 }
 
 type State = {
@@ -46,7 +48,7 @@ class MessageItem extends React.Component<Props, State> {
                 style={{ opacity: message.clusterId < 0 ? 0.5 : 1 }}
                 className={this.props.mine ? 'message message-right' : 'message'}
             >
-                <div className="message__avatar">
+                <div className="message__avatar" onClick={() => this.props.showProfile(author)}>
                     <img src={noavatar(author.gid)} title={author.name}/>
                 </div>
                 <div className="message-box">
@@ -85,4 +87,6 @@ class MessageItem extends React.Component<Props, State> {
 
 export default connect(state => ({
     users: state.chatsMembers
+}), dispatch => ({
+    showProfile: user => dispatch({ type: SHOW_PROFILE_MODAL, payload: { user, isShow: true } })
 }))(MessageItem)

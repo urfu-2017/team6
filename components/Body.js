@@ -6,6 +6,7 @@ import io from 'socket.io-client'
 import Menu from './Menu'
 import ChatFormModal from './ChatFormModal'
 import ContactFormModal from './ContactFormModal'
+import UserProfileModal from './UserProfileModal'
 
 import * as userActions from '../actions/userActions'
 import UserProfile from '../models/UserProfile'
@@ -73,6 +74,8 @@ class Body extends React.Component<Props> {
                     onClose={this.onContactAddClose}
                     visible={this.state.addContactModalOpen}
                 />
+
+                <UserProfileModal/>
             </div>
         )
     }

@@ -1,0 +1,2 @@
+export const SHOW_PROFILE_MODAL = 'view.SHOW_PROFILE_MODAL'
+export const CLOSE_PROFILE_MODAL = 'view.CLOSE_PROFILE_MODAL'

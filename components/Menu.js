@@ -6,6 +6,7 @@ import ChatItem from '../pages/chat/components/ChatItem'
 import UserInfo from '../models/UserInfo'
 import ContactItem from '../pages/contact/components/ContactItem'
 import Profile from './Profile'
+import { SHOW_PROFILE } from '../actions/viewActions'
 
 type Props = {
     chats: Chat[],
@@ -16,7 +17,8 @@ type Props = {
     selectContact: Function,
     onAddChatClick: Function,
     onAddContactClick: Function,
-    selectedTab: Number
+    selectedTab: Number,
+    openProfile: Function
 }
 
 type State = {
@@ -63,6 +65,7 @@ export class Menu extends React.Component<Props, State> {
                         {contactsArray.map(c => <ContactItem
                             key={c.gid}
                             contact={c}
+                            onClick={() => this.props.openProfile(c)}
                         />)}
                     </TabPanel>
                 </Tabs>
@@ -75,4 +78,6 @@ export class Menu extends React.Component<Props, State> {
 export default connect(state => ({
     chats: state.chats,
     contacts: state.contacts
+}), dispatch => ({
+    openProfile: user => dispatch({ type: SHOW_PROFILE, payload: { user, isShow: true }})
 }))(Menu)

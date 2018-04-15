@@ -7,11 +7,13 @@ import contactsReducer from './contactsReducer'
 import chatsReducer from './chatsReducer'
 import messagesReducer from './messagesReducer'
 import chatsMembersReducer from './chatsMembersReducer'
+import modalProfileReducer from './modalProfileReducer'
 
 export default combineReducers({
     session: sessionReducer,
     contacts: contactsReducer,
     chats: chatsReducer,
     chatsMembers: chatsMembersReducer,
-    messages: messagesReducer
+    messages: messagesReducer,
+    viewModalProfile: modalProfileReducer
 })

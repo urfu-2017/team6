@@ -8,7 +8,7 @@ type Props = {
 export class ContactItem extends React.Component<Props> {
     render() {
         return (
-            <div className="menu__row">
+            <div onClick={this.props.onClick} className="menu__row">
                 <div className="chat-item__title">
                     {this.props.contact.name}
                 </div>
