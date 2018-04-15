@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import UserInfo from '../models/UserInfo'
 import Modal from 'react-responsive-modal'
-import { CLOSE_PROFILE } from '../actions/viewActions'
+import { CLOSE_PROFILE_MODAL } from '../actions/viewActions'
 
 type Data = {
     user: UserInfo,
@@ -14,7 +14,7 @@ type Props = {
     closeModal: Function
 }
 
-class ProfileView extends React.Component<Props> {
+class UserProfileModal extends React.Component<Props> {
     onCloseModal = () => this.props.closeModal()
 
     render() {
@@ -34,5 +34,5 @@ class ProfileView extends React.Component<Props> {
 export default connect(state => ({
     data: state.viewModalProfile
 }), dispatch => ({
-    closeModal: () => dispatch({ type: CLOSE_PROFILE })
-}))(ProfileView)
+    closeModal: () => dispatch({ type: CLOSE_PROFILE_MODAL })
+}))(UserProfileModal)

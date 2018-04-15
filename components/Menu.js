@@ -6,7 +6,7 @@ import ChatItem from '../pages/chat/components/ChatItem'
 import UserInfo from '../models/UserInfo'
 import ContactItem from '../pages/contact/components/ContactItem'
 import Profile from './Profile'
-import { SHOW_PROFILE } from '../actions/viewActions'
+import { SHOW_PROFILE_MODAL } from '../actions/viewActions'
 
 type Props = {
     chats: Chat[],
@@ -79,5 +79,5 @@ export default connect(state => ({
     chats: state.chats,
     contacts: state.contacts
 }), dispatch => ({
-    openProfile: user => dispatch({ type: SHOW_PROFILE, payload: { user, isShow: true }})
+    openProfile: user => dispatch({ type: SHOW_PROFILE_MODAL, payload: { user, isShow: true }})
 }))(Menu)
