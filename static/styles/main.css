@@ -12,6 +12,11 @@ html, body {
     height: 100%;
 }
 
+body ::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 0;
+}
+
 input, button {
     border: none;
     outline: none;
@@ -31,12 +36,24 @@ a:hover {
     color: #628b96;
 }
 
+.flex {
+    display: flex;
+}
+
+.fullWidth {
+    width: 100%;
+}
+
 #__next, .root {
     width: 100%;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.LinesEllipsis {
+    display: inline-block;
 }
 
 .input-text {
@@ -86,10 +103,24 @@ a:hover {
     position: relative;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 
-.menu__tabs {
+.menu__chats {
+    width: 100%;
     height: 100%;
+    overflow-y: scroll;
+    box-sizing: content-box;
+}
+
+.menu__chats_divider {
+    background-color: #fafafa;
+    padding: 8px 12px;
+    font-size: 8pt;
+    color: #93a9be;
+    border-left: 2px solid #93a9be;
+    text-transform: uppercase;
+    border-bottom: 1px solid #eee;
 }
 
 .menu__row {
@@ -103,7 +134,7 @@ a:hover {
     background: #f8fbfe;
 }
 
-.menu__row:hover > .menu-row__remove {
+.menu__row:hover .menu-row__remove {
     display: inline-block;
 }
 
@@ -111,31 +142,22 @@ a:hover {
     background: #95a9be;
 }
 
-.menu__row-selected > .menu-row__remove {
-    color: white;
-}
-
-.menu__tabs_add {
-    background-color: #f6f6f6;
-    border: none;
-    text-align: center;
-    text-decoration: none;
-    padding: 12px 18px;
-    float: right;
-    cursor: pointer;
-    color: #bcbcbc;
-    font-weight: 100;
-    outline: none;
-}
-
-.menu__tabs_add:hover {
-    background-color: #95a9be;
+.menu__row-selected .menu-row__remove {
     color: white;
 }
 
 .menu-row__title {
     color: #638593;
     font-size: 12pt;
+}
+
+.menu-row__avatar {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    border: 2px solid #93a9be;
+    margin-right: 6px;
 }
 
 .menu-row__message {
@@ -145,13 +167,20 @@ a:hover {
     white-space: nowrap;
     overflow: hidden;
     color: #727272;
-    margin: 6px 0;
+    margin: 4px 0;
+}
+
+.menu-row__message_author {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 4px;
+    border-radius: 100%;
 }
 
 .menu-row__remove {
     display: none;
-    position: absolute;
-    right: 16px;
+    float: right;
     color: #a7b3bf;
     cursor: pointer;
 }
@@ -195,6 +224,11 @@ a:hover {
 .message {
     display: flex;
     padding: 4px 18px;
+    cursor: pointer;
+}
+
+.message:hover {
+    background-color: #fcfcfc;
 }
 
 .message-right {
@@ -203,18 +237,18 @@ a:hover {
 
 .message-right .message-box {
     background-color: #e4ecf4;
+    border-radius: 10px 0 10px 10px;
 }
 
 .message-box {
     max-width: 50%;
-    padding: 4px 10px;
-    background: #fafafa;
-    border-radius: 5px;
-    box-shadow: 0 1px 5px 0 #0000001c;
+    padding: 8px 10px;
+    background: #eeeeee;
+    border-radius: 0 10px 10px 10px;
 }
 
 .message-box__text {
-    font-size: 9pt;
+    font-size: 10pt;
 }
 
 .message__avatar {
@@ -230,22 +264,16 @@ a:hover {
 }
 
 .chat-info {
-    padding: 10px;
+    padding: 3.5px 10px;
     background: #eee;
     font-size: 8pt;
-    height: 20px;
-}
-
-.chat-info {
-    padding: 10px;
-    background: #eee;
-    font-size: 8pt;
-    height: 20px;
+    height: 70px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    box-shadow: 4px 2px 5px 0 #00000017;
+    box-shadow: 4px 2px 5px 0 #00000014;
     position: relative;
+    border-bottom: 1px solid #eaeaea;
 }
 
 .chat-info__name {
@@ -389,10 +417,9 @@ a:hover {
 }
 
 .link-metadata {
-    background-color: #0000000a;
     display: flex;
     margin: 4px -10px -4px;
-    border-bottom: 1px solid #fff;
+    padding: 10px;
 }
 
 .link-metadata__image {
@@ -400,9 +427,10 @@ a:hover {
 }
 
 .link-metadata__image img {
-    width: 90px;
+    width: 55px;
     height: 100%;
     object-fit: cover;
+    border-radius: 10px;
 }
 
 .link-metadata__body {
@@ -418,14 +446,15 @@ a:hover {
 }
 
 .link-metadata__body_url {
-    opacity: .5;
+    opacity: .4;
     font-size: 7pt;
+    margin-top: 5px;
 }
 
 .profile-card {
     display: flex;
     background: #94a9be;
-    height: 65px;
+    height: 70px;
 }
 
 .profile-card__avatar img {
@@ -440,12 +469,18 @@ a:hover {
 
 .profile-card__body_name {
     font-size: 10pt;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    -ms-text-overflow: ellipsis;
 }
 
 .profile-card__body_bio,
 .profile-card__body_email {
     font-size: 8pt;
     opacity: .75;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    -ms-text-overflow: ellipsis;
 }
 
 @media only

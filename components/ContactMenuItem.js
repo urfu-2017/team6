@@ -6,6 +6,7 @@ import UserInfo from '../server/models/UserInfo'
 
 import { SELECT_CHAT_ACTION } from '../actions/uiActions'
 import { REMOVE_ACTION } from '../actions/contactsActions'
+import noavatar from '../utils/noavatar'
 
 type Props = {
     contact: UserInfo,
@@ -22,13 +23,16 @@ class ContactMenuItem extends React.Component<Props> {
         const { contact, selected } = this.props
         const message = null
         return (
-            <div onClick={this.onSelectChat} className={selected ? 'menu__row menu__row-selected' : 'menu__row'}>
-                <div onClick={this.onRemoveClick} className="menu-row__remove"><RemoveIcon/></div>
-                <p className="menu-row__title">
-                    {contact.name}
-                </p>
-                <div className="menu-row__message">
-                    {message ? <p>{message.text}</p> : <i>сообщений нет</i>}
+            <div onClick={this.onSelectChat}>
+                <div className={selected ? 'menu__row menu__row-selected flex' : 'menu__row flex'}>
+                    <div><img className="menu-row__avatar" src={noavatar(contact.gid)}/></div>
+                    <div className="fullWidth">
+                        <RemoveIcon className="menu-row__remove"/>
+                        <p className="menu-row__title">{contact.name}</p>
+                        <p className="menu-row__message">
+                            {message ? <p>{message.text}</p> : <i>сообщений нет</i>}
+                        </p>
+                    </div>
                 </div>
             </div>
         )

@@ -21,21 +21,23 @@ export class Menu extends React.Component<Props> {
             <div className="menu">
                 <ProfileCard/>
 
-                <p>Группы</p>
-                {chatsArray.map(chat => (
-                    <ChatMenuItem
-                        key={chat.common.id}
-                        chat={chat}
-                    />
-                ))}
+                <div className="menu__chats">
+                    <p className="menu__chats_divider">Группы</p>
+                    {chatsArray.map(chat => (
+                        <ChatMenuItem
+                            key={chat.common.id}
+                            chat={chat}
+                        />
+                    ))}
 
-                <p>Контакты</p>
-                {contactsArray.map(contact => (
-                    <ContactMenuItem
-                        key={contact.gid}
-                        contact={contact}
-                    />
-                ))}
+                    <p className="menu__chats_divider">Контакты</p>
+                    {contactsArray.map(contact => (
+                        <ContactMenuItem
+                            key={contact.gid}
+                            contact={contact}
+                        />
+                    ))}
+                </div>
             </div>
         )
     }

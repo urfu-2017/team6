@@ -21,7 +21,7 @@ type State = {
 }
 
 const markdownOptions = {
-    preset: 'commonmark',
+    preset: 'default',
     html: false,
     linkify: true,
     typographer: true,
@@ -39,6 +39,29 @@ class MessageItem extends React.Component<Props, State> {
         }
     }
 
+    renderMetadata = (data, index) => (
+        <a key={index} href={data.url} target="_blank">
+            <div className="link-metadata">
+                <div className="link-metadata__image">
+                    <img src={data.image}/>
+                </div>
+                <div className="link-metadata__body">
+                    <p className="link-metadata__body_title">{data.title}</p>
+                    <p className="link-metadata__body_description">
+                        <LinesEllipsis
+                            text={data.description}
+                            maxLine="2"
+                            ellipsis="..."
+                            trimRight
+                            basedOn="letters"
+                        />
+                    </p>
+                    <p className="link-metadata__body_url">{data.url}</p>
+                </div>
+            </div>
+        </a>
+    )
+
     render() {
         const { message, users } = this.props
         const { metadata } = this.state
@@ -53,31 +76,13 @@ class MessageItem extends React.Component<Props, State> {
                 </div>
                 <div className="message-box">
                     <div className="message-box__text">
-                        <MarkdownRenderer markdown={message.text} options={markdownOptions}/>
+                        <MarkdownRenderer
+                            markdown={message.text}
+                            options={markdownOptions}
+                        />
                     </div>
                     <div className="message_box__metadata">
-                        {metadata.map((data, index) => (
-                            <a key={index} href={data.url} target="_blank">
-                                <div className="link-metadata">
-                                    <div className="link-metadata__image">
-                                        <img src={data.image}/>
-                                    </div>
-                                    <div className="link-metadata__body">
-                                        <p className="link-metadata__body_title">{data.title}</p>
-                                        <p className="link-metadata__body_description">
-                                            <LinesEllipsis
-                                                text={data.description}
-                                                maxLine="2"
-                                                ellipsis="..."
-                                                trimRight
-                                                basedOn="letters"
-                                            />
-                                        </p>
-                                        <p className="link-metadata__body_url">{data.url}</p>
-                                    </div>
-                                </div>
-                            </a>
-                        ))}
+                        {metadata.map(this.renderMetadata)}
                     </div>
                 </div>
             </div>
