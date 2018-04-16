@@ -3,15 +3,16 @@ import { connect } from 'react-redux'
 
 import Modal from 'react-responsive-modal'
 
-import API from '../api'
+import API from '../api/index'
 import * as contactsActions from '../actions/contactsActions'
+import * as uiActions from '../actions/uiActions'
 
 import UserInfo from '../server/models/UserInfo'
 
 type Props = {
-    onClose: Function,
     visible: boolean,
-    addContact: Function
+    addContact: Function,
+    closeModal: Function
 }
 
 type State = {
@@ -34,12 +35,16 @@ class ContactFormModal extends React.Component<Props, State> {
 
     onContactAdd = () => {
         this.props.addContact(this.state.user)
-        this.props.onClose()
+        this.props.closeModal()
     }
 
     render() {
+        if (!this.props.visible) {
+            return null
+        }
+
         return (
-            <Modal onClose={this.props.onClose} open={this.props.visible}>
+            <Modal onClose={this.props.closeModal} open={true}>
                 <div className="modal-content">
                     <p className="modal-content_title">Новый контакт</p>
                     <div>
@@ -69,6 +74,9 @@ class ContactFormModal extends React.Component<Props, State> {
     }
 }
 
-export default connect(null, dispatch => ({
-    addContact: (user: UserInfo) => dispatch({ type: contactsActions.ADD_ACTION, payload: [user] })
+export default connect(state => ({
+    visible: state.ui[uiActions.entities.CONTACT_ADD_MODAL]
+}), dispatch => ({
+    addContact: (user: UserInfo) => dispatch({ type: contactsActions.ADD_ACTION, payload: [user] }),
+    closeModal: () => dispatch({ type: uiActions.CLOSE_CONTACT_ADD_MODAL })
 }))(ContactFormModal)

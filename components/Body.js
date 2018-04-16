@@ -7,74 +7,48 @@ import Menu from './Menu'
 import ChatFormModal from './ChatFormModal'
 import ContactFormModal from './ContactFormModal'
 import UserProfileModal from './UserProfileModal'
+import ChatBody from './ChatBody'
 
-import * as userActions from '../actions/userActions'
 import UserProfile from '../server/models/UserProfile'
 
+import * as userActions from '../actions/userActions'
+import * as uiActions from '../actions/uiActions'
+
 type Props = {
+    session: UserProfile,
+    queryId: number,
     initialSession: Function,
     fetchSelf: Function,
-    session: UserProfile,
-    children: React.Children,
-    selectedTab: Number,
-    selectChat: Function,
-    selectedChatId: number,
-    selectContact: Function,
-    selectedContactId: number
+    selectChat: Function
 }
 
 class Body extends React.Component<Props> {
-    state = {
-        addChatModalOpen: false,
-        addContactModalOpen: false
-    }
-
     componentWillMount() {
         this.props.initialSession(this.props.session)
     }
 
     componentDidMount() {
+        const { queryId } = this.props
+
+        if (queryId) {
+            this.props.selectChat(queryId)
+        }
+
         this.socket = io()
         this.props.fetchSelf(this.socket)
     }
 
-    onChatAddClick = () => this.setState({ addChatModalOpen: true })
-
-    onContactAddClick = () => this.setState({ addContactModalOpen: true })
-
-    onChatAddClose = () => this.setState({ addChatModalOpen: false })
-
-    onContactAddClose = () => this.setState({ addContactModalOpen: false })
-
-    onChatAdd = () => this.onChatAddClose()
-
-    onContactAdd = () => this.onContactAddClose()
-
     render() {
         return (
             <div className="main">
-                <Menu
-                    selectedChatId={this.props.selectedChatId}
-                    selectChat={this.props.selectChat}
-                    onAddChatClick={this.onChatAddClick}
-                    onAddContactClick={this.onContactAddClick}
-                    selectedTab={this.props.selectedTab}
-                />
+                <Menu/>
 
                 <div className="content">
-                    {this.props.children}
+                    <ChatBody/>
                 </div>
 
-                <ChatFormModal
-                    onClose={this.onChatAddClose}
-                    visible={this.state.addChatModalOpen}
-                />
-
-                <ContactFormModal
-                    onClose={this.onContactAddClose}
-                    visible={this.state.addContactModalOpen}
-                />
-
+                <ChatFormModal/>
+                <ContactFormModal/>
                 <UserProfileModal/>
             </div>
         )
@@ -83,5 +57,6 @@ class Body extends React.Component<Props> {
 
 export default connect(null, dispatch => ({
     initialSession: payload => dispatch({ type: userActions.INITIAL_SESSION_ACTION, payload }),
-    fetchSelf: socket => dispatch({ type: userActions.FETCH_PROFILE_ACTION, payload: socket })
+    fetchSelf: payload => dispatch({ type: userActions.FETCH_PROFILE_ACTION, payload }),
+    selectChat: payload => dispatch({ type: uiActions.SELECT_CHAT_ACTION, payload })
 }))(Body)

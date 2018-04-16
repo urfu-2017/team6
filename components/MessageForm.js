@@ -1,8 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import SendIcon from 'react-icons/lib/md/send'
-import Message from '../../../server/models/Message'
-import { SEND_ACTION } from '../../../actions/messagesActions'
+import Message from '../server/models/Message'
+import { SEND_ACTION } from '../actions/messagesActions'
 
 type Props = {
     chatId: number,

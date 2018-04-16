@@ -3,11 +3,11 @@ import { connect } from 'react-redux'
 import LinesEllipsis from 'react-lines-ellipsis'
 import MarkdownRenderer from 'react-markdown-renderer'
 
-import Message from '../../../server/models/Message'
-import UserInfo from '../../../server/models/UserInfo'
-import noavatar from '../../../utils/noavatar'
-import { metaParse } from '../../../utils/metaparse'
-import { SHOW_PROFILE_MODAL } from '../../../actions/viewActions'
+import Message from '../server/models/Message'
+import UserInfo from '../server/models/UserInfo'
+import noavatar from '../utils/noavatar'
+import { metaParse } from '../utils/metaparse'
+import { SHOW_PROFILE_MODAL } from '../actions/uiActions'
 
 type Props = {
     users: Object,
@@ -88,5 +88,5 @@ class MessageItem extends React.Component<Props, State> {
 export default connect(state => ({
     users: state.chatsMembers
 }), dispatch => ({
-    showProfile: user => dispatch({ type: SHOW_PROFILE_MODAL, payload: { user, isShow: true } })
+    showProfile: payload => dispatch({ type: SHOW_PROFILE_MODAL, payload })
 }))(MessageItem)

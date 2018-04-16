@@ -1,14 +1,13 @@
 import React from 'react'
-import {connect} from 'react-redux'
-import Message from '../../../server/models/Message'
+import { connect } from 'react-redux'
+import Message from '../server/models/Message'
 import MessageItem from './Message'
 import ChatHeader from './ChatHeader'
 import MessageForm from './MessageForm'
-import Chat from '../../../server/models/Chat'
+import Chat from '../server/models/Chat'
 
 type Props = {
     gid: number,
-    chatId: number,
     chat: Chat,
     messages: Message[],
 }
@@ -33,25 +32,27 @@ class ChatBody extends React.Component<Props> {
             return null
         }
 
-        const messages: Message[] = this.props.messages || []
+        const { messages, chat, gid } = this.props
         return (
             <div className="chat">
-                <ChatHeader chat={this.props.chat} />
+                <ChatHeader chat={chat} />
                 <div className="messages" ref={ref => this.messagesBody = ref}>
-                    {messages.map(m => <MessageItem
-                        key={m.createdAt}
-                        message={m}
-                        mine={m.authorGid === this.props.gid}
-                    />)}
+                    {messages.map(message => (
+                        <MessageItem
+                            key={message.createdAt}
+                            mine={message.authorGid === gid}
+                            message={message}
+                        />
+                    ))}
                 </div>
-                <MessageForm chatId={this.props.chatId} />
+                <MessageForm chatId={chat.common.id}/>
             </div>
         )
     }
 }
 
-export default connect((state, props) => ({
+export default connect(state => ({
     gid: state.session.user.gid,
-    chat: state.chats[props.chatId],
-    messages: state.messages[props.chatId] && [...state.messages[props.chatId]]
+    chat: state.chats[state.ui.selectedChatId],
+    messages: (state.messages[state.ui.selectedChatId] && [...state.messages[state.ui.selectedChatId]]) || []
 }))(ChatBody)

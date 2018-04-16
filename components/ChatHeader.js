@@ -2,8 +2,8 @@ import React from 'react'
 import MembersIcon from 'react-icons/lib/md/group'
 import TitleIcon from 'react-icons/lib/md/local-offer'
 import { Dropdown } from 'semantic-ui-react'
-import Chat from '../../../server/models/Chat'
-import ChatAddMemberModal from '../../../components/ChatAddMemberModal'
+import Chat from '../server/models/Chat'
+import ChatAddMemberModal from './ChatAddMemberModal'
 
 type Props = {
     chat: Chat

@@ -1,16 +1,14 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import UserInfo from '../server/models/UserInfo'
-import Modal from 'react-responsive-modal'
-import { CLOSE_PROFILE_MODAL } from '../actions/viewActions'
 
-type Data = {
-    user: UserInfo,
-    isShow: boolean
-}
+import Modal from 'react-responsive-modal'
+
+import UserInfo from '../server/models/UserInfo'
+
+import * as uiActions from '../actions/uiActions'
 
 type Props = {
-    data: Data,
+    data: { user: UserInfo, visible: boolean },
     closeModal: Function
 }
 
@@ -18,9 +16,14 @@ class UserProfileModal extends React.Component<Props> {
     onCloseModal = () => this.props.closeModal()
 
     render() {
-        const { user, isShow } = this.props.data
+        const { user, visible } = this.props.data
+
+        if (!visible) {
+            return null
+        }
+
         return (
-            <Modal onClose={this.onCloseModal} open={isShow}>
+            <Modal onClose={this.onCloseModal} open={true}>
                 <div className="modal-content">
                     <p className="modal-content_title">{user.name}</p>
                     <p>{user.bio}</p>
@@ -32,7 +35,7 @@ class UserProfileModal extends React.Component<Props> {
 }
 
 export default connect(state => ({
-    data: state.viewModalProfile
+    data: state.ui[uiActions.entities.PROFILE_MODAL]
 }), dispatch => ({
-    closeModal: () => dispatch({ type: CLOSE_PROFILE_MODAL })
+    closeModal: () => dispatch({ type: uiActions.CLOSE_PROFILE_MODAL })
 }))(UserProfileModal)

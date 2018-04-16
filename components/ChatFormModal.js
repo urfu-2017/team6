@@ -4,14 +4,15 @@ import { connect } from 'react-redux'
 import Modal from 'react-responsive-modal'
 
 import * as chatsActions from '../actions/chatsActions'
+import * as uiActions from '../actions/uiActions'
 
 import Chat from '../server/models/Chat'
 import ChatInfo from '../server/models/ChatInfo'
 
 type Props = {
-    onClose: Function,
     visible: boolean,
-    createChat: Function
+    createChat: Function,
+    closeModal: Function
 }
 
 class ChatFormModal extends React.Component<Props> {
@@ -20,13 +21,17 @@ class ChatFormModal extends React.Component<Props> {
 
         if (name) {
             this.props.createChat(new Chat({ common: new ChatInfo({ name }) }))
-            this.props.onClose()
+            this.props.closeModal()
         }
     }
 
     render() {
+        if (!this.props.visible) {
+            return null
+        }
+
         return (
-            <Modal onClose={this.props.onClose} open={this.props.visible}>
+            <Modal onClose={this.props.closeModal} open={true}>
                 <div className="modal-content">
                     <p className="modal-content_title">Новый чат</p>
                     <div>
@@ -46,6 +51,9 @@ class ChatFormModal extends React.Component<Props> {
     }
 }
 
-export default connect(null, dispatch => ({
-    createChat: (payload: Chat) => dispatch({ type: chatsActions.CREATE_ACTION, payload })
+export default connect(state => ({
+    visible: state.ui[uiActions.entities.CHAT_CREATE_MODAL]
+}), dispatch => ({
+    createChat: (payload: Chat) => dispatch({ type: chatsActions.CREATE_ACTION, payload }),
+    closeModal: () => dispatch({ type: uiActions.CLOSE_CHAT_CREATE_MODAL })
 }))(ChatFormModal)
