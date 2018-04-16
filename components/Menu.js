@@ -1,5 +1,5 @@
 import React from 'react'
-import PlusIcon from 'react-icons/lib/md/plus-one'
+import PlusIcon from 'react-icons/lib/fa/plus-square-o'
 import { connect } from 'react-redux'
 
 import ChatMenuItem from './ChatMenuItem'
@@ -8,10 +8,13 @@ import ProfileCard from './ProfileCard'
 
 import Chat from '../server/models/Chat'
 import UserInfo from '../server/models/UserInfo'
+import { SHOW_CHAT_CREATE_MODAL, SHOW_CONTACT_ADD_MODAL } from '../actions/uiActions'
 
 type Props = {
     chats: Chat[],
-    contacts: UserInfo[]
+    contacts: UserInfo[],
+    openChatCreateModal: Function,
+    openContactAddModal: Function
 }
 
 export class Menu extends React.Component<Props> {
@@ -25,7 +28,7 @@ export class Menu extends React.Component<Props> {
                 <div className="menu__chats">
                     <div className="menu__chats_divider">
                         Группы
-                        <PlusIcon className="menu__chats_plus"/>
+                        <PlusIcon onClick={this.props.openChatCreateModal} className="menu__chats_plus"/>
                     </div>
                     {chatsArray.map(chat => (
                         <ChatMenuItem
@@ -36,7 +39,7 @@ export class Menu extends React.Component<Props> {
 
                     <div className="menu__chats_divider">
                         Контакты
-                        <PlusIcon className="menu__chats_plus"/>
+                        <PlusIcon onClick={this.props.openContactAddModal} className="menu__chats_plus"/>
                     </div>
                     {contactsArray.map(contact => (
                         <ContactMenuItem
@@ -53,4 +56,7 @@ export class Menu extends React.Component<Props> {
 export default connect(state => ({
     chats: state.chats,
     contacts: state.contacts
+}), dispatch => ({
+    openChatCreateModal: () => dispatch({ type: SHOW_CHAT_CREATE_MODAL }),
+    openContactAddModal: () => dispatch({ type: SHOW_CONTACT_ADD_MODAL })
 }))(Menu)
