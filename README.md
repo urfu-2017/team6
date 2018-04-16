@@ -1,6 +1,10 @@
-# Kilogram Messenger
+# K1logram Messenger
 
 ### team 6
+
+*http://k1logram.pro*
+
+## Как запустить
 
 В корне проекта создать файл .env для переменных окружения
 ```
@@ -13,7 +17,13 @@ API_KEY=
 
 ```
 npm install
+
+npm run build
 npm start
+
+OR
+
+npm run dev
 
 SPA: http://localhost:8080
 API: http://localhost:8080/api/v1
