@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import UserInfo from '../models/UserInfo'
+import UserInfo from '../server/models/UserInfo'
 import Modal from 'react-responsive-modal'
 import { CLOSE_PROFILE_MODAL } from '../actions/viewActions'
 

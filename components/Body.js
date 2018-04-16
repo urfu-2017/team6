@@ -9,7 +9,7 @@ import ContactFormModal from './ContactFormModal'
 import UserProfileModal from './UserProfileModal'
 
 import * as userActions from '../actions/userActions'
-import UserProfile from '../models/UserProfile'
+import UserProfile from '../server/models/UserProfile'
 
 type Props = {
     initialSession: Function,

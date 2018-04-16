@@ -2,9 +2,9 @@ import React from 'react'
 import {connect} from 'react-redux'
 import GroupIcon from 'react-icons/lib/md/group'
 import RemoveIcon from 'react-icons/lib/md/clear'
-import Message from '../../../models/Message'
-import Chat from '../../../models/Chat'
-import UserInfo from '../../../models/UserInfo'
+import Message from '../../../server/models/Message'
+import Chat from '../../../server/models/Chat'
+import UserInfo from '../../../server/models/UserInfo'
 import { REMOVE_ACTION } from '../../../actions/chatsActions'
 
 type Props = {

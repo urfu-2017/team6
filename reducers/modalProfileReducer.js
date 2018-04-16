@@ -2,7 +2,7 @@
 
 import * as view from '../actions/viewActions'
 
-import UserInfo from '../models/UserInfo'
+import UserInfo from '../server/models/UserInfo'
 
 type StateType = {
     user: UserInfo,

@@ -6,7 +6,7 @@ import Modal from 'react-responsive-modal'
 import API from '../api'
 import * as contactsActions from '../actions/contactsActions'
 
-import UserInfo from '../models/UserInfo'
+import UserInfo from '../server/models/UserInfo'
 
 type Props = {
     onClose: Function,

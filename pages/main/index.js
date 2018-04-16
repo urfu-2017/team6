@@ -9,10 +9,8 @@ import initStore from '../../store'
 import Body from '../../components/Body'
 import ChatBody from './components/ChatBody'
 
-import UserProfile from '../../models/UserProfile'
-import Message from '../../models/Message'
-
-import stylesheet from './main.css'
+import UserProfile from '../../server/models/UserProfile'
+import Message from '../../server/models/Message'
 
 type Props = {
     session: UserProfile,
@@ -59,6 +57,7 @@ export default class Main extends React.Component<Props, State> {
                         <meta name="viewport" content="width=device-width, initial-scale=1" />
                         <title>Kilogram Messenger</title>
                         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css"/>
+                        <link rel="stylesheet" href="/static/styles/main.css"/>
                     </Head>
                     <Body
                         session={this.props.session}
@@ -67,7 +66,6 @@ export default class Main extends React.Component<Props, State> {
                         selectedChatId={this.state.selectedChatId}
                     >
                         <ChatBody chatId={Number(this.state.selectedChatId)}/>
-                        <style dangerouslySetInnerHTML={{ __html: stylesheet.toString() }} />
                     </Body>
                 </div>
             </Provider>

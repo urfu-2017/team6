@@ -1,6 +1,6 @@
 import * as actions from '../actions/chatsActions'
 
-import UserInfo from '../models/UserInfo'
+import UserInfo from '../server/models/UserInfo'
 
 type StateType = {
     [key: number]: UserInfo

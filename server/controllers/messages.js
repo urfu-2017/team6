@@ -1,9 +1,9 @@
 // @flow
 
 import { INTERNAL_SERVER_ERROR, OK } from 'http-status-codes'
-import Message from '../../models/Message'
+import Message from '../models/Message'
 import MessagesAPI from '../api/messages'
-import UserProfile from '../../models/UserProfile'
+import UserProfile from '../models/UserProfile'
 
 export const addMessage = async ({ user, body }: {
     user: UserProfile,

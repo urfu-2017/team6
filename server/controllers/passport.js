@@ -1,8 +1,8 @@
 // @flow
 
 import UserAPI from '../api/user'
-import UserProfile from '../../models/UserProfile'
-import UserInfo from '../../models/UserInfo'
+import UserProfile from '../models/UserProfile'
+import UserInfo from '../models/UserInfo'
 
 export const serializeUser = async ({ _json }: Object, serialize: Function) => {
     try {

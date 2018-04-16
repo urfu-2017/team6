@@ -5,9 +5,9 @@ import metascraper from 'metascraper'
 import got from 'got'
 
 import * as hrudb from '../hrudb'
-import Event, { types as eventTypes, filters } from '../../../models/Event'
-import Message from '../../../models/Message'
-import SocketEvent, { types as socketEventTypes } from '../../../models/SocketEvent'
+import Event, { types as eventTypes, filters } from '../../models/Event'
+import Message from '../../models/Message'
+import SocketEvent, { types as socketEventTypes } from '../../models/SocketEvent'
 
 import socketManager from '../../socket'
 

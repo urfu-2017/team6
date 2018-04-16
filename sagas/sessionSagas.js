@@ -7,13 +7,13 @@ import * as userActions from '../actions/userActions'
 import * as contactsActions from '../actions/contactsActions'
 import * as chatsActions from '../actions/chatsActions'
 
-import { types } from '../models/SocketEvent'
+import { types } from '../server/models/SocketEvent'
 import { dispatch } from '../store'
 
-import UserProfile from '../models/UserProfile'
-import UserInfo from '../models/UserInfo'
-import Chat from '../models/Chat'
-import Event from '../models/Event'
+import UserProfile from '../server/models/UserProfile'
+import UserInfo from '../server/models/UserInfo'
+import Chat from '../server/models/Chat'
+import Event from '../server/models/Event'
 
 const fetchSelf = function * ({ payload: socket }) {
     const profile: UserProfile = yield call(API.fetchSelf)

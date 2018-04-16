@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import UserInfo from '../models/UserInfo'
+import UserInfo from '../server/models/UserInfo'
 import noavatar from '../utils/noavatar'
 
 type Props = {

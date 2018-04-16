@@ -5,9 +5,9 @@ import { OK, NOT_FOUND, INTERNAL_SERVER_ERROR } from 'http-status-codes'
 import ChatsAPI from '../api/chats'
 import UserAPI from '../api/user'
 
-import Chat from '../../models/Chat'
-import ChatInfo from '../../models/ChatInfo'
-import UserProfile from '../../models/UserProfile'
+import Chat from '../models/Chat'
+import ChatInfo from '../models/ChatInfo'
+import UserProfile from '../models/UserProfile'
 
 export const fetchChat = async ({ params: { id } }: {
     params: { id: string }

@@ -1,10 +1,10 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import Message from '../../../models/Message'
+import Message from '../../../server/models/Message'
 import MessageItem from './Message'
 import ChatHeader from './ChatHeader'
 import MessageForm from './MessageForm'
-import Chat from '../../../models/Chat'
+import Chat from '../../../server/models/Chat'
 
 type Props = {
     gid: number,

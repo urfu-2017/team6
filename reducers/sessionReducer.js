@@ -2,8 +2,8 @@
 
 import * as actions from '../actions/userActions'
 
-import UserProfile from '../models/UserProfile'
-import UserInfo from '../models/UserInfo'
+import UserProfile from '../server/models/UserProfile'
+import UserInfo from '../server/models/UserInfo'
 
 type ActionType = {
     type: string,

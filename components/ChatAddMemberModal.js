@@ -5,7 +5,7 @@ import Modal from 'react-responsive-modal'
 
 import * as chatsActions from '../actions/chatsActions'
 
-import UserInfo from '../models/UserInfo'
+import UserInfo from '../server/models/UserInfo'
 
 type Props = {
     chatId: number,

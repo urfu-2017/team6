@@ -5,7 +5,7 @@ import API from '../api'
 
 import * as actions from '../actions/contactsActions'
 
-import UserInfo from '../models/UserInfo'
+import UserInfo from '../server/models/UserInfo'
 
 const fetchContacts = function * ({ payload } : {
     payload: Array<number>

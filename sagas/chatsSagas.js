@@ -5,9 +5,9 @@ import API from '../api'
 
 import * as actions from '../actions/chatsActions'
 
-import Chat from '../models/Chat'
-import UserInfo from '../models/UserInfo'
-import ChatInfo from '../models/ChatInfo'
+import Chat from '../server/models/Chat'
+import UserInfo from '../server/models/UserInfo'
+import ChatInfo from '../server/models/ChatInfo'
 
 const fetchChats = function * ({ payload } : {
     payload: Array<number>

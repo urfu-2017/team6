@@ -1,6 +1,6 @@
 import * as actions from '../actions/messagesActions'
 
-import Message from '../models/Message'
+import Message from '../server/models/Message'
 
 type StateType = {
     [key: number]: Array<Message>

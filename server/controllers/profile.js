@@ -3,8 +3,8 @@
 import { OK, NOT_MODIFIED, NOT_FOUND } from 'http-status-codes'
 
 import UserAPI from '../api/user'
-import UserInfo from '../../models/UserInfo'
-import UserProfile from '../../models/UserProfile'
+import UserInfo from '../models/UserInfo'
+import UserProfile from '../models/UserProfile'
 
 export const fetchSelf = async ({ user }: {
     user: UserProfile

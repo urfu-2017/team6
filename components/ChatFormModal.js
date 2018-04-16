@@ -5,8 +5,8 @@ import Modal from 'react-responsive-modal'
 
 import * as chatsActions from '../actions/chatsActions'
 
-import Chat from '../models/Chat'
-import ChatInfo from '../models/ChatInfo'
+import Chat from '../server/models/Chat'
+import ChatInfo from '../server/models/ChatInfo'
 
 type Props = {
     onClose: Function,

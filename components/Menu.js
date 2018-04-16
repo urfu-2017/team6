@@ -1,10 +1,9 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs'
-import Chat from '../models/Chat'
-import ChatItem from '../pages/chat/components/ChatItem'
-import UserInfo from '../models/UserInfo'
-import ContactItem from '../pages/contact/components/ContactItem'
+import Chat from '../server/models/Chat'
+import ChatItem from '../pages/main/components/ChatItem'
+import UserInfo from '../server/models/UserInfo'
 import Profile from './Profile'
 import { SHOW_PROFILE_MODAL } from '../actions/viewActions'
 
@@ -62,11 +61,11 @@ export class Menu extends React.Component<Props, State> {
                         />)}
                     </TabPanel>
                     <TabPanel>
-                        {contactsArray.map(c => <ContactItem
-                            key={c.gid}
-                            contact={c}
-                            onClick={() => this.props.openProfile(c)}
-                        />)}
+                        {/*{contactsArray.map(c => <ContactItem*/}
+                            {/*key={c.gid}*/}
+                            {/*contact={c}*/}
+                            {/*onClick={() => this.props.openProfile(c)}*/}
+                        {/*/>)}*/}
                     </TabPanel>
                 </Tabs>
                 <Profile />
