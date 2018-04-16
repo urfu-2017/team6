@@ -127,7 +127,6 @@ export const getAvatar = async ({ params: { gid } }: {
     try {
         return res.status(OK).send(await UserAPI.getAvatar(gid))
     } catch (e) {
-        console.info(e)
         return res.sendStatus(NOT_FOUND)
     }
 }

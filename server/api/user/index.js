@@ -29,8 +29,7 @@ export default class UserAPI {
         gid = (Number(gid) * Math.pow(10, (15 - gid.length))).toString()
         const img = 'data:image/jpg;base64,' + new Identicon(gid, 150).toString()
         const data = img.replace(/^data:image\/\w+;base64,/, '')
-        const buf = new Buffer(data, 'base64')
 
-        return buf
+        return Buffer.from(data, 'base64')
     }
 }
