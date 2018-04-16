@@ -1,4 +1,5 @@
 import React from 'react'
+import PlusIcon from 'react-icons/lib/md/plus-one'
 import { connect } from 'react-redux'
 
 import ChatMenuItem from './ChatMenuItem'
@@ -22,7 +23,10 @@ export class Menu extends React.Component<Props> {
                 <ProfileCard/>
 
                 <div className="menu__chats">
-                    <p className="menu__chats_divider">Группы</p>
+                    <div className="menu__chats_divider">
+                        Группы
+                        <PlusIcon className="menu__chats_plus"/>
+                    </div>
                     {chatsArray.map(chat => (
                         <ChatMenuItem
                             key={chat.common.id}
@@ -30,7 +34,10 @@ export class Menu extends React.Component<Props> {
                         />
                     ))}
 
-                    <p className="menu__chats_divider">Контакты</p>
+                    <div className="menu__chats_divider">
+                        Контакты
+                        <PlusIcon className="menu__chats_plus"/>
+                    </div>
                     {contactsArray.map(contact => (
                         <ContactMenuItem
                             key={contact.gid}
