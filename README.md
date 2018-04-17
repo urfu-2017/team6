@@ -8,6 +8,7 @@
 
 В корне проекта создать файл .env для переменных окружения
 ```
+PORT=80
 NODE_ENV=development
 CLIENT_ID=
 CLIENT_SECRET=
