@@ -1,6 +1,6 @@
 import * as actions from '../actions/contactsActions'
 
-import UserInfo from '../models/UserInfo'
+import UserInfo from '../server/models/UserInfo'
 
 type StateType = {
     [key: number]: UserInfo
@@ -16,11 +16,11 @@ export default (state: StateType = {}, { type, payload }: ActionType): StateType
 
     switch (type) {
         case actions.FETCH_ALL_SUCCESS:
+        case actions.ADD_SUCCESS:
+            return Object.assign(newState, payload)
         case actions.ADD_FAILED:
         case actions.REMOVE_FAILED:
             return payload
-        case actions.ADD_SUCCESS:
-            return Object.assign(newState, payload)
         case actions.REMOVE_SUCCESS:
             payload.forEach(gid => delete newState[gid])
             return newState

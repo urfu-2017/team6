@@ -6,9 +6,9 @@ import API from '../api'
 import * as chatsActions from '../actions/chatsActions'
 import * as actions from '../actions/messagesActions'
 
-import UserInfo from '../models/UserInfo'
-import Message from '../models/Message'
-import Event, { types } from '../models/Event'
+import UserInfo from '../server/models/UserInfo'
+import Message from '../server/models/Message'
+import Event, { types } from '../server/models/Event'
 
 const fetchAllMessages = function * ({ payload } : {
     payload: Object
