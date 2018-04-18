@@ -1,3 +1,4 @@
+import express from 'express'
 import bodyParser from 'body-parser'
 import cookieParser from 'cookie-parser'
 import cookieSession from 'cookie-session'
@@ -6,6 +7,7 @@ import authMiddleware from './authMiddleware'
 import passport from '../auth'
 
 export default app => app
+    .use(express.static('.next'))
     .use(bodyParser.json())
     .use(bodyParser.urlencoded({ extended: true }))
     .use(cookieParser())
