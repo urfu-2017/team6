@@ -8,5 +8,6 @@ export default {
     CLIENT_ID: process.env.CLIENT_ID,
     CLIENT_SECRET: process.env.CLIENT_SECRET,
     AUTH_CALLBACK: process.env.AUTH_CALLBACK,
+    MONGODB_URL: process.env.MONGODB_URL,
     HRUDB_BASE_URL: 'https://hrudb.herokuapp.com/storage/'
 }

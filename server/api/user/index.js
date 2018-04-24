@@ -1,6 +1,6 @@
 // @flow
 
-import * as hrudb from '../hrudb'
+import user from '../mongodb'
 import UserProfile from '../../models/UserProfile'
 import SocketEvent, { types } from '../../models/SocketEvent'
 import Identicon from 'identicon.js'
@@ -8,13 +8,12 @@ import Identicon from 'identicon.js'
 import socketManager from '../../socket'
 
 export default class UserAPI {
-    static async fetch(gid: number): Promise<UserProfile> {
-        const userRaw: string = await hrudb.get(`user${gid}`)
-        return JSON.parse(userRaw)
+    static fetch(gid: number): Promise<UserProfile> {
+        return user.get(gid)
     }
 
-    static async update(profile: UserProfile, broadcast?: boolean): Promise<void> {
-        return hrudb.update(`user${profile.user.gid}`, JSON.stringify(profile)).then(() => {
+    static update(profile: UserProfile, broadcast?: boolean): Promise<void> {
+        user.updateOrCreate(profile.user.gid, profile).then(() => {
             socketManager.sendEvent(`session_${profile.user.gid}`, new SocketEvent(types.USER_UPDATE, profile))
 
             if (broadcast) {
