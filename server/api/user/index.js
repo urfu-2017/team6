@@ -1,6 +1,6 @@
 // @flow
 
-import user from '../mongodb'
+import { user } from '../mongodb'
 import UserProfile from '../../models/UserProfile'
 import SocketEvent, { types } from '../../models/SocketEvent'
 import Identicon from 'identicon.js'
@@ -13,7 +13,7 @@ export default class UserAPI {
     }
 
     static update(profile: UserProfile, broadcast?: boolean): Promise<void> {
-        user.updateOrCreate(profile.user.gid, profile).then(() => {
+        return user.updateOrCreate(profile.user.gid, profile).then(() => {
             socketManager.sendEvent(`session_${profile.user.gid}`, new SocketEvent(types.USER_UPDATE, profile))
 
             if (broadcast) {

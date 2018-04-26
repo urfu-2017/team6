@@ -26,13 +26,14 @@ class Entity {
     }
 
     async updateOrCreate(id: number, obj: any): Promise<void> {
-        const model = await this.Model.find({ id })
+        const model = await this.Model.findOne({ id })
 
         if (!model) {
-            return new this.Model(this._format(obj))
+            const entity = new this.Model(this._format(obj))
+            return entity.save()
         }
 
-        model.update(this._format(obj))
+        return model.update(this._format(obj))
     }
 
     _format(obj: any): any {
@@ -43,7 +44,7 @@ class Entity {
 class User extends Entity {
     constructor() {
         super('user', 'users', mongoose.Schema({
-            id: Number,
+            id: { type: Number, index: true },
             name: String,
             bio: String,
             email: String,
@@ -55,7 +56,7 @@ class User extends Entity {
 
     _format(profile: UserProfile): any {
         return {
-            id: profile.user.id,
+            id: profile.user.gid,
             name: profile.user.name,
             bio: profile.user.bio,
             email: profile.user.email,
@@ -69,7 +70,7 @@ class User extends Entity {
 class Chat extends Entity {
     constructor() {
         super('chat', 'chats', mongoose.Schema({
-            id: Number,
+            id: { type: Number, index: true },
             name: String,
             owner: Number,
             members: [Number]
@@ -106,10 +107,5 @@ export const user = new User()
 export const chat = new Chat()
 export const message = new Message()
 
-export const start = async () => {
-    await mongoose.connect(config.MONGODB_URL)
-}
-
-export const end = async () => {
-    await mongoose.disconnect()
-}
+export const start = () => mongoose.connect(config.MONGODB_URL, { autoReconnect: true })
+export const end = () => mongoose.disconnect()
