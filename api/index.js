@@ -8,8 +8,8 @@ import Chat from '../server/models/Chat'
 import ChatInfo from '../server/models/ChatInfo'
 import Message from '../server/models/Message'
 
-const BASE_URL = '/api/v1'
-const BASE_OPTIONS = {
+export const BASE_URL = '/api/v1'
+export const BASE_OPTIONS = {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
     credentials: 'include'

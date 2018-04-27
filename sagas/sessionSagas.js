@@ -1,11 +1,13 @@
 import {put, call, takeLatest, all, select} from 'redux-saga/effects'
 import { OK } from 'http-status-codes'
 
-import API from '../api'
+import API, { BASE_URL } from '../api'
 
 import * as userActions from '../actions/userActions'
 import * as contactsActions from '../actions/contactsActions'
 import * as chatsActions from '../actions/chatsActions'
+
+import { socket } from '../components/Body'
 
 import { types } from '../server/models/SocketEvent'
 import { dispatch } from '../store'
@@ -15,15 +17,35 @@ import UserInfo from '../server/models/UserInfo'
 import Chat from '../server/models/Chat'
 import Event from '../server/models/Event'
 
-const fetchSelf = function * ({ payload: socket }) {
-    const profile: UserProfile = yield call(API.fetchSelf)
+const fetchSelf = function * () {
+    yield put({
+        type: userActions.FETCH_PROFILE_REQUEST,
+        meta: {
+            offline: {
+                effect: {
+                    url: `${BASE_URL}/user`,
+                    method: 'GET',
+                    credentials: 'include'
+                },
+                commit: {
+                    type: userActions.FETCH_PROFILE_SUCCESS
+                }
+            }
+        }
+    })
+}
+
+const socketInit = function * ({ fromSocket, payload: profile }) {
+    if (fromSocket) {
+        return
+    }
 
     socket.emit('connect_auth', profile)
 
     socket.on(types.USER_UPDATE, (profile: UserProfile) => {
         socket.emit('connect_auth', profile)
 
-        dispatch({ type: userActions.FETCH_PROFILE_SUCCESS, payload: profile })
+        dispatch({ type: userActions.FETCH_PROFILE_SUCCESS, payload: profile, fromSocket: true })
         dispatch({ type: contactsActions.FETCH_ALL_ACTION, payload: profile.contacts })
         dispatch({ type: chatsActions.FETCH_ALL_ACTION, payload: profile.chats })
     })
@@ -45,7 +67,6 @@ const fetchSelf = function * ({ payload: socket }) {
     })
 
     yield all([
-        put({ type: userActions.FETCH_PROFILE_SUCCESS, payload: profile }),
         put({ type: contactsActions.FETCH_ALL_ACTION, payload: profile.contacts }),
         put({ type: chatsActions.FETCH_ALL_ACTION, payload: profile.chats })
     ])
@@ -68,6 +89,7 @@ const updateSelf = function * ({ payload } : {
 
 const sessionSagas = function * () {
     yield takeLatest(userActions.FETCH_PROFILE_ACTION, fetchSelf)
+    yield takeLatest(userActions.FETCH_PROFILE_SUCCESS, socketInit)
     yield takeLatest(userActions.UPDATE_USER_ACTION, updateSelf)
 }
 

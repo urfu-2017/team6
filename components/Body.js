@@ -22,6 +22,8 @@ type Props = {
     selectChat: Function
 }
 
+export let socket
+
 class Body extends React.Component<Props> {
     componentWillMount() {
         this.props.initialSession(this.props.session)
@@ -35,7 +37,8 @@ class Body extends React.Component<Props> {
         }
 
         this.socket = io()
-        this.props.fetchSelf(this.socket)
+        socket = this.socket
+        this.props.fetchSelf()
     }
 
     render() {
@@ -57,6 +60,6 @@ class Body extends React.Component<Props> {
 
 export default connect(null, dispatch => ({
     initialSession: payload => dispatch({ type: userActions.INITIAL_SESSION_ACTION, payload }),
-    fetchSelf: payload => dispatch({ type: userActions.FETCH_PROFILE_ACTION, payload }),
+    fetchSelf: () => dispatch({ type: userActions.FETCH_PROFILE_ACTION }),
     selectChat: payload => dispatch({ type: uiActions.SELECT_CHAT_ACTION, payload })
 }))(Body)
