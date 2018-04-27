@@ -20,7 +20,7 @@ type Props = {
 }
 
 export class ChatItem extends React.Component<Props> {
-    onSelectChat = () => this.props.selectChat(this.props.chat.common.id)
+    onSelectChat = () => this.props.selectChat(this.props.chat._id)
 
     onRemoveClick = () => this.props.removeChat(this.props.chat)
 
@@ -44,10 +44,10 @@ export class ChatItem extends React.Component<Props> {
     }
 }
 
-export default connect((state, { chat: { common: { id } } }) => ({
-    selected: state.ui.selectedChatId === id,
-    message: state.messages[id] && state.messages[id][
-        state.messages[id].length - 1
+export default connect((state, { chat: { _id } }) => ({
+    selected: state.ui.selectedChatId === _id,
+    message: state.messages[_id] && state.messages[_id][
+        state.messages[_id].length - 1
     ]
 }), dispatch => ({
     selectChat: payload => dispatch({ type: SELECT_CHAT_ACTION, payload }),

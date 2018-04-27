@@ -1,111 +1,112 @@
 // @flow
 
+import Cache from 'lru-cache'
 import mongoose from 'mongoose'
 
 import config from '../config'
 import UserProfile from '../models/UserProfile'
 
-class Entity {
+const LRUCache: Cache = new Cache({
+    max: 100000,
+    maxAge: 1000 * 60 * 60
+})
+
+class EntityNotFoundError extends Error {}
+
+class Entity<T> {
+    name: string
+    collection: string
+    Model: Object
+
     constructor(name, collection, schema) {
         this.name = name
-        this.schema = schema
         this.collection = collection
         this.Model = mongoose.model(name, schema, collection)
     }
 
-    getAll(): Promise<Array<any>> {
-        return this.Model.find()
+    getAll(options? = { limit: 50, offset: 0, where: {} }): Promise<Array<T>> {
+        return this.Model.find(options.where)
+            .skip(options.offset)
+            .limit(options.limit)
+            .exec()
     }
 
-    get(id: number): Promise<any> {
-        return this.Model.findOne({ id })
-    }
+    async get(_id: number): Promise<T> {
+        const key = `${this.Model.collection.name}_${_id}`
+        const cached = LRUCache.get(key)
 
-    remove(id: number): Promise<void> {
-        this.Model.remove({ id })
-    }
+        if (cached) {
+            return cached
+        }
 
-    async updateOrCreate(id: number, obj: any): Promise<void> {
-        const model = await this.Model.findOne({ id })
+        const model: T = await this.Model.findOne({ _id })
 
         if (!model) {
-            const entity = new this.Model(this._format(obj))
+            throw new EntityNotFoundError(`${this.constructor.name}: entity with id=${_id} not found`)
+        }
+
+        LRUCache.set(key, model)
+
+        return model
+    }
+
+    remove(_id: number): Promise<void> {
+        LRUCache.del(`${this.Model.collection.name}_${_id}`)
+        return this.Model.remove({ _id })
+    }
+
+    async updateOrCreate(_id: number, obj: T): Promise<void> {
+        const model = await this.Model.findOne({ _id })
+
+        if (!model) {
+            const entity = new this.Model(obj)
             return entity.save()
         }
 
-        return model.update(this._format(obj))
+        LRUCache.del(`${this.Model.collection.name}_${_id}`)
+
+        return model.update(obj)
     }
 
-    _format(obj: any): any {
-        return obj
-    }
-}
-
-class User extends Entity {
-    constructor() {
-        super('user', 'users', mongoose.Schema({
-            id: { type: Number, index: true },
-            name: String,
-            bio: String,
-            email: String,
-            avatar: String,
-            contacts: [Number],
-            chats: [Number]
-        }))
-    }
-
-    _format(profile: UserProfile): any {
-        return {
-            id: profile.user.gid,
-            name: profile.user.name,
-            bio: profile.user.bio,
-            email: profile.user.email,
-            avatar: profile.user.avatar,
-            contacts: profile.contacts,
-            chats: profile.chats
-        }
+    static create<S>(name, collection, schema) {
+        return new class extends Entity<S> {
+            constructor() {
+                super(name, collection, schema)
+            }
+        }()
     }
 }
 
-class Chat extends Entity {
-    constructor() {
-        super('chat', 'chats', mongoose.Schema({
-            id: { type: Number, index: true },
-            name: String,
-            owner: Number,
-            members: [Number]
-        }))
-    }
+export const userModel: Entity<UserProfile> = Entity.create('user', 'users', mongoose.Schema({
+    _id: Number,
+    user: mongoose.Schema({
+        gid: Number,
+        name: String,
+        bio: String,
+        email: String,
+        avatar: String
+    }),
+    contacts: [Number],
+    chats: [Number]
+}))
 
-    _format(chat: Chat): any {
-        return {
-            id: chat.common.id,
-            name: chat.common.name,
-            owner: chat.owner,
-            members: chat.members
-        }
-    }
-}
+export const chatModel = Entity.create('chat', 'chats', mongoose.Schema({
+    _id: Number,
+    common: mongoose.Schema({
+        name: String,
+        createdAt: Number
+    }),
+    owner: Number,
+    members: [Number]
+}))
 
-class Message extends Entity {
-    constructor() {
-        super('message', 'messages', mongoose.Schema({
-            text: String,
-            chatId: Number,
-            authorGid: Number,
-            avatar: String,
-            createdAt: Date
-        }))
-    }
+export const messageModel = Entity.create('message', 'messages', mongoose.Schema({
+    _id: Number,
+    text: String,
+    chatId: Number,
+    authorGid: Number,
+    createdAt: Number
+}))
 
-    _format(message: Message): any {
-        return { ...message }
-    }
-}
-
-export const user = new User()
-export const chat = new Chat()
-export const message = new Message()
-
-export const start = () => mongoose.connect(config.MONGODB_URL, { autoReconnect: true })
-export const end = () => mongoose.disconnect()
+export const connect = () => mongoose.connect(config.MONGODB_URL, { autoReconnect: true })
+export const disconnect = () => mongoose.disconnect()

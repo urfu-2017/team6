@@ -32,7 +32,7 @@ export class Menu extends React.Component<Props> {
                     </div>
                     {chatsArray.map(chat => (
                         <ChatMenuItem
-                            key={chat.common.id}
+                            key={chat._id}
                             chat={chat}
                         />
                     ))}

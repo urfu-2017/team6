@@ -1,19 +1,20 @@
 // @flow
 
-import { user } from '../mongodb'
+import Identicon from 'identicon.js'
+
 import UserProfile from '../../models/UserProfile'
 import SocketEvent, { types } from '../../models/SocketEvent'
-import Identicon from 'identicon.js'
+import { userModel } from '../mongodb'
 
 import socketManager from '../../socket'
 
 export default class UserAPI {
     static fetch(gid: number): Promise<UserProfile> {
-        return user.get(gid)
+        return userModel.get(gid)
     }
 
     static update(profile: UserProfile, broadcast?: boolean): Promise<void> {
-        return user.updateOrCreate(profile.user.gid, profile).then(() => {
+        return userModel.updateOrCreate(profile.user.gid, profile).then(() => {
             socketManager.sendEvent(`session_${profile.user.gid}`, new SocketEvent(types.USER_UPDATE, profile))
 
             if (broadcast) {
@@ -24,7 +25,7 @@ export default class UserAPI {
         })
     }
 
-    static getAvatar(gid: string): Buffer {
+    static async getAvatar(gid: string): Buffer {
         gid = (Number(gid) * Math.pow(10, (15 - gid.length))).toString()
         const img = 'data:image/jpg;base64,' + new Identicon(gid, 150).toString()
         const data = img.replace(/^data:image\/\w+;base64,/, '')
