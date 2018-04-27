@@ -4,7 +4,10 @@ import Cache from 'lru-cache'
 import mongoose from 'mongoose'
 
 import config from '../config'
+
 import UserProfile from '../models/UserProfile'
+import Chat from '../models/Chat'
+import Message from '../models/Message'
 
 const LRUCache: Cache = new Cache({
     max: 100000,
@@ -90,7 +93,7 @@ export const userModel: Entity<UserProfile> = Entity.create('user', 'users', mon
     chats: [Number]
 }))
 
-export const chatModel = Entity.create('chat', 'chats', mongoose.Schema({
+export const chatModel: Entity<Chat> = Entity.create('chat', 'chats', mongoose.Schema({
     _id: Number,
     common: mongoose.Schema({
         name: String,
@@ -100,7 +103,7 @@ export const chatModel = Entity.create('chat', 'chats', mongoose.Schema({
     members: [Number]
 }))
 
-export const messageModel = Entity.create('message', 'messages', mongoose.Schema({
+export const messageModel: Entity<Message> = Entity.create('message', 'messages', mongoose.Schema({
     _id: Number,
     text: String,
     chatId: Number,
