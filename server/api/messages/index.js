@@ -16,7 +16,7 @@ type OptionsType = {
 }
 
 export default class MessagesAPI {
-    static fetch(chatId: number, options?: OptionsType): Promise<Array<Message>> {
+    static fetch(chatId: number, options?: OptionsType = { limit: 50, offset: 0 }): Promise<Array<Message>> {
         return messageModel.getAll({ ...options, where: { chatId } })
     }
 

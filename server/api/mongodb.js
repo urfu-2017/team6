@@ -27,10 +27,10 @@ class Entity<T> {
         this.Model = mongoose.model(name, schema, collection)
     }
 
-    getAll(options? = { limit: 50, offset: 0, where: {} }): Promise<Array<T>> {
-        return this.Model.find(options.where)
-            .skip(options.offset)
-            .limit(options.limit)
+    getAll({ limit, offset, where = {} }): Promise<Array<T>> {
+        return this.Model.find(where)
+            .skip(limit)
+            .limit(offset)
             .exec()
     }
 

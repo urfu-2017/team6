@@ -23,12 +23,17 @@ export const addMessage = async ({ user, body }: {
 export const fetchMessages = async ({ params: { chatId }, query: { limit, offset } }: {
     params: { chatId: string },
     query: {
-        limit?: number,
-        offset?: number
+        limit?: string,
+        offset?: string
     }
 }, res: Object) => {
     try {
-        const messages: Array<Message> = await MessagesAPI.fetch(Number(chatId), { limit, offset })
+        const options = {
+            limit: Number(limit) || undefined,
+            offset: Number(offset) || undefined
+        }
+
+        const messages: Array<Message> = await MessagesAPI.fetch(Number(chatId), options)
 
         return res.status(OK).json(messages)
     } catch (e) {
