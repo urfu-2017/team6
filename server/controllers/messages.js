@@ -10,7 +10,8 @@ export const addMessage = async ({ user, body }: {
     body: Message
 }, res: Object) => {
     try {
-        body.authorGid = user.user.gid
+        const message = new Message(body)
+        message.setAuthorGid(user.user.gid)
 
         await MessagesAPI.add(body)
 

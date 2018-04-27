@@ -40,7 +40,7 @@ const sendMessage = function * ({ payload } : {
 }) {
     const user: UserInfo = yield select(state => state.session.user)
     const messages: Object = yield select(state => state.messages)
-    payload.authorGid = user.gid
+    payload.setAuthorGid(user.gid)
 
     yield put({ type: actions.SEND_SUCCESS, payload })
 

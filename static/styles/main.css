@@ -168,6 +168,10 @@ code {
 .menu-row__title {
     color: #638593;
     font-size: 12pt;
+    text-overflow: ellipsis;
+    -ms-text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .menu-row__avatar {
@@ -272,6 +276,7 @@ code {
 
 .message-box__text {
     font-size: 10pt;
+    word-break: break-all;
 }
 
 .message__avatar {
