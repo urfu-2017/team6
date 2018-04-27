@@ -10,6 +10,8 @@
     "object-curly-spacing": [0, "error"],
     "no-duplicate-imports": "error",
     "lines-between-class-members": 0,
-    "no-return-assign": 0
+    "no-return-assign": 0,
+    "no-case-declarations": 0,
+    "operator-linebreak": "off"
   }
 }

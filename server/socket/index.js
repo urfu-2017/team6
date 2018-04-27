@@ -1,5 +1,5 @@
-import UserProfile from '../../models/UserProfile'
-import SocketEvent from '../../models/SocketEvent'
+import UserProfile from '../models/UserProfile'
+import SocketEvent from '../models/SocketEvent'
 
 class SocketManager {
     init(io) {

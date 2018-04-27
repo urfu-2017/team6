@@ -1,8 +1,8 @@
 // @flow
 
 import * as hrudb from '../hrudb'
-import UserProfile from '../../../models/UserProfile'
-import SocketEvent, { types } from '../../../models/SocketEvent'
+import UserProfile from '../../models/UserProfile'
+import SocketEvent, { types } from '../../models/SocketEvent'
 import Identicon from 'identicon.js'
 
 import socketManager from '../../socket'

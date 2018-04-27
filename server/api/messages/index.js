@@ -5,9 +5,9 @@ import metascraper from 'metascraper'
 import got from 'got'
 
 import * as hrudb from '../hrudb'
-import Event, { types as eventTypes, filters } from '../../../models/Event'
-import Message from '../../../models/Message'
-import SocketEvent, { types as socketEventTypes } from '../../../models/SocketEvent'
+import Event, { types as eventTypes, filters } from '../../models/Event'
+import Message from '../../models/Message'
+import SocketEvent, { types as socketEventTypes } from '../../models/SocketEvent'
 
 import socketManager from '../../socket'
 
@@ -58,8 +58,8 @@ export default class MessagesAPI {
         return this._addEvent(message.chatId, message.clusterId, event)
     }
 
-    static async getMeta(message: Message): Promise<Object> {
-        const { body: html, url } = await got(message.text)
+    static async getMeta(targetUrl: string): Promise<Object> {
+        const { body: html, url } = await got(targetUrl)
         return metascraper({ html, url })
     }
 

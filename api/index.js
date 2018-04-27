@@ -2,11 +2,11 @@
 
 import fetch from 'isomorphic-unfetch'
 
-import UserProfile from '../models/UserProfile'
-import UserInfo from '../models/UserInfo'
-import Chat from '../models/Chat'
-import ChatInfo from '../models/ChatInfo'
-import Message from '../models/Message'
+import UserProfile from '../server/models/UserProfile'
+import UserInfo from '../server/models/UserInfo'
+import Chat from '../server/models/Chat'
+import ChatInfo from '../server/models/ChatInfo'
+import Message from '../server/models/Message'
 
 const BASE_URL = '/api/v1'
 const BASE_OPTIONS = {
@@ -28,7 +28,7 @@ export default class APIClient {
         })
     }
 
-    static async fetchContacts(gids: Array<number>): Promise<Array<UserInfo>> {
+    static async fetchContacts(gids: Array<number>): Promise<Object> {
         const response = await fetch(`${BASE_URL}/users`, {...BASE_OPTIONS,
             method: 'POST',
             body: JSON.stringify(gids)
@@ -134,10 +134,10 @@ export default class APIClient {
         })
     }
 
-    static async fetchMeta(message: Message): Promise<Object> {
+    static async fetchMeta(url: string): Promise<Object> {
         const response = await fetch(`${BASE_URL}/messages/meta`, {...BASE_OPTIONS,
             method: 'POST',
-            body: JSON.stringify(message)
+            body: JSON.stringify({ url })
         })
 
         return response.json()

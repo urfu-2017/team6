@@ -5,7 +5,7 @@ import API from '../api'
 
 import * as actions from '../actions/contactsActions'
 
-import UserInfo from '../models/UserInfo'
+import UserInfo from '../server/models/UserInfo'
 
 const fetchContacts = function * ({ payload } : {
     payload: Array<number>
@@ -20,7 +20,7 @@ const addContacts = function * ({ payload } : {
     const contacts: Object = yield select(state => state.contacts)
     yield put({
         type: actions.ADD_SUCCESS,
-        payload: payload.reduce((res, cur) => ({ ...res, [cur.user.gid]: cur.user }), {})
+        payload: payload.reduce((res, cur) => ({ ...res, [cur.gid]: cur }), {})
     })
 
     const response = yield call(API.addContacts, payload.map(x => x.gid))

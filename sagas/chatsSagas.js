@@ -5,15 +5,23 @@ import API from '../api'
 
 import * as actions from '../actions/chatsActions'
 
-import Chat from '../models/Chat'
-import UserInfo from '../models/UserInfo'
-import ChatInfo from '../models/ChatInfo'
+import Chat from '../server/models/Chat'
+import UserInfo from '../server/models/UserInfo'
+import ChatInfo from '../server/models/ChatInfo'
 
 const fetchChats = function * ({ payload } : {
     payload: Array<number>
 }) {
     const chats: Object = yield call(API.fetchChats, payload)
     yield put({ type: actions.FETCH_ALL_SUCCESS, payload: chats })
+
+    const membersMap = Object.values(chats).reduce((res, cur: Chat) => {
+        cur.members.forEach(gid => res[gid] = true)
+        return res
+    }, {})
+
+    const members: Object = yield call(API.fetchContacts, Object.keys(membersMap))
+    yield put({ type: actions.FETCH_MEMBERS_SUCCESS, payload: members })
 }
 
 const fetchChat = function * ({ payload } : {

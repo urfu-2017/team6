@@ -1,8 +1,8 @@
 // @flow
 
 import * as hrudb from '../hrudb'
-import Chat from '../../../models/Chat'
-import SocketEvent, { types } from '../../../models/SocketEvent'
+import Chat from '../../models/Chat'
+import SocketEvent, { types } from '../../models/SocketEvent'
 import socketManager from '../../socket'
 
 export default class ChatsAPI {

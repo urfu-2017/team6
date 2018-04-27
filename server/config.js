@@ -2,7 +2,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 export default {
-    PORT: 8080,
+    PORT: process.env.PORT,
     NODE_ENV: process.env.NODE_ENV,
     API_KEY: process.env.API_KEY,
     CLIENT_ID: process.env.CLIENT_ID,

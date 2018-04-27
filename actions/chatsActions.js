@@ -16,6 +16,9 @@ export const UPDATE_ACTION = 'chats.UPDATE_ACTION'
 export const UPDATE_SUCCESS = 'chats.UPDATE_SUCCESS'
 export const UPDATE_FAILED = 'chats.UPDATE_FAILED'
 
+export const FETCH_MEMBERS_ACTION = 'chats.FETCH_MEMBERS_ACTION'
+export const FETCH_MEMBERS_SUCCESS = 'chats.FETCH_MEMBERS_SUCCESS'
+
 export const ADD_MEMBER_ACTION = 'chats.ADD_MEMBER_ACTION'
 export const ADD_MEMBER_SUCCESS = 'chats.ADD_MEMBER_SUCCESS'
 export const ADD_MEMBER_FAILED = 'chats.ADD_MEMBER_FAILED'
