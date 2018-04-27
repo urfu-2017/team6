@@ -16,7 +16,6 @@ export const addMessage = async ({ user, body }: {
 
         return res.sendStatus(OK)
     } catch (e) {
-        console.log(e)
         return res.sendStatus(INTERNAL_SERVER_ERROR)
     }
 }
@@ -83,7 +82,6 @@ export const getMeta = async ({ body: { url } }: {
         const metaData: Object = await MessagesAPI.getMeta(url)
         return res.status(OK).json(metaData)
     } catch (e) {
-        console.log(e)
         return res.sendStatus(INTERNAL_SERVER_ERROR)
     }
 }

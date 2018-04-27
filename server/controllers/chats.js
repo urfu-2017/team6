@@ -62,7 +62,6 @@ export const createChat = async ({ user, body: chat }: {
 
         return res.sendStatus(OK)
     } catch (e) {
-        console.log(e)
         return res.sendStatus(INTERNAL_SERVER_ERROR)
     }
 }
