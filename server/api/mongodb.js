@@ -106,7 +106,7 @@ export const chatModel: Entity<Chat> = Entity.create('chat', 'chats', mongoose.S
 export const messageModel: Entity<Message> = Entity.create('message', 'messages', mongoose.Schema({
     _id: Number,
     text: String,
-    chatId: Number,
+    chatId: { type: Number, index: true },
     authorGid: Number,
     createdAt: Number
 }))
