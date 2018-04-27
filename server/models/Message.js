@@ -1,6 +1,6 @@
 // @flow
 
-import computeId from '../../utils/cantor-pairing'
+import computeId from '../utils/cantor-pairing'
 
 interface MessageType {
     _id: number,

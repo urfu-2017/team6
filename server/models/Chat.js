@@ -1,7 +1,7 @@
 // @flow
 
 import ChatInfo from './ChatInfo'
-import computeId from '../../utils/cantor-pairing'
+import computeId from '../utils/cantor-pairing'
 
 interface ChatType {
     _id: number,
