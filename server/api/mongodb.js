@@ -42,7 +42,7 @@ class Entity<T> {
             return cached
         }
 
-        const model: T = await this.Model.findOne({ _id })
+        const model: T = await this.Model.findById(_id)
 
         if (!model) {
             throw new EntityNotFoundError(`${this.constructor.name}: entity with id=${_id} not found`)
@@ -55,11 +55,11 @@ class Entity<T> {
 
     remove(_id: number): Promise<void> {
         LRUCache.del(`${this.Model.collection.name}_${_id}`)
-        return this.Model.remove({ _id })
+        return this.Model.findById(_id).remove()
     }
 
     async updateOrCreate(_id: number, obj: T): Promise<void> {
-        const model = await this.Model.findOne({ _id })
+        const model = await this.Model.findById(_id)
 
         if (!model) {
             const entity = new this.Model(obj)
