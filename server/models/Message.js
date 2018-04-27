@@ -18,10 +18,16 @@ export default class Message implements MessageType {
     createdAt: number
 
     constructor({ text, chatId, authorGid, createdAt = Date.now() }: MessageType) {
-        this._id = computeId(authorGid, createdAt)
         this.text = text
         this.chatId = chatId
-        this.authorGid = authorGid
         this.createdAt = createdAt
+        this.setAuthorGid(authorGid)
+    }
+
+    setAuthorGid(gid) {
+        if (gid) {
+            this.authorGid = gid
+            this._id = computeId(gid, this.createdAt)
+        }
     }
 }

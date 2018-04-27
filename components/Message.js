@@ -74,7 +74,7 @@ class MessageItem extends React.Component<Props, State> {
                 className={this.props.mine ? 'message message-right' : 'message'}
             >
                 <div className="message__avatar" onClick={() => this.props.showProfile(author)}>
-                    <img src={noavatar(author.gid)} title={author.name}/>
+                    <img src={noavatar(message.authorGid)} title={author.name}/>
                 </div>
                 <div className="message-box">
                     <div className="message-box__text">
