@@ -55,7 +55,7 @@ const removeChat = function * ({ payload: chat } : {
     const chats: Object = yield select(state => state.chats)
     yield put({ type: actions.REMOVE_SUCCESS, payload: chat })
 
-    const response = yield call(API.removeChat, chat.common.id)
+    const response = yield call(API.removeChat, chat._id)
 
     if (response.status !== OK) {
         yield put({ type: actions.REMOVE_FAILED, payload: chats })
