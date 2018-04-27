@@ -29,8 +29,8 @@ class Entity<T> {
 
     getAll({ limit, offset, where = {} }): Promise<Array<T>> {
         return this.Model.find(where)
-            .skip(limit)
-            .limit(offset)
+            .skip(offset)
+            .limit(limit)
             .exec()
     }
 
