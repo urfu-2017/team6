@@ -45,7 +45,7 @@ class ChatBody extends React.Component<Props> {
                         />
                     ))}
                 </div>
-                <MessageForm chatId={chat.common.id}/>
+                <MessageForm chatId={chat._id}/>
             </div>
         )
     }

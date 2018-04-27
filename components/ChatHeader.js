@@ -37,7 +37,7 @@ export default class ChatHeader extends React.Component<Props, State> {
                 </div>
 
                 <ChatAddMemberModal
-                    chatId={chat.common.id}
+                    chatId={chat._id}
                     onClose={this.onToggleAddMemberModal}
                     visible={this.state.addMemberModalVisible}
                 />

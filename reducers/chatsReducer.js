@@ -26,10 +26,10 @@ export default (state: StateType = {}, { type, payload }: ActionType): StateType
         case actions.FETCH_SUCCESS:
         case actions.CREATE_SUCCESS:
         case actions.SOCKET_UPDATE_ACTION:
-            newState[payload.common.id] = payload
+            newState[payload._id] = payload
             return newState
         case actions.REMOVE_SUCCESS:
-            delete newState[payload.common.id]
+            delete newState[payload._id]
             return newState
         case actions.SOCKET_REMOVE_ACTION:
             delete newState[payload]
