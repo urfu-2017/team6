@@ -6,9 +6,13 @@ class SocketManager {
         this.io = io
         this.io.on('connection', socket => {
             socket.on('connect_auth', (client: UserProfile) => {
-                socket.join(`session_${client.user.gid}`)
-                client.chats.forEach(id => socket.join(`chat_${id}`))
-                client.contacts.forEach(id => socket.join(`user_${id}`))
+                try {
+                    socket.join(`session_${client.user.gid}`)
+                    client.chats.forEach(id => socket.join(`chat_${id}`))
+                    client.contacts.forEach(id => socket.join(`user_${id}`))
+                } catch (e) {
+                    console.info(e)
+                }
             })
         })
     }

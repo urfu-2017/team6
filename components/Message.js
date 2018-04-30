@@ -48,13 +48,15 @@ class MessageItem extends React.Component<Props, State> {
                 <div className="link-metadata__body">
                     <p className="link-metadata__body_title">{data.title}</p>
                     <p className="link-metadata__body_description">
-                        <LinesEllipsis
-                            text={data.description}
-                            maxLine="2"
-                            ellipsis="..."
-                            trimRight
-                            basedOn="letters"
-                        />
+                        {data.description && (
+                            <LinesEllipsis
+                                text={data.description}
+                                maxLine="2"
+                                ellipsis="..."
+                                trimRight
+                                basedOn="letters"
+                            />
+                        )}
                     </p>
                     <p className="link-metadata__body_url">{data.url}</p>
                 </div>
@@ -72,7 +74,7 @@ class MessageItem extends React.Component<Props, State> {
                 className={this.props.mine ? 'message message-right' : 'message'}
             >
                 <div className="message__avatar" onClick={() => this.props.showProfile(author)}>
-                    <img src={noavatar(author.gid)} title={author.name}/>
+                    <img src={noavatar(message.authorGid)} title={author.name}/>
                 </div>
                 <div className="message-box">
                     <div className="message-box__text">

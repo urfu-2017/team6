@@ -22,7 +22,7 @@ export default (state: StateType = {}, { type, payload }: ActionType): StateType
         case actions.CREATE_REQUEST:
         case actions.REMOVE_FAILED:
         case actions.SOCKET_UPDATE_ACTION:
-            newState[payload.common.id] = payload
+            newState[payload._id] = payload
             return newState
         case actions.CREATE_FAILED:
         case actions.REMOVE_REQUEST:

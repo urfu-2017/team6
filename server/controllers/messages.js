@@ -10,23 +10,31 @@ export const addMessage = async ({ user, body }: {
     body: Message
 }, res: Object) => {
     try {
-        body.authorGid = user.user.gid
+        const message = new Message(body)
+        message.setAuthorGid(user.user.gid)
 
         await MessagesAPI.add(body)
 
         return res.sendStatus(OK)
     } catch (e) {
-        console.log(e)
         return res.sendStatus(INTERNAL_SERVER_ERROR)
     }
 }
 
-export const fetchMessages = async ({ params: { chatId }, query: { clusterId } }: {
+export const fetchMessages = async ({ params: { chatId }, query: { limit, offset } }: {
     params: { chatId: string },
-    query: { clusterId?: string }
+    query: {
+        limit?: string,
+        offset?: string
+    }
 }, res: Object) => {
     try {
-        const messages: Array<Message> = await MessagesAPI.fetch(Number(chatId), Number(clusterId))
+        const options = {
+            limit: Number(limit) || undefined,
+            offset: Number(offset) || undefined
+        }
+
+        const messages: Array<Message> = await MessagesAPI.fetch(Number(chatId), options)
 
         return res.status(OK).json(messages)
     } catch (e) {
@@ -80,7 +88,6 @@ export const getMeta = async ({ body: { url } }: {
         const metaData: Object = await MessagesAPI.getMeta(url)
         return res.status(OK).json(metaData)
     } catch (e) {
-        console.log(e)
         return res.sendStatus(INTERNAL_SERVER_ERROR)
     }
 }

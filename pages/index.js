@@ -20,6 +20,10 @@ export default class Main extends React.Component<Props> {
         return { session: req.user }
     }
 
+    im = this.props.url.query.im
+        ? this.props.url.query.im.replace(' ', '+')
+        : null
+
     render() {
         return (
             <Provider store={initStore()}>
@@ -31,7 +35,7 @@ export default class Main extends React.Component<Props> {
                         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css"/>
                         <link rel="stylesheet" href="/static/styles/main.css"/>
                     </Head>
-                    <Body queryId={Number(this.props.url.query.im)} session={this.props.session}/>
+                    <Body im={Number(this.im)} session={this.props.session}/>
                 </div>
             </Provider>
         )

@@ -16,7 +16,7 @@ import * as uiActions from '../actions/uiActions'
 
 type Props = {
     session: UserProfile,
-    queryId: number,
+    im: number,
     initialSession: Function,
     fetchSelf: Function,
     selectChat: Function
@@ -30,10 +30,8 @@ class Body extends React.Component<Props> {
     }
 
     componentDidMount() {
-        const { queryId } = this.props
-
-        if (queryId) {
-            this.props.selectChat(queryId)
+        if (this.props.im) {
+            this.props.selectChat(this.props.im)
         }
 
         this.socket = io()

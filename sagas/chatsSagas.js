@@ -92,7 +92,7 @@ const createChat = function * ({ payload: chat } : {
                 },
                 rollback: {
                     type: actions.CREATE_FAILED,
-                    payload: chat.common.id
+                    payload: chat._id
                 }
             }
         }
@@ -104,11 +104,11 @@ const removeChat = function * ({ payload: chat } : {
 }) {
     yield put({
         type: actions.REMOVE_REQUEST,
-        payload: chat.common.id,
+        payload: chat._id,
         meta: {
             offline: {
                 effect: {
-                    url: `${BASE_URL}/chat/${chat.common.id}`,
+                    url: `${BASE_URL}/chat/${chat._id}`,
                     method: 'DELETE',
                     credentials: 'include'
                 },
