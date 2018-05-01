@@ -544,6 +544,11 @@ code {
     -ms-text-overflow: ellipsis;
 }
 
+.message-form-wrapper {
+    height: 60px;
+    position: relative;
+}
+
 @media only
 screen and (max-device-width: 1024px),
 screen and (max-width: 1024px) {

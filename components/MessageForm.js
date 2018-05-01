@@ -1,6 +1,8 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import SendIcon from 'react-icons/lib/md/send'
+import SmileIcon from 'react-icons/lib/fa/smile-o'
+import EmojiPicker from './EmojiPicker'
 import Message from '../server/models/Message'
 import { SEND_ACTION } from '../actions/messagesActions'
 
@@ -10,6 +12,15 @@ type Props = {
 }
 
 class MessageForm extends React.Component<Props> {
+    showEmojiPicker = e => {
+        e.preventDefault()
+        this.emojiPicker.toggle()
+    }
+
+    onSelectEmoji = emoji => {
+        this.inputText.value += emoji.native
+    }
+
     onSubmit = e => {
         e.preventDefault()
 
@@ -23,15 +34,25 @@ class MessageForm extends React.Component<Props> {
 
     render() {
         return (
-            <form className="message-form" onSubmit={this.onSubmit}>
-                <input type="text"
-                    className="message-form__input" ref={ref => this.inputText = ref}
-                    placeholder="Введите сообщение..."
-                />
-                <button type="submit" onClick={this.onSubmit} className="button button-send">
-                    <SendIcon/>
-                </button>
-            </form>
+            <div className="message-form-wrapper">
+                <EmojiPicker
+                    onSelect={this.onSelectEmoji}
+                    ref={ref => this.emojiPicker = ref}/>
+                <form className="message-form" onSubmit={this.onSubmit}>
+                    <input
+                        type="text"
+                        className="message-form__input"
+                        placeholder="Введите сообщение..."
+                        ref={ref => this.inputText = ref}
+                    />
+                    <button type="button" onClick={this.showEmojiPicker} className="button button-send">
+                        <SmileIcon/>
+                    </button>
+                    <button type="submit" onClick={this.onSubmit} className="button button-send">
+                        <SendIcon/>
+                    </button>
+                </form>
+            </div>
         )
     }
 }
