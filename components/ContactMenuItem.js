@@ -27,7 +27,7 @@ class ContactMenuItem extends React.Component<Props> {
                 <div className={selected ? 'menu__row menu__row-selected flex' : 'menu__row flex'}>
                     <div><img className="menu-row__avatar" src={noavatar(contact.gid)}/></div>
                     <div className="fullWidth">
-                        <RemoveIcon className="menu-row__remove"/>
+                        <RemoveIcon onClick={this.onRemoveClick} className="menu-row__remove"/>
                         <p className="menu-row__title">{contact.name}</p>
                         <p className="menu-row__message">
                             {message ? <p>{message.text}</p> : <i>сообщений нет</i>}

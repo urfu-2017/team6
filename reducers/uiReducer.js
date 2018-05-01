@@ -19,6 +19,7 @@ type ActionType = {
 }
 
 const initialState: StateType = {
+    restored: false,
     selectedChatId: null,
     [ui.entities.CHAT_CREATE_MODAL]: false,
     [ui.entities.CONTACT_ADD_MODAL]: false,
@@ -27,6 +28,8 @@ const initialState: StateType = {
 
 export default (state: StateType = initialState, { type, payload }: ActionType): StateType => {
     switch (type) {
+        case ui.REHYDRATE_ACTION:
+            return { ...state, restored: true }
         case ui.SELECT_CHAT_ACTION:
             if (payload === state.selectedChatId) {
                 return state

@@ -1,4 +1,4 @@
-import {put, takeLatest, select} from 'redux-saga/effects'
+import { put, takeLatest, select } from 'redux-saga/effects'
 
 import { BASE_URL } from '../api'
 

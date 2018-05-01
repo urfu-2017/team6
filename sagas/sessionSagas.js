@@ -1,7 +1,5 @@
-import {put, call, takeLatest, all, select} from 'redux-saga/effects'
-import { OK } from 'http-status-codes'
-
-import API, { BASE_URL } from '../api'
+import { put, takeLatest, all, select } from 'redux-saga/effects'
+import { BASE_URL } from '../api'
 
 import * as userActions from '../actions/userActions'
 import * as contactsActions from '../actions/contactsActions'
@@ -78,13 +76,23 @@ const updateSelf = function * ({ payload } : {
     const user: UserInfo = yield select(state => state.session.user)
     payload.gid = user.gid
 
-    yield put({ type: userActions.UPDATE_USER_SUCCESS, payload })
-
-    const response = yield call(API.updateSelf, payload)
-
-    if (response.status !== OK) {
-        yield put({ type: userActions.UPDATE_USER_FAILED, payload: user })
-    }
+    yield put({
+        type: userActions.UPDATE_USER_REQUEST,
+        payload, meta: {
+            offline: {
+                effect: {
+                    url: `${BASE_URL}/user`,
+                    method: 'PATCH',
+                    credentials: 'include',
+                    body: JSON.stringify(user)
+                },
+                rollback: {
+                    type: userActions.UPDATE_USER_FAILED,
+                    payload: user
+                }
+            }
+        }
+    })
 }
 
 const sessionSagas = function * () {

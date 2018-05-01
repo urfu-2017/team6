@@ -15,7 +15,7 @@ export default (state: UserProfile = null, { type, payload }: ActionType): UserP
         case actions.INITIAL_SESSION_ACTION:
         case actions.FETCH_PROFILE_SUCCESS:
             return payload
-        case actions.UPDATE_USER_SUCCESS:
+        case actions.UPDATE_USER_REQUEST:
         case actions.UPDATE_USER_FAILED:
             return new UserProfile({ ...state, user: payload })
         default:

@@ -21,12 +21,10 @@ type Props = {
 
 export class ChatItem extends React.Component<Props> {
     onSelectChat = () => this.props.selectChat(this.props.chat._id)
-
     onRemoveClick = () => this.props.removeChat(this.props.chat)
 
     render() {
         const { chat, message, selected } = this.props
-
         return (
             <div onClick={this.onSelectChat} className={selected ? 'menu__row menu__row-selected' : 'menu__row'}>
                 <div onClick={this.onRemoveClick} className="menu-row__remove"><RemoveIcon/></div>

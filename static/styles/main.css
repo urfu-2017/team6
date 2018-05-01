@@ -3,7 +3,7 @@
 }
 
 html, body {
-    background: #e9e9e9;
+    background: #d9dee4;
     font-family: sans-serif;
     font-weight: 100;
     font-size: 10pt;
@@ -44,6 +44,22 @@ code {
     border-left: 2px solid #b9bbbd;
 }
 
+.preloader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.preloader__title {
+    text-shadow: 0 1px 0 #fff;
+    font-family: sans-serif;
+    font-weight: 400;
+    font-size: 30pt;
+    margin-top: -30px;
+    color: #898e96;
+}
+
 .flex {
     display: flex;
 }
@@ -58,6 +74,23 @@ code {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.root > div {
+    width: 100%;
+    height: 100%;
+}
+
+.line-offline {
+    color: white;
+    padding: 4px;
+    background: #94a9be;
+    position: relative;
+    text-align: center;
+}
+
+.line-offline__loader {
+    display: inline;
 }
 
 .LinesEllipsis {
@@ -97,7 +130,7 @@ code {
 
 .main {
     display: flex;
-    height: 90%;
+    height: 100%;
     width: 1024px;
     margin: 0 auto;
     padding: 0;
@@ -107,7 +140,7 @@ code {
 
 .menu {
     width: 30%;
-    box-shadow: 5px 0 25px 0 #00000017;
+    box-shadow: 5px 0 10px 0 #0000000d;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -235,7 +268,7 @@ code {
     height: 100%;
     overflow-y: auto;
     background-position-y: -54px;
-    background: url(https://raw.githubusercontent.com/telegramdesktop/tdesktop/dev/Telegram/Resources/art/bg_initial.jpg) fixed;
+    background: url('/static/img/bg-chat.jpg') fixed;
 }
 
 .messages .message:first-child{
@@ -292,16 +325,15 @@ code {
 }
 
 .chat-info {
-    padding: 3.5px 10px;
-    background: #eee;
+    background: white;
     font-size: 8pt;
-    height: 70px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    box-shadow: 4px 2px 5px 0 #00000014;
+    box-shadow: 0 2px 4px 0 #00000015;
     position: relative;
-    border-bottom: 1px solid #eaeaea;
+    padding: 15px;
 }
 
 .chat-info__name {
@@ -483,6 +515,7 @@ code {
     display: flex;
     background: #eeeeee;
     height: 70px;
+    z-index: 1;
 }
 
 .profile-card__avatar img {

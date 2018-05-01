@@ -4,6 +4,7 @@ import { Provider } from 'react-redux'
 
 import initStore from '../store/index'
 
+import Loader from '../components/Loader'
 import Body from '../components/Body'
 
 import UserProfile from '../server/models/UserProfile'
@@ -35,7 +36,9 @@ export default class Main extends React.Component<Props> {
                         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css"/>
                         <link rel="stylesheet" href="/static/styles/main.css"/>
                     </Head>
-                    <Body im={Number(this.im)} session={this.props.session}/>
+                    <Loader>
+                        <Body im={Number(this.im)} session={this.props.session}/>
+                    </Loader>
                 </div>
             </Provider>
         )
