@@ -8,6 +8,7 @@ import UserInfo from '../server/models/UserInfo'
 import noavatar from '../utils/noavatar'
 import { metaParse } from '../utils/metaparse'
 import { SHOW_PROFILE_MODAL } from '../actions/uiActions'
+import { statuses as status } from '../reducers/messagesReducer'
 
 type Props = {
     users: Object,
@@ -70,7 +71,7 @@ class MessageItem extends React.Component<Props, State> {
         const author: UserInfo = users[message.authorGid] || {}
         return (
             <div
-                style={{ opacity: message.clusterId < 0 ? 0.5 : 1 }}
+                style={{ opacity: message.status === status.PENDING ? 0.5 : 1 }}
                 className={this.props.mine ? 'message message-right' : 'message'}
             >
                 <div className="message__avatar" onClick={() => this.props.showProfile(author)}>
