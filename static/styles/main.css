@@ -121,7 +121,7 @@ code {
 }
 
 .modal-content_title {
-    font-size: 18pt;
+    font-size: 14pt;
     color: #476a89;
     border-bottom: 1px solid #f4f4f4;
     padding-bottom: 10px;
@@ -337,7 +337,7 @@ code {
 }
 
 .chat-info__name {
-    font-size: 12pt;
+    font-size: 14pt;
     color: #6d767f;
 }
 
@@ -385,7 +385,6 @@ code {
 .button-default {
     transition: all .1s;
     background: #fff;
-    padding: 10px 20px;
     border-radius: 5px;
     box-shadow: 0 1px 2px 0 #0000001f;
     cursor: pointer;
@@ -393,6 +392,8 @@ code {
     color: #4a5e71;
     font-weight: 400;
     text-transform: uppercase;
+    height: 30px;
+    padding: 0 12px;
 }
 
 .button-default:hover {
@@ -402,8 +403,6 @@ code {
 
 .button-default:active {
     box-shadow: 0 1px 0 0 #0000001f;
-    padding-top: 12px;
-    padding-bottom: 8px;
 }
 
 .button-send {
@@ -547,6 +546,32 @@ code {
 .message-form-wrapper {
     height: 60px;
     position: relative;
+}
+
+.user-info__avatar {
+    width: 40px;
+    height: 40px;
+    margin-right: 8px;
+}
+
+.user-info {
+    display: flex;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+    width: 100%;
+    font-size: 9pt;
+}
+
+.user-info__body {
+    flex: 1;
+}
+
+.modal-content_divider {
+    font-size: 12pt;
+    color: #ffffff;
+    background: #5184b0;
+    margin: 8px -26px;
+    padding: 8px;
 }
 
 @media only

@@ -37,6 +37,11 @@ export default class APIClient {
         return response.json()
     }
 
+    static async findContacts(name: string): Promise<Array<UserInfo>> {
+        const response = await fetch(`${BASE_URL}/contacts?name=${name}`, BASE_OPTIONS)
+        return response.json()
+    }
+
     static async addContacts(gids: Array<number>): Promise<Array<UserInfo>> {
         return fetch(`${BASE_URL}/contacts`, {...BASE_OPTIONS,
             method: 'PUT',

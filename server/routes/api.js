@@ -14,6 +14,7 @@ router.patch('/user', profile.updateUser)
 router.get('/user/:gid/avatar', profile.getAvatar)
 
 /* Contacts API */
+router.get('/contacts', profile.findContactByName)
 router.put('/contacts', profile.addContacts)
 router.delete('/contacts', profile.removeContacts)
 

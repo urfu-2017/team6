@@ -13,6 +13,10 @@ export default class UserAPI {
         return userModel.get(gid)
     }
 
+    static fetchBy(key: string, query: string, options? = { limit: 10, offset: 0 }): Promise<Array<UserProfile>> {
+        return userModel.findAll(key, query, options)
+    }
+
     static update(profile: UserProfile, broadcast?: boolean): Promise<void> {
         return userModel.updateOrCreate(profile.user.gid, profile).then(() => {
             socketManager.sendEvent(`session_${profile.user.gid}`, new SocketEvent(types.USER_UPDATE, profile))

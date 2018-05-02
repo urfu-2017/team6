@@ -34,6 +34,14 @@ class Entity<T> {
             .exec()
     }
 
+    findAll(key: string, query: string, { limit, offset }): Promise<Array<T>> {
+        return this.Model.find()
+            .regex(key, new RegExp(query, 'i'))
+            .skip(offset)
+            .limit(limit)
+            .exec()
+    }
+
     async get(_id: number): Promise<T> {
         const key = `${this.Model.collection.name}_${_id}`
         const cached = LRUCache.get(key)

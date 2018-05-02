@@ -92,6 +92,21 @@ export const addContacts = async ({ user, body: contacts }: {
     }
 }
 
+export const findContactByName = async ({ user, query: { name } }: {
+    user: UserProfile,
+    name: string,
+}, res: Object) => {
+    try {
+        const users: Array<UserProfile> = await UserAPI.fetchBy('user.name', name)
+        const response: Array<UserInfo> = users.filter(x => x.user.gid !== user.user.gid && !user.contacts.includes(x.user.gid))
+            .map(x => x.user)
+
+        return res.status(OK).json(response)
+    } catch (e) {
+        return res.sendStatus(NOT_FOUND)
+    }
+}
+
 export const removeContacts = async ({ user, body: contacts }: {
     user: UserProfile,
     contacts: Array<number>,
