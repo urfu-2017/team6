@@ -5,13 +5,14 @@ import MarkdownRenderer from 'react-markdown-renderer'
 
 import Message from '../server/models/Message'
 import UserInfo from '../server/models/UserInfo'
-import noavatar from '../utils/noavatar'
+import avatarByGid from '../utils/avatarByGid'
 import { metaParse } from '../utils/metaparse'
 import { SHOW_PROFILE_MODAL } from '../actions/uiActions'
 import { statuses as status } from '../reducers/messagesReducer'
 
 type Props = {
     users: Object,
+    modified: number,
     message: Message,
     mine: Boolean,
     showProfile: Function
@@ -66,7 +67,7 @@ class MessageItem extends React.Component<Props, State> {
     )
 
     render() {
-        const { message, users } = this.props
+        const { message, users, modified } = this.props
         const { metadata } = this.state
         const author: UserInfo = users[message.authorGid] || {}
         return (
@@ -75,7 +76,7 @@ class MessageItem extends React.Component<Props, State> {
                 className={this.props.mine ? 'message message-right' : 'message'}
             >
                 <div className="message__avatar" onClick={() => this.props.showProfile(author)}>
-                    <img src={noavatar(message.authorGid)} title={author.name}/>
+                    <img src={avatarByGid(message.authorGid, modified)} title={author.name}/>
                 </div>
                 <div className="message-box">
                     <div className="message-box__text">
@@ -94,7 +95,8 @@ class MessageItem extends React.Component<Props, State> {
 }
 
 export default connect(state => ({
-    users: state.chatsMembers
+    users: state.chatsMembers,
+    modified: state.session.modified
 }), dispatch => ({
     showProfile: payload => dispatch({ type: SHOW_PROFILE_MODAL, payload })
 }))(MessageItem)

@@ -8,7 +8,7 @@ import * as contactsActions from '../actions/contactsActions'
 import * as uiActions from '../actions/uiActions'
 
 import UserInfo from '../server/models/UserInfo'
-import noavatar from '../utils/noavatar'
+import noavatar from '../utils/avatarByGid'
 
 type Props = {
     visible: boolean,

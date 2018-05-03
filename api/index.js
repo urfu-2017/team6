@@ -1,6 +1,7 @@
 // @flow
 
 import fetch from 'isomorphic-unfetch'
+import FormData from 'form-data'
 
 import UserProfile from '../server/models/UserProfile'
 import UserInfo from '../server/models/UserInfo'
@@ -146,5 +147,16 @@ export default class APIClient {
         })
 
         return response.json()
+    }
+
+    static async uploadAvatar(gid: number, image: Object): Promise<Object> {
+        const formData: FormData = new FormData()
+        formData.append('avatar', image)
+
+        return fetch(`${BASE_URL}/user/${gid}/avatar`, {
+            method: 'POST',
+            credentials: 'include',
+            body: formData
+        })
     }
 }

@@ -213,7 +213,7 @@ code {
     width: 40px;
     height: 40px;
     border-radius: 100%;
-    border: 2px solid #93a9be;
+    border: 2px solid #eeeeee;
     margin-right: 6px;
 }
 
@@ -513,7 +513,7 @@ code {
 
 .profile-card {
     display: flex;
-    background: #eeeeee;
+    background: #dfe4e9;
     height: 70px;
     z-index: 1;
 }
@@ -525,11 +525,12 @@ code {
 
 .profile-card__body {
     padding: 4px 8px;
-    color: #767c83;
+    color: #768da4;
 }
 
 .profile-card__body_name {
     font-size: 10pt;
+    font-weight: 400;
     white-space: nowrap;
     text-overflow: ellipsis;
     -ms-text-overflow: ellipsis;
@@ -573,6 +574,39 @@ code {
     background: #5184b0;
     margin: 8px -26px;
     padding: 8px;
+}
+
+.modal-user-profile {
+    display: flex;
+}
+
+.modal-user-profile input {
+    display: none;
+}
+
+.modal-user-profile__avatar {
+    width: 100px;
+    height: 100px;
+    margin-right: 10px;
+}
+
+.hoverable {
+    cursor: pointer;
+}
+
+.hoverable:hover {
+    opacity: .5;
+}
+
+.modal-user-profile__avatar_uploading {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    bottom: 0;
+    background: #ffffffa8;
+    padding: 43px 0;
+    color: #476988;
+    font-weight: 400;
 }
 
 @media only

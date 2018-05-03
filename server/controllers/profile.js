@@ -1,6 +1,6 @@
 // @flow
 
-import { OK, NOT_MODIFIED, NOT_FOUND } from 'http-status-codes'
+import { OK, NOT_MODIFIED, NOT_FOUND, INTERNAL_SERVER_ERROR } from 'http-status-codes'
 
 import UserAPI from '../api/user'
 import UserInfo from '../models/UserInfo'
@@ -154,6 +154,6 @@ export const uploadAvatar = async ({ params: { gid }, files }: {
         await UserAPI.uploadAvatar(gid, files)
         res.sendStatus(OK)
     } catch (e) {
-        return res.status(500).send(e)
+        return res.sendStatus(INTERNAL_SERVER_ERROR)
     }
 }

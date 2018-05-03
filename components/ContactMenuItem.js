@@ -7,7 +7,7 @@ import Message from '../server/models/Message'
 
 import { SELECT_CHAT_ACTION } from '../actions/uiActions'
 import { REMOVE_ACTION } from '../actions/contactsActions'
-import noavatar from '../utils/noavatar'
+import noavatar from '../utils/avatarByGid'
 
 type Props = {
     chatId: number,

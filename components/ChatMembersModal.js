@@ -6,7 +6,7 @@ import Modal from 'react-responsive-modal'
 import * as chatsActions from '../actions/chatsActions'
 
 import UserInfo from '../server/models/UserInfo'
-import noavatar from '../utils/noavatar'
+import noavatar from '../utils/avatarByGid'
 import Chat from '../server/models/Chat'
 
 type Props = {

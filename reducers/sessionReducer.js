@@ -18,6 +18,8 @@ export default (state: UserProfile = null, { type, payload }: ActionType): UserP
         case actions.UPDATE_USER_REQUEST:
         case actions.UPDATE_USER_FAILED:
             return new UserProfile({ ...state, user: payload })
+        case actions.UPLOAD_AVATAR_SUCCESS:
+            return { ...state, modified: Date.now() }
         default:
             return state
     }

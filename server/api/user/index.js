@@ -2,6 +2,7 @@
 
 import Identicon from 'identicon.js'
 import { readFileSync } from 'fs'
+import rootPath from 'app-root-path'
 
 import UserProfile from '../../models/UserProfile'
 import SocketEvent, { types } from '../../models/SocketEvent'
@@ -32,7 +33,7 @@ export default class UserAPI {
 
     static async getAvatar(gid: string): Buffer {
         try {
-            return readFileSync(`./static/avatars/${gid}.jpg`)
+            return readFileSync(`${rootPath}/static/avatars/${gid}.jpg`)
         } catch (e) {
             gid = (Math.pow(Number(gid), (Math.floor(Math.sqrt(15 - gid.length))))).toString()
             const img = 'data:image/jpg;base64,' + new Identicon(gid, 150).toString()
@@ -42,10 +43,10 @@ export default class UserAPI {
     }
 
     static async uploadAvatar(gid: string, files: Object) {
-        if (!files.sampleFile || files.sampleFile.truncated) {
+        if (!files.avatar || files.avatar.truncated) {
             throw new Error('No file or size of file so large')
         }
-        const sampleFile = files.sampleFile
-        sampleFile.mv(`./static/avatars/${gid}.jpg`)
+
+        return files.avatar.mv(`${rootPath}/static/avatars/${gid}.jpg`)
     }
 }
