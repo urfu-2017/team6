@@ -135,9 +135,6 @@ export const uploadAvatar = async ({ params: { gid }, files }: {
     params: { gid: string },
     files: Object
 }, res: Object) => {
-    if (!files) {
-        return res.status(400).send('No files were uploaded.')
-    }
     try {
         await UserAPI.uploadAvatar(gid, files)
         res.sendStatus(OK)

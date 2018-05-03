@@ -9,7 +9,7 @@ import fileUpload from 'express-fileupload'
 export default app => app
     .use(bodyParser.json())
     .use(bodyParser.urlencoded({ extended: true }))
-    .use(fileUpload())
+    .use(fileUpload({ limits: { fileSize: 5 * 1024 * 1024 } }))
     .use(cookieParser())
     .use(cookieSession({
         name: 'session',

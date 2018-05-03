@@ -1,7 +1,7 @@
 // @flow
 
 import Identicon from 'identicon.js'
-import fs, { readFileSync } from 'fs'
+import { readFileSync } from 'fs'
 
 import UserProfile from '../../models/UserProfile'
 import SocketEvent, { types } from '../../models/SocketEvent'
@@ -28,8 +28,7 @@ export default class UserAPI {
 
     static async getAvatar(gid: string): Buffer {
         try {
-            const avatar = readFileSync(`./static/avatars/${gid}.jpg`)
-            return avatar
+            return readFileSync(`./static/avatars/${gid}.jpg`)
         } catch (e) {
             gid = (Number(gid) * Math.pow(10, (15 - gid.length))).toString()
             const img = 'data:image/jpg;base64,' + new Identicon(gid, 150).toString()
@@ -39,7 +38,9 @@ export default class UserAPI {
     }
 
     static async uploadAvatar(gid: string, files: Object) {
-        const sampleFile = files.sampleFile
-        sampleFile.mv(`./static/avatars/${gid}.jpg`)
+        if (files && !files.sampleFile.truncated) {
+            const sampleFile = files.sampleFile
+            sampleFile.mv(`./static/avatars/${gid}.jpg`)
+        }
     }
 }
