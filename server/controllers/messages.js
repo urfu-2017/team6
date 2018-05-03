@@ -43,8 +43,7 @@ export const fetchMessages = async ({ params: { chatId }, query: { limit, offset
 }
 
 export const fetchAllMessages = async ({ body: ids }: {
-    ids: Array<number>,
-    body: Array<number>
+    ids: Array<number>
 }, res: Object) => {
     try {
         const response: Object = {}

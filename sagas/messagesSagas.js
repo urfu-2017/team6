@@ -9,6 +9,8 @@ import { statuses as status } from '../reducers/messagesReducer'
 import UserInfo from '../server/models/UserInfo'
 import Message from '../server/models/Message'
 import Event, { types } from '../server/models/Event'
+import computeId from '../server/utils/cantor-pairing'
+import UserProfile from '../server/models/UserProfile'
 
 const mapSocketEventToAction = (type): string => {
     switch (type) {
@@ -25,6 +27,11 @@ const mapSocketEventToAction = (type): string => {
 const fetchAllMessages = function * ({ payload } : {
     payload: Object
 }) {
+    const session: UserProfile = yield select(state => state.session)
+    const body: number[] = session.contacts
+        .map(gid => computeId(gid, session.user.gid))
+        .concat(Object.keys(payload))
+
     yield put({
         type: actions.FETCH_ALL_REQUEST,
         meta: {
@@ -33,7 +40,7 @@ const fetchAllMessages = function * ({ payload } : {
                     url: `${BASE_URL}/messages`,
                     method: 'POST',
                     credentials: 'include',
-                    body: JSON.stringify(Object.keys(payload))
+                    body: JSON.stringify(body)
                 },
                 commit: {
                     type: actions.FETCH_ALL_SUCCESS

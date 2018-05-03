@@ -9,6 +9,7 @@ import Chat from '../server/models/Chat'
 type Props = {
     gid: number,
     chat: Chat,
+    chatId: number,
     messages: Message[],
 }
 
@@ -28,14 +29,14 @@ class ChatBody extends React.Component<Props> {
     }
 
     render() {
-        if (!this.props.chat) {
+        const { messages, chat, chatId, gid } = this.props
+        if (!chatId) {
             return null
         }
 
-        const { messages, chat, gid } = this.props
         return (
             <div className="chat">
-                <ChatHeader chat={chat} />
+                {chat && <ChatHeader chat={chat} />}
                 <div className="messages" ref={ref => this.messagesBody = ref}>
                     {messages.map(message => (
                         <MessageItem
@@ -45,7 +46,7 @@ class ChatBody extends React.Component<Props> {
                         />
                     ))}
                 </div>
-                <MessageForm chatId={chat._id}/>
+                <MessageForm chatId={chatId}/>
             </div>
         )
     }
@@ -54,5 +55,6 @@ class ChatBody extends React.Component<Props> {
 export default connect(state => ({
     gid: state.session.user.gid,
     chat: state.chats[state.ui.selectedChatId],
+    chatId: state.ui.selectedChatId,
     messages: (state.messages[state.ui.selectedChatId] && [...state.messages[state.ui.selectedChatId]]) || []
 }))(ChatBody)

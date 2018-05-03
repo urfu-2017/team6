@@ -3,12 +3,15 @@ import { connect } from 'react-redux'
 import RemoveIcon from 'react-icons/lib/md/clear'
 
 import UserInfo from '../server/models/UserInfo'
+import Message from '../server/models/Message'
 
 import { SELECT_CHAT_ACTION } from '../actions/uiActions'
 import { REMOVE_ACTION } from '../actions/contactsActions'
 import noavatar from '../utils/noavatar'
 
 type Props = {
+    chatId: number,
+    message: Message,
     contact: UserInfo,
     selected: boolean,
     selectChat: Function,
@@ -16,12 +19,11 @@ type Props = {
 }
 
 class ContactMenuItem extends React.Component<Props> {
-    onSelectChat = () => this.props.selectChat(this.props.contact.gid)
+    onSelectChat = () => this.props.selectChat(this.props.chatId)
     onRemoveClick = () => this.props.removeContact(this.props.contact.gid)
 
     render() {
-        const { contact, selected } = this.props
-        const message = null
+        const { contact, selected, message } = this.props
         return (
             <div onClick={this.onSelectChat}>
                 <div className={selected ? 'menu__row menu__row-selected flex' : 'menu__row flex'}>
@@ -39,8 +41,11 @@ class ContactMenuItem extends React.Component<Props> {
     }
 }
 
-export default connect((state, { contact }: { contact: UserInfo }) => ({
-    selected: state.ui.selectedChatId === contact.gid
+export default connect((state, { chatId }: { chatId: number }) => ({
+    selected: state.ui.selectedChatId === chatId,
+    message: state.messages[chatId] && state.messages[chatId][
+        state.messages[chatId].length - 1
+    ]
 }), dispatch => ({
     selectChat: payload => dispatch({ type: SELECT_CHAT_ACTION, payload }),
     removeContact: (gid: number) => dispatch({ type: REMOVE_ACTION, payload: [gid] })

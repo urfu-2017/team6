@@ -1,1 +1,6 @@
-export default (x, y) => (0.5 * (x + y) * (x + y + 1)) + y
+export default (x, y) => {
+    const a = Math.max(x, y)
+    const b = Math.min(x, y)
+
+    return (0.5 * (a + b) * (a + b + 1)) + b
+}

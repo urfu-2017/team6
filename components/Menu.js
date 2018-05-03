@@ -9,8 +9,10 @@ import ProfileCard from './ProfileCard'
 import Chat from '../server/models/Chat'
 import UserInfo from '../server/models/UserInfo'
 import { SHOW_CHAT_CREATE_MODAL, SHOW_CONTACT_ADD_MODAL } from '../actions/uiActions'
+import computeId from '../server/utils/cantor-pairing'
 
 type Props = {
+    userGid: number,
     chats: Chat[],
     contacts: UserInfo[],
     openChatCreateModal: Function,
@@ -44,6 +46,7 @@ export class Menu extends React.Component<Props> {
                     {contactsArray.map(contact => (
                         <ContactMenuItem
                             key={contact.gid}
+                            chatId={computeId(contact.gid, this.props.userGid)}
                             contact={contact}
                         />
                     ))}
@@ -54,6 +57,7 @@ export class Menu extends React.Component<Props> {
 }
 
 export default connect(state => ({
+    userGid: state.session.user.gid,
     chats: state.chats,
     contacts: state.contacts
 }), dispatch => ({
