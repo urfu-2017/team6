@@ -43,7 +43,7 @@ export default class MessagesAPI {
         return metascraper({ html, url })
     }
 
-    static async uploadImage(file: String) {
+    static async uploadImage(file: String): String {
         const time = Date.now()
         const path = '../../../static/images/'
         const optionalObj = { fileName: `${time}`, type: 'png' }
@@ -52,7 +52,7 @@ export default class MessagesAPI {
         return `http://localhost:8080/api/v1/messages/image/${time}`
     }
 
-    static async getImage(id: String) {
+    static async getImage(id: String): Buffer {
         try {
             return readFileSync(`./static/images/${id}.png`)
         } catch (e) {
