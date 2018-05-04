@@ -374,7 +374,7 @@ code {
 
 .message-form__input {
     width: 100%;
-    padding: 4px 16px;
+    padding: 4px 16px 2px 0;
     color: #363636;
     font-weight: 100;
     font-size: 10pt;
@@ -633,6 +633,15 @@ code {
     margin-top: 50%;
     font-size: 14pt;
     color: #dadada;
+}
+
+.message-form-img {
+    position: absolute;
+    height: 100px;
+    bottom: 70px;
+    left: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px 0 #00000036;
 }
 
 @media only
