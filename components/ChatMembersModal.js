@@ -22,6 +22,7 @@ type Props = {
 class ChatMembersModal extends React.Component<Props> {
     inviteMember = gid => this.props.doAction(chatsActions.ADD_MEMBER_ACTION, this.props.chatId, gid)
     excludeMember = gid => this.props.doAction(chatsActions.REMOVE_MEMBER_ACTION, this.props.chatId, gid)
+    handleFocus = e => e.target.select()
 
     render() {
         const { chat, members, contacts } = this.props
@@ -30,6 +31,15 @@ class ChatMembersModal extends React.Component<Props> {
             <Modal onClose={this.props.onClose} open={this.props.visible}>
                 <div className="modal-content">
                     <p className="modal-content_title">Участники</p>
+                    <div className="invite-link" style={{ display: 'flex' }}>
+                        <span className="invite-link__title">Ссылка для приглашения</span>
+                        <input
+                            className="input-text"
+                            type="text"
+                            value={`http://${window.location.host}/?invite=${chat._id}`}
+                            onFocus={this.handleFocus}
+                        />
+                    </div>
                     <div className="user-list">
                         {chat.members.map(gid => members[gid]).filter(Boolean).map(user => (
                             <div className="user-info" key={user.gid}>

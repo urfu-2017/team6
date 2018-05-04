@@ -15,7 +15,19 @@ import UserInfo from '../server/models/UserInfo'
 import Chat from '../server/models/Chat'
 import Event from '../server/models/Event'
 
-const fetchSelf = function * () {
+const prepareInvite = function * ({ payload, invite: chatId } : {
+    payload: UserProfile,
+    chatId: number
+}) {
+    if (chatId && !payload.chats.includes(chatId)) {
+        yield put({
+            type: chatsActions.ADD_MEMBER_ACTION,
+            payload: { chatId, gid: payload.user.gid }
+        })
+    }
+}
+
+const fetchSelf = function * ({ payload }) {
     yield put({
         type: userActions.FETCH_PROFILE_REQUEST,
         meta: {
@@ -26,7 +38,8 @@ const fetchSelf = function * () {
                     credentials: 'include'
                 },
                 commit: {
-                    type: userActions.FETCH_PROFILE_SUCCESS
+                    type: userActions.FETCH_PROFILE_SUCCESS,
+                    invite: payload
                 }
             }
         }
@@ -98,6 +111,7 @@ const updateSelf = function * ({ payload } : {
 const sessionSagas = function * () {
     yield takeLatest(userActions.FETCH_PROFILE_ACTION, fetchSelf)
     yield takeLatest(userActions.FETCH_PROFILE_SUCCESS, socketInit)
+    yield takeLatest(userActions.FETCH_PROFILE_SUCCESS, prepareInvite)
     yield takeLatest(userActions.UPDATE_USER_ACTION, updateSelf)
 }
 

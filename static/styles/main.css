@@ -609,6 +609,21 @@ code {
     font-weight: 400;
 }
 
+.invite-link {
+    display: flex;
+    align-items: center;
+}
+
+.invite-link__title {
+    font-size: 8pt;
+    background: #7e95ab;
+    color: white;
+    padding: 6px;
+    height: 26px;
+    line-height: 1.2;
+    width: 90px;
+}
+
 @media only
 screen and (max-device-width: 1024px),
 screen and (max-width: 1024px) {

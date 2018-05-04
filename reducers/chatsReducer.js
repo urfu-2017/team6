@@ -35,8 +35,12 @@ export default (state: StateType = {}, { type, payload }: ActionType): StateType
             return newState
         case actions.ADD_MEMBER_REQUEST:
         case actions.REMOVE_MEMBER_FAILED:
-            newState[payload.chatId].members.push(payload.gid)
-            return newState
+            if (newState[payload.chatId]) {
+                newState[payload.chatId].members.push(payload.gid)
+                return newState
+            }
+
+            return state
         case actions.REMOVE_MEMBER_REQUEST:
         case actions.ADD_MEMBER_FAILED:
             newState[payload.chatId].members = newState[payload.chatId]

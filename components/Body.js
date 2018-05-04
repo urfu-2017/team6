@@ -16,10 +16,11 @@ import * as userActions from '../actions/userActions'
 import * as uiActions from '../actions/uiActions'
 
 type Props = {
+    im: number,
+    invite: number,
     restored: boolean,
     online: boolean,
     session: UserProfile,
-    im: number,
     initialSession: Function,
     fetchSelf: Function,
     selectChat: Function
@@ -36,13 +37,20 @@ class Body extends React.Component<Props, State> {
 
     updateState = () => this.setState({ connected: !this.state.connected })
 
-    componentWillMount() {
-        this.props.initialSession(this.props.session)
-    }
-
     componentDidMount() {
-        if (this.props.im) {
-            this.props.selectChat(this.props.im)
+        const {
+            session,
+            initialSession,
+            selectChat,
+            fetchSelf,
+            im,
+            invite
+        } = this.props
+
+        initialSession(session)
+
+        if (im) {
+            selectChat(im)
         }
 
         this.socket = io()
@@ -50,7 +58,7 @@ class Body extends React.Component<Props, State> {
         socket.on('connect', this.updateState)
         socket.on('disconnect', this.updateState)
 
-        this.props.fetchSelf()
+        fetchSelf(invite)
     }
 
     render() {
@@ -83,6 +91,6 @@ export default connect(state => ({
     online: state.offline.online
 }), dispatch => ({
     initialSession: payload => dispatch({ type: userActions.INITIAL_SESSION_ACTION, payload }),
-    fetchSelf: () => dispatch({ type: userActions.FETCH_PROFILE_ACTION }),
+    fetchSelf: invite => dispatch({ type: userActions.FETCH_PROFILE_ACTION, payload: invite }),
     selectChat: payload => dispatch({ type: uiActions.SELECT_CHAT_ACTION, payload })
 }))(Body)
