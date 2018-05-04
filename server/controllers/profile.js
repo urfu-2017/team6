@@ -154,7 +154,7 @@ export const uploadAvatar = async ({ params: { gid }, files }: {
 }, res: Object) => {
     try {
         await UserAPI.uploadAvatar(gid, files)
-        res.sendStatus(OK)
+        return res.sendStatus(OK)
     } catch (e) {
         return res.sendStatus(INTERNAL_SERVER_ERROR)
     }
