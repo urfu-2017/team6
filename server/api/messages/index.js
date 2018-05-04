@@ -3,8 +3,6 @@
 import metascraper from 'metascraper'
 import got from 'got'
 import base64ToImage from 'base64-to-image'
-import { readFileSync } from 'fs'
-import base64Img from 'base64-img'
 import Event, { types as eventTypes } from '../../models/Event'
 import Message from '../../models/Message'
 import { messageModel } from '../mongodb'
