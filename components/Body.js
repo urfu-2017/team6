@@ -37,21 +37,12 @@ class Body extends React.Component<Props, State> {
 
     updateState = () => this.setState({ connected: !this.state.connected })
 
+    componentWillMount() {
+        this.props.initialSession(this.props.session)
+    }
+
     componentDidMount() {
-        const {
-            session,
-            initialSession,
-            selectChat,
-            fetchSelf,
-            im,
-            invite
-        } = this.props
-
-        initialSession(session)
-
-        if (im) {
-            selectChat(im)
-        }
+        const { selectChat, fetchSelf, im, invite } = this.props
 
         this.socket = io()
         socket = this.socket
@@ -59,6 +50,7 @@ class Body extends React.Component<Props, State> {
         socket.on('disconnect', this.updateState)
 
         fetchSelf(invite)
+        selectChat(im || invite)
     }
 
     render() {

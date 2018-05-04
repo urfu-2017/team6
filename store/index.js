@@ -19,7 +19,11 @@ export default (): Store => {
     const sagaMiddleware: SagaMiddleware = createSagaMiddleware()
     const middleware: Middleware = composeWithDevTools(applyMiddleware(sagaMiddleware))
 
-    reduxStore = offline(defaultConfig)(createStore)(rootReducer, middleware)
+    reduxStore = offline({ ...defaultConfig,
+        persistOptions: {
+            blacklist: ['ui']
+        }
+    })(createStore)(rootReducer, middleware)
 
     sagaMiddleware.run(rootSaga)
 

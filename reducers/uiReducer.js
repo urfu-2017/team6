@@ -35,7 +35,7 @@ export default (state: StateType = initialState, { type, payload }: ActionType):
                 return state
             }
 
-            const href = `/?im=${payload}`
+            const href = payload ? `/?im=${payload}` : `/`
             Router.replace(href, href, { shallow: true })
 
             return { ...state, selectedChatId: payload }

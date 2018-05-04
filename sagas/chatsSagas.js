@@ -29,12 +29,16 @@ const fetchChats = function * ({ payload } : {
     })
 }
 
-const fetchMembers = function * ({ payload: chats }) {
+const fetchMembersFromChats = function * ({ payload: chats }) {
     const membersMap = Object.values(chats).reduce((res, cur: Chat) => {
         cur.members.forEach(gid => res[gid] = true)
         return res
     }, {})
 
+    yield put({ type: actions.FETCH_MEMBERS_ACTION, payload: Object.keys(membersMap) })
+}
+
+const fetchMembers = function * ({ payload }) {
     yield put({
         type: actions.FETCH_MEMBERS_REQUEST,
         meta: {
@@ -43,7 +47,7 @@ const fetchMembers = function * ({ payload: chats }) {
                     url: `${BASE_URL}/users`,
                     method: 'POST',
                     credentials: 'include',
-                    body: JSON.stringify(Object.keys(membersMap))
+                    body: JSON.stringify(payload)
                 },
                 commit: {
                     type: actions.FETCH_MEMBERS_SUCCESS
@@ -201,7 +205,8 @@ const removeMemberFromChat = function * ({ payload: { chatId, gid } } : {
 
 const chatsSagas = function * () {
     yield takeLatest(actions.FETCH_ALL_ACTION, fetchChats)
-    yield takeLatest(actions.FETCH_ALL_SUCCESS, fetchMembers)
+    yield takeLatest(actions.FETCH_ALL_SUCCESS, fetchMembersFromChats)
+    yield takeLatest(actions.FETCH_MEMBERS_ACTION, fetchMembers)
     yield takeLatest(actions.FETCH_ACTION, fetchChat)
     yield takeLatest(actions.CREATE_ACTION, createChat)
     yield takeLatest(actions.REMOVE_ACTION, removeChat)

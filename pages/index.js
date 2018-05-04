@@ -36,13 +36,13 @@ export default class Main extends React.Component<Props> {
                         <link rel="stylesheet" href="/static/styles/main.css"/>
                         <link rel="stylesheet" href="/static/styles/emoji.css"/>
                     </Head>
-                    <Loader>
+                    <Loader body={(
                         <Body
                             im={Number(this.im)}
                             invite={Number(this.invite)}
                             session={this.props.session}
                         />
-                    </Loader>
+                    )}/>
                 </div>
             </Provider>
         )

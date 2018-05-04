@@ -36,7 +36,7 @@ class ChatMembersModal extends React.Component<Props> {
                         <input
                             className="input-text"
                             type="text"
-                            value={`http://${window.location.host}/?invite=${chat._id}`}
+                            value={`http://${window.location.host}/?invite=${chat._id}`} //eslint-disable-line
                             onFocus={this.handleFocus}
                         />
                     </div>

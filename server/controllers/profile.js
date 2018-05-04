@@ -69,7 +69,9 @@ export const addContacts = async ({ user, body: contacts }: {
     body: Array<number>
 }, res: Object) => {
     try {
-        const updatedContacts: Array<number> = [...new Set(...user.contacts, ...contacts)]
+        const updatedContacts: Array<number> = [...user.contacts, ...contacts]
+            .filter((x, i, arr) => arr.indexOf(x) === i)
+
         const myProfile: UserProfile = new UserProfile({ ...user, contacts: updatedContacts })
 
         const addContactToUserProfiles = async (gid: number): Promise<void> => {

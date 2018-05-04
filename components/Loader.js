@@ -1,31 +1,28 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import UserProfile from '../server/models/UserProfile'
 
 type Props = {
-    session: UserProfile,
     restored: boolean,
-    children: any
+    body: any
 }
 
 class Loader extends React.Component<Props> {
     render() {
-        if (this.props.restored && this.props.session) {
-            return this.props.children
+        if (this.props.restored) {
+            return this.props.body
         }
 
         return (
-            <div className="preloader">
-                <div>
+            <div>
+                <span className="body-loader">
                     <img src="/static/img/ripple.svg" />
-                    <p className="preloader__title">k1logram</p>
-                </div>
+                    <p className="body-loader__title">k1logram</p>
+                </span>
             </div>
         )
     }
 }
 
 export default connect(state => ({
-    session: state.session,
     restored: state.ui.restored
 }))(Loader)

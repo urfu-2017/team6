@@ -67,6 +67,7 @@ const socketInit = function * ({ fromSocket, payload: profile }) {
 
     socket.on(types.CHAT_UPDATE, (payload: Chat) => {
         dispatch({ type: chatsActions.SOCKET_UPDATE_ACTION, payload })
+        dispatch({ type: chatsActions.FETCH_MEMBERS_ACTION, payload: payload.members })
     })
 
     socket.on(types.CHAT_REMOVE, (payload: number) => {
