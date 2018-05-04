@@ -92,13 +92,15 @@ export const getMeta = async ({ body: { url } }: {
     }
 }
 
-export const uploadImage = async ({ file }: {
-    file: String
+export const uploadImage = async ({ body: { file } }: {
+    body: { file: string },
 }, res: Object) => {
     try {
-        res.status(OK).json(await MessagesAPI.uploadImage(file))
+        return res.status(OK).json({
+            url: await MessagesAPI.uploadImage(file)
+        })
     } catch (e) {
-        return res.status(500).send(e)
+        return res.sendStatus(INTERNAL_SERVER_ERROR)
     }
 }
 

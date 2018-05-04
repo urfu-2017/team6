@@ -7,6 +7,7 @@ import Event, { types as eventTypes } from '../../models/Event'
 import Message from '../../models/Message'
 import { messageModel } from '../mongodb'
 import SocketEvent, { types as socketEventTypes } from '../../models/SocketEvent'
+import rootPath from 'app-root-path'
 
 import socketManager from '../../socket'
 
@@ -43,10 +44,10 @@ export default class MessagesAPI {
 
     static async uploadImage(file: String): String {
         const time = Date.now()
-        const path = './static/images/'
-        const optionalObj = { fileName: `${time}`, type: 'png' }
+        const path = `${rootPath}/static/images/`
+        const optionalObj = { fileName: `${time}`, type: 'jpg' }
         base64ToImage(file, path, optionalObj)
 
-        return `/static/images/${time}`
+        return `/static/images/${time}.jpg`
     }
 }
