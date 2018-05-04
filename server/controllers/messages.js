@@ -92,3 +92,23 @@ export const getMeta = async ({ body: { url } }: {
     }
 }
 
+export const getImage = async ({ params: { id } }: {
+    params: { id: string }
+}, res: Object) => {
+    try {
+        return res.status(OK).send(await MessagesAPI.getImage(id))
+    } catch (e) {
+        return res.status(500).send(e)
+    }
+}
+
+export const uploadImage = async ({ file }: {
+    file: String
+}, res: Object) => {
+    try {
+        res.status(OK).json(await MessagesAPI.uploadImage(file))
+    } catch (e) {
+        return res.status(500).send(e)
+    }
+}
+

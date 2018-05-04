@@ -2,6 +2,8 @@
 
 import metascraper from 'metascraper'
 import got from 'got'
+import base64ToImage from 'base64-to-image'
+import { readFileSync } from 'fs'
 
 import Event, { types as eventTypes } from '../../models/Event'
 import Message from '../../models/Message'
@@ -39,5 +41,22 @@ export default class MessagesAPI {
     static async getMeta(targetUrl: string): Promise<Object> {
         const { body: html, url } = await got(targetUrl)
         return metascraper({ html, url })
+    }
+
+    static async uploadImage(file: String) {
+        const time = Date.now()
+        const path = '../../../static/images/'
+        const optionalObj = { fileName: `${time}`, type: 'png' }
+        base64ToImage(file, path, optionalObj)
+
+        return `http://localhost:8080/api/v1/messages/image/${time}`
+    }
+
+    static async getImage(id: String) {
+        try {
+            return readFileSync(`./static/images/${id}.png`)
+        } catch (e) {
+            throw new Error('File not found')
+        }
     }
 }
