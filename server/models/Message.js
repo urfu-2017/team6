@@ -6,7 +6,7 @@ interface MessageType {
     _id: number,
     chatId: number,
     text: string,
-    imageUrl: string,
+    imgUrl: string,
     authorGid: number,
     createdAt: number,
 }
@@ -15,7 +15,7 @@ export default class Message implements MessageType {
     _id: number
     chatId: number
     text: string
-    imageUrl: string
+    imgUrl: string
     authorGid: number
     createdAt: number
 
@@ -27,7 +27,7 @@ export default class Message implements MessageType {
         this.setAuthorGid(authorGid)
     }
 
-    setAuthorGid(gid) {
+    setAuthorGid(gid: number) {
         if (gid) {
             this.authorGid = gid
             this._id = computeId(gid, this.createdAt)

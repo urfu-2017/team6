@@ -42,6 +42,7 @@ export default (state: StateType = {}, { type, payload }: ActionType): StateType
                 newState[payload.chatId][index] = payload
             }
 
+            newState[payload.chatId] = newState[payload.chatId].sort((a, b) => a.createdAt - b.createdAt)
             return newState
         case actions.SOCKET_DELETE_MESSAGE:
             index = newState[payload.chatId].findIndex(x => x.createdAt === payload.createdAt)

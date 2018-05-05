@@ -1,5 +1,3 @@
-// @flow
-
 import Cache from 'lru-cache'
 import mongoose from 'mongoose'
 
@@ -29,6 +27,7 @@ class Entity<T> {
 
     getAll({ limit, offset, where = {} }): Promise<Array<T>> {
         return this.Model.find(where)
+            .sort({ createdAt: 1 })
             .skip(offset)
             .limit(limit)
             .exec()

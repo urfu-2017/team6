@@ -7,7 +7,7 @@ import Message from '../server/models/Message'
 
 import { SELECT_CHAT_ACTION } from '../actions/uiActions'
 import { REMOVE_ACTION } from '../actions/contactsActions'
-import noavatar from '../utils/avatarByGid'
+import avatarByGid from '../utils/avatarByGid'
 
 type Props = {
     chatId: number,
@@ -25,16 +25,16 @@ class ContactMenuItem extends React.Component<Props> {
     render() {
         const { contact, selected, message } = this.props
         return (
-            <div onClick={this.onSelectChat}>
-                <div className={selected ? 'menu__row menu__row-selected flex' : 'menu__row flex'}>
-                    <div><img className="menu-row__avatar" src={noavatar(contact.gid)}/></div>
-                    <div className="fullWidth">
-                        <RemoveIcon onClick={this.onRemoveClick} className="menu-row__remove"/>
-                        <p className="menu-row__title">{contact.name}</p>
-                        <p className="menu-row__message">
-                            {message ? <p>{message.text || (message.imgUrl && '*изображение*')}</p> : <i>сообщений нет</i>}
-                        </p>
-                    </div>
+            <div onClick={this.onSelectChat} className={selected ? 'menu__row menu__row-selected' : 'menu__row'}>
+                <img src={avatarByGid(contact.gid)} className="menu-row__avatar"/>
+                <div onClick={this.onRemoveClick} className="menu-row__remove"><RemoveIcon/></div>
+                <div className="menu-row__contact">
+                    <p className="menu-row__title">
+                        <span>{contact.name}</span>
+                    </p>
+                    <p className="menu-row__message">
+                        {message ? <span>{message.text || (message.imgUrl && '*изображение*')}</span> : <i>сообщений нет</i>}
+                    </p>
                 </div>
             </div>
         )

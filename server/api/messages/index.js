@@ -42,7 +42,7 @@ export default class MessagesAPI {
         return metascraper({ html, url })
     }
 
-    static async uploadImage(file: string): string {
+    static async uploadImage(file: string): Promise<string> {
         const time = Date.now()
         const path = `${rootPath}/static/images/`
         const optionalObj = { fileName: `${time}`, type: 'jpg' }

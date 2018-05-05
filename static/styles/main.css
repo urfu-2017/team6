@@ -157,9 +157,11 @@ code {
     height: 100%;
     overflow-y: scroll;
     box-sizing: content-box;
+    overflow-x: hidden;
 }
 
 .menu__chats_divider {
+    position: relative;
     background-color: #fafafa;
     padding: 8px 12px;
     font-size: 8pt;
@@ -167,6 +169,7 @@ code {
     border-left: 2px solid #93a9be;
     text-transform: uppercase;
     border-bottom: 1px solid #eee;
+    z-index: 1;
 }
 
 .menu__chats_plus {
@@ -181,10 +184,21 @@ code {
 }
 
 .menu__row {
+    position: relative;
     padding: 12px;
     height: 50px;
     border-bottom: 1px solid #eee;
     cursor: pointer;
+}
+
+.menu-row__stub {
+    display: inline-block;
+    position: absolute;
+    width: 1px;
+    height: 100%;
+    right: 0;
+    top: 0;
+    box-shadow: -15px -20px 20px 10px #fff;
 }
 
 .menu__row:hover {
@@ -203,6 +217,10 @@ code {
     color: white;
 }
 
+.menu__row-selected .menu-row__stub {
+    box-shadow: -15px -20px 20px 10px #95a9be;
+}
+
 .menu-row__title {
     color: #638593;
     font-size: 12pt;
@@ -213,12 +231,15 @@ code {
 }
 
 .menu-row__avatar {
-    display: inline-block;
     width: 40px;
     height: 40px;
+    position: absolute;
     border-radius: 100%;
     border: 2px solid #eeeeee;
-    margin-right: 6px;
+}
+
+.menu-row__contact {
+    margin-left:52px;
 }
 
 .menu-row__message {
@@ -240,6 +261,8 @@ code {
 }
 
 .menu-row__remove {
+    position: relative;
+    z-index: 1;
     display: none;
     float: right;
     color: #a7b3bf;
