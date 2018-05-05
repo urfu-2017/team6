@@ -680,6 +680,21 @@ code {
     min-width: 100px;
 }
 
+.message-form-dropzone {
+    position: absolute;
+    background: #dfe4e9c4;
+    left: 0;
+    right: 0;
+    font-size: 14pt;
+    border: 2px dashed #bdc6d0;
+    bottom: 0;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #868e9a;
+}
+
 @media only
 screen and (max-device-width: 1024px),
 screen and (max-width: 1024px) {
