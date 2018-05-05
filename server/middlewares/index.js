@@ -11,7 +11,10 @@ export default app => app
     .use(express.static('.next'))
     .use(bodyParser.json())
     .use(bodyParser.urlencoded({ extended: true }))
-    .use(fileUpload({ limits: { fileSize: 5 * 1024 * 1024 } }))
+    .use(fileUpload({
+        limits: { fileSize: 250 * 1024 },
+        abortOnLimit: true
+    }))
     .use(cookieParser())
     .use(cookieSession({
         name: 'session',

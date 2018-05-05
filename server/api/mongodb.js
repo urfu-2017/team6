@@ -41,11 +41,11 @@ class Entity<T> {
             .exec()
     }
 
-    async get(_id: number): Promise<T> {
+    async get(_id: number, nocache: boolean): Promise<T> {
         const key = `${this.Model.collection.name}_${_id}`
         const cached = LRUCache.get(key)
 
-        if (cached) {
+        if (cached && !nocache) {
             return cached
         }
 
@@ -55,7 +55,9 @@ class Entity<T> {
             throw new EntityNotFoundError(`${this.constructor.name}: entity with id=${_id} not found`)
         }
 
-        LRUCache.set(key, model)
+        if (nocache) {
+            LRUCache.set(key, model)
+        }
 
         return model
     }
@@ -117,6 +119,11 @@ export const messageModel: Entity<Message> = Entity.create('message', 'messages'
     chatId: { type: Number, index: true },
     authorGid: Number,
     createdAt: Number
+}))
+
+export const avatarsModel: Entity<Message> = Entity.create('avatar', 'avatars', mongoose.Schema({
+    _id: Number,
+    data: String
 }))
 
 export const connect = () => mongoose.connect(config.MONGODB_URL, { autoReconnect: true })

@@ -60,7 +60,7 @@ export const editMessage = async ({ body }: {
     body: Message,
 }, res: Object) => {
     try {
-        await MessagesAPI.edit(body)
+        //await MessagesAPI.edit(body)
 
         return res.sendStatus(OK)
     } catch (e) {
@@ -72,7 +72,7 @@ export const deleteMessage = async ({ body }: {
     body: Message
 }, res: Object) => {
     try {
-        await MessagesAPI.delete(body)
+        //await MessagesAPI.delete(body)
 
         return res.sendStatus(OK)
     } catch (e) {
@@ -93,6 +93,7 @@ export const getMeta = async ({ body: { url } }: {
 
 export const uploadImage = async ({ body: file }: {
     file: string,
+    body: string,
 }, res: Object) => {
     try {
         return res.status(OK).json({
