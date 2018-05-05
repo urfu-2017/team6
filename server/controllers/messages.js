@@ -43,8 +43,7 @@ export const fetchMessages = async ({ params: { chatId }, query: { limit, offset
 }
 
 export const fetchAllMessages = async ({ body: ids }: {
-    ids: Array<number>,
-    body: Array<number>
+    ids: Array<number>
 }, res: Object) => {
     try {
         const response: Object = {}
@@ -92,8 +91,8 @@ export const getMeta = async ({ body: { url } }: {
     }
 }
 
-export const uploadImage = async ({ body: { file } }: {
-    body: { file: string },
+export const uploadImage = async ({ body: file }: {
+    file: string,
 }, res: Object) => {
     try {
         return res.status(OK).json({

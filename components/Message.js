@@ -5,15 +5,18 @@ import MarkdownRenderer from 'react-markdown-renderer'
 
 import Message from '../server/models/Message'
 import UserInfo from '../server/models/UserInfo'
-import noavatar from '../utils/noavatar'
+import avatarByGid from '../utils/avatarByGid'
 import { metaParse } from '../utils/metaparse'
 import { SHOW_PROFILE_MODAL } from '../actions/uiActions'
+import { statuses as status } from '../reducers/messagesReducer'
 
 type Props = {
     users: Object,
+    modified: number,
     message: Message,
     mine: Boolean,
-    showProfile: Function
+    showProfile: Function,
+    onLoad: Function
 }
 
 type State = {
@@ -35,7 +38,7 @@ class MessageItem extends React.Component<Props, State> {
         const response = await metaParse(this.props.message)
 
         if (response) {
-            this.setState({ metadata: response })
+            this.setState({ metadata: response }, this.props.onLoad)
         }
     }
 
@@ -65,27 +68,36 @@ class MessageItem extends React.Component<Props, State> {
     )
 
     render() {
-        const { message, users } = this.props
+        const { message, users, modified } = this.props
         const { metadata } = this.state
         const author: UserInfo = users[message.authorGid] || {}
         return (
             <div
-                style={{ opacity: message.clusterId < 0 ? 0.5 : 1 }}
+                style={{ opacity: message.status === status.PENDING ? 0.5 : 1 }}
                 className={this.props.mine ? 'message message-right' : 'message'}
             >
                 <div className="message__avatar" onClick={() => this.props.showProfile(author)}>
-                    <img src={noavatar(message.authorGid)} title={author.name}/>
+                    <img src={avatarByGid(message.authorGid, modified)} title={author.name}/>
                 </div>
                 <div className="message-box">
-                    <div className="message-box__text">
-                        <MarkdownRenderer
-                            markdown={message.text}
-                            options={markdownOptions}
-                        />
-                    </div>
-                    <div className="message_box__metadata">
-                        {metadata.map(this.renderMetadata)}
-                    </div>
+                    {message.text && (
+                        <div className="message-box__text">
+                            <MarkdownRenderer
+                                markdown={message.text}
+                                options={markdownOptions}
+                            />
+                        </div>
+                    )}
+                    {message.imgUrl && (
+                        <div className="message-box__img">
+                            <img onLoad={this.props.onLoad} src={message.imgUrl}/>
+                        </div>
+                    )}
+                    {metadata.length > 0 && (
+                        <div className="message_box__metadata">
+                            {metadata.map(this.renderMetadata)}
+                        </div>
+                    )}
                 </div>
             </div>
         )
@@ -93,7 +105,8 @@ class MessageItem extends React.Component<Props, State> {
 }
 
 export default connect(state => ({
-    users: state.chatsMembers
+    users: state.chatsMembers,
+    modified: state.session.modified
 }), dispatch => ({
     showProfile: payload => dispatch({ type: SHOW_PROFILE_MODAL, payload })
 }))(MessageItem)

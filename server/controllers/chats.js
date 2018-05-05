@@ -1,6 +1,6 @@
 // @flow
 
-import { OK, NOT_FOUND, INTERNAL_SERVER_ERROR } from 'http-status-codes'
+import { OK, NOT_FOUND, INTERNAL_SERVER_ERROR, NOT_MODIFIED } from 'http-status-codes'
 
 import ChatsAPI from '../api/chats'
 import UserAPI from '../api/user'
@@ -88,6 +88,10 @@ export const addMemberToChat = async ({ params: { id }, body: { gid } }: {
 }, res: Object) => {
     try {
         const chat: Chat = await ChatsAPI.fetch(Number(id))
+        if (chat.members.includes(gid)) {
+            return res.sendStatus(NOT_MODIFIED)
+        }
+
         chat.members = [...chat.members, gid]
 
         const profileUpdate: Promise<void> = UserAPI.fetch(gid).then(profile => {

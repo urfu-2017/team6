@@ -29,20 +29,20 @@ export default class MessagesAPI {
         })
     }
 
-    static edit(message: Message): Promise<void> {
-        // TODO: edit message
-    }
+    // TODO: edit message
+    // static edit(message: Message): Promise<void> {
+    // }
 
-    static delete(message: Message): Promise<void> {
-        // TODO: delete message
-    }
+    // TODO: delete message
+    // static delete(message: Message): Promise<void> {
+    // }
 
     static async getMeta(targetUrl: string): Promise<Object> {
         const { body: html, url } = await got(targetUrl)
         return metascraper({ html, url })
     }
 
-    static async uploadImage(file: String): String {
+    static async uploadImage(file: string): string {
         const time = Date.now()
         const path = `${rootPath}/static/images/`
         const optionalObj = { fileName: `${time}`, type: 'jpg' }

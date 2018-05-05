@@ -15,6 +15,7 @@ router.get('/user/:gid/avatar', profile.getAvatar)
 router.post('/user/:gid/avatar', profile.uploadAvatar)
 
 /* Contacts API */
+router.get('/contacts', profile.findContactByName)
 router.put('/contacts', profile.addContacts)
 router.delete('/contacts', profile.removeContacts)
 
