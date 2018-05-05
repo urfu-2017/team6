@@ -16,7 +16,7 @@ export default class LoginPage extends React.Component {
                     <h1 className="main_hello">Hello!</h1>
                     <Link href="/auth">
                         <a>
-                            <button className="main_login">GitHub</button>
+                            <button className="main_login">Войти</button>
                         </a>
                     </Link>
                 </main>
