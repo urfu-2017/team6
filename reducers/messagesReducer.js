@@ -23,7 +23,6 @@ export default (state: StateType = {}, { type, payload }: ActionType): StateType
 
     switch (type) {
         case actions.FETCH_ALL_SUCCESS:
-        case actions.EDIT_FAILED:
         case actions.REMOVE_FAILED:
             return payload
         case actions.FETCH_CLUSTER_SUCCESS:
@@ -32,6 +31,9 @@ export default (state: StateType = {}, { type, payload }: ActionType): StateType
         case actions.SEND_REQUEST:
         case actions.SEND_SUCCESS:
         case actions.SEND_FAILED:
+        case actions.EDIT_REQUEST:
+        case actions.EDIT_SUCCESS:
+        case actions.EDIT_FAILED:
         case actions.SOCKET_NEW_MESSAGE:
         case actions.SOCKET_EDIT_MESSAGE:
             index = newState[payload.chatId].findIndex(x => x.createdAt === payload.createdAt)

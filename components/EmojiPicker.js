@@ -17,6 +17,8 @@ export default class EmojiPicker extends React.Component<Props, State> {
 
     handleClickOutside = () => this.state.isVisible && this.toggle()
 
+    isVisible = () => this.state.isVisible
+
     render() {
         if (!this.state.isVisible) {
             return null

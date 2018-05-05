@@ -60,7 +60,7 @@ export const editMessage = async ({ body }: {
     body: Message,
 }, res: Object) => {
     try {
-        //await MessagesAPI.edit(body)
+        await MessagesAPI.edit(body)
 
         return res.sendStatus(OK)
     } catch (e) {

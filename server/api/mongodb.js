@@ -118,7 +118,8 @@ export const messageModel: Entity<Message> = Entity.create('message', 'messages'
     imgUrl: String,
     chatId: { type: Number, index: true },
     authorGid: Number,
-    createdAt: Number
+    createdAt: Number,
+    reactions: mongoose.Schema.Types.Mixed
 }))
 
 export const avatarsModel: Entity<Message> = Entity.create('avatar', 'avatars', mongoose.Schema({

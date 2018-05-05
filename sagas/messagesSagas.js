@@ -80,6 +80,33 @@ const sendMessage = function * ({ payload: message } : {
     })
 }
 
+const editMessage = function * ({ payload: message } : {
+    message: Message
+}) {
+    yield put({
+        type: actions.EDIT_REQUEST,
+        payload: { ...message, status: status.PENDING },
+        meta: {
+            offline: {
+                effect: {
+                    url: `${BASE_URL}/messages`,
+                    method: 'PATCH',
+                    credentials: 'include',
+                    body: JSON.stringify(message)
+                },
+                commit: {
+                    type: actions.EDIT_SUCCESS,
+                    payload: { ...message, status: status.OK }
+                },
+                rollback: {
+                    type: actions.EDIT_FAILED,
+                    payload: { ...message, status: status.FAILED }
+                }
+            }
+        }
+    })
+}
+
 const socketEvent = function * ({ payload: event } : {
     event: Event
 }) {
@@ -89,6 +116,7 @@ const socketEvent = function * ({ payload: event } : {
 const messagesSagas = function * () {
     yield takeLatest(chatsActions.FETCH_ALL_SUCCESS, fetchAllMessages)
     yield takeLatest(actions.SEND_ACTION, sendMessage)
+    yield takeLatest(actions.EDIT_ACTION, editMessage)
     yield takeLatest(chatsActions.SOCKET_EVENT_ACTION, socketEvent)
 }
 
