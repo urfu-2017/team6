@@ -1,23 +1,22 @@
 import React from 'react'
 import MembersIcon from 'react-icons/lib/md/group'
 import TitleIcon from 'react-icons/lib/md/local-offer'
-import { Dropdown } from 'semantic-ui-react'
 import Chat from '../server/models/Chat'
-import ChatAddMemberModal from './ChatAddMemberModal'
+import ChatMembersModal from './ChatMembersModal'
 
 type Props = {
     chat: Chat
 }
 
 type State = {
-    addMemberModalVisible: boolean
+    membersModalVisible: boolean
 }
 
 export default class ChatHeader extends React.Component<Props, State> {
-    state = { addMemberModalVisible: false }
+    state = { membersModalVisible: false }
 
-    onToggleAddMemberModal = () => {
-        this.setState({ addMemberModalVisible: !this.state.addMemberModalVisible })
+    toggleMembersModal = () => {
+        this.setState({ membersModalVisible: !this.state.membersModalVisible })
     }
 
     render() {
@@ -28,18 +27,15 @@ export default class ChatHeader extends React.Component<Props, State> {
                     <TitleIcon/> {chat.common.name}
                 </p>
                 <div className="chat-info__members">
-                    <MembersIcon/> {chat.members.length} участников
-                    <Dropdown className="chat-info__dropdown" icon="bars">
-                        <Dropdown.Menu>
-                            <Dropdown.Item onClick={this.onToggleAddMemberModal} text="Добавить участника"/>
-                        </Dropdown.Menu>
-                    </Dropdown>
+                    <a href="#" onClick={this.toggleMembersModal}>
+                        <MembersIcon/> {chat.members.length} участников
+                    </a>
                 </div>
 
-                <ChatAddMemberModal
-                    chatId={chat.common.id}
-                    onClose={this.onToggleAddMemberModal}
-                    visible={this.state.addMemberModalVisible}
+                <ChatMembersModal
+                    chatId={chat._id}
+                    onClose={this.toggleMembersModal}
+                    visible={this.state.membersModalVisible}
                 />
             </div>
         )

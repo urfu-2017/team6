@@ -1,25 +1,39 @@
 // @flow
 
+import computeId from '../utils/cantor-pairing'
+
 interface MessageType {
-    text: string,
+    _id: number,
     chatId: number,
+    text: string,
+    imgUrl: string,
     authorGid: number,
     createdAt: number,
-    clusterId: number
+    reactions: Object
 }
 
 export default class Message implements MessageType {
-    text: string
+    _id: number
     chatId: number
+    text: string
+    imgUrl: string
     authorGid: number
     createdAt: number
-    clusterId: number
+    reactions: Object
 
-    constructor({ text, chatId, authorGid, createdAt = Date.now(), clusterId = -1 }: MessageType) {
+    constructor({ text, imgUrl, chatId, reactions = {}, authorGid, createdAt = Date.now() }: MessageType) {
         this.text = text
+        this.imgUrl = imgUrl
         this.chatId = chatId
-        this.authorGid = authorGid
         this.createdAt = createdAt
-        this.clusterId = clusterId
+        this.reactions = reactions
+        this.setAuthorGid(authorGid)
+    }
+
+    setAuthorGid(gid: number) {
+        if (gid) {
+            this.authorGid = gid
+            this._id = computeId(gid, this.createdAt)
+        }
     }
 }

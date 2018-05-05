@@ -1,6 +1,6 @@
 // @flow
 
-import { OK, NOT_MODIFIED, NOT_FOUND } from 'http-status-codes'
+import { OK, NOT_MODIFIED, NOT_FOUND, INTERNAL_SERVER_ERROR } from 'http-status-codes'
 
 import UserAPI from '../api/user'
 import UserInfo from '../models/UserInfo'
@@ -70,6 +70,8 @@ export const addContacts = async ({ user, body: contacts }: {
 }, res: Object) => {
     try {
         const updatedContacts: Array<number> = [...user.contacts, ...contacts]
+            .filter((x, i, arr) => arr.indexOf(x) === i)
+
         const myProfile: UserProfile = new UserProfile({ ...user, contacts: updatedContacts })
 
         const addContactToUserProfiles = async (gid: number): Promise<void> => {
@@ -89,6 +91,22 @@ export const addContacts = async ({ user, body: contacts }: {
         return res.sendStatus(OK)
     } catch (e) {
         return res.sendStatus(NOT_MODIFIED)
+    }
+}
+
+export const findContactByName = async ({ user, query: { name } }: {
+    user: UserProfile,
+    name: string,
+    query: Object
+}, res: Object) => {
+    try {
+        const users: Array<UserProfile> = await UserAPI.fetchBy('user.name', name)
+        const response: Array<UserInfo> = users.filter(x => x.user.gid !== user.user.gid && !user.contacts.includes(x.user.gid))
+            .map(x => x.user)
+
+        return res.status(OK).json(response)
+    } catch (e) {
+        return res.sendStatus(NOT_FOUND)
     }
 }
 
@@ -128,5 +146,17 @@ export const getAvatar = async ({ params: { gid } }: {
         return res.status(OK).send(await UserAPI.getAvatar(gid))
     } catch (e) {
         return res.sendStatus(NOT_FOUND)
+    }
+}
+
+export const uploadAvatar = async ({ params: { gid }, files }: {
+    params: { gid: string },
+    files: Object
+}, res: Object) => {
+    try {
+        await UserAPI.uploadAvatar(gid, files)
+        return res.sendStatus(OK)
+    } catch (e) {
+        return res.status(INTERNAL_SERVER_ERROR)
     }
 }
