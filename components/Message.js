@@ -15,7 +15,8 @@ type Props = {
     modified: number,
     message: Message,
     mine: Boolean,
-    showProfile: Function
+    showProfile: Function,
+    onLoad: Function
 }
 
 type State = {
@@ -37,7 +38,7 @@ class MessageItem extends React.Component<Props, State> {
         const response = await metaParse(this.props.message)
 
         if (response) {
-            this.setState({ metadata: response })
+            this.setState({ metadata: response }, this.props.onLoad)
         }
     }
 
@@ -79,15 +80,24 @@ class MessageItem extends React.Component<Props, State> {
                     <img src={avatarByGid(message.authorGid, modified)} title={author.name}/>
                 </div>
                 <div className="message-box">
-                    <div className="message-box__text">
-                        <MarkdownRenderer
-                            markdown={message.text}
-                            options={markdownOptions}
-                        />
-                    </div>
-                    <div className="message_box__metadata">
-                        {metadata.map(this.renderMetadata)}
-                    </div>
+                    {message.text && (
+                        <div className="message-box__text">
+                            <MarkdownRenderer
+                                markdown={message.text}
+                                options={markdownOptions}
+                            />
+                        </div>
+                    )}
+                    {message.imgUrl && (
+                        <div className="message-box__img">
+                            <img onLoad={this.props.onLoad} src={message.imgUrl}/>
+                        </div>
+                    )}
+                    {metadata.length > 0 && (
+                        <div className="message_box__metadata">
+                            {metadata.map(this.renderMetadata)}
+                        </div>
+                    )}
                 </div>
             </div>
         )

@@ -62,6 +62,7 @@ class ChatBody extends React.Component<Props> {
                             key={message.createdAt}
                             mine={message.authorGid === gid}
                             message={message}
+                            onLoad={this.scrollToBottom}
                         />
                     ))}
                 </div>

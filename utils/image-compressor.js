@@ -1,10 +1,13 @@
 /* eslint-disable */
+'use strict'
 
 /**
  * Author: Oleh Kastornov
  * ver 1.2.0
  * Ukraine
  */
+
+const MAX_SIZE = 300
 
 const COMPRESSOR_DEFAULTS = {
     toWidth: null,
@@ -160,10 +163,10 @@ ImageCompressor.prototype = {
 
     checkSizes() {
         const aspectRatio = this.image.naturalWidth / this.image.naturalHeight
-        if (this.image.naturalWidth > 1000) {
-            this.settings.toWidth = 1000
-        } else if (this.image.naturalHeight > 1000) {
-            this.settings.toHeight = 1000
+        if (this.image.naturalWidth > MAX_SIZE) {
+            this.settings.toWidth = MAX_SIZE
+        } else if (this.image.naturalHeight > MAX_SIZE) {
+            this.settings.toHeight = MAX_SIZE
         }
 
         if (!this.settings.toWidth && !this.settings.toHeight) {

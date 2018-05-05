@@ -27,22 +27,20 @@ class MessageForm extends React.Component<Props> {
         this.emojiPicker.toggle()
     }
 
-    onSelectEmoji = emoji => {
-        this.inputText.value += emoji.native
-    }
+    selectEmoji = emoji => this.inputText.value += emoji.native
 
-    onAttachImage = e => {
+    attachImage = e => {
         const imgSrc = URL.createObjectURL(e.target.files[0]) // eslint-disable-line
         this.compressor.run(imgSrc, imgData => this.setState({ imgData }))
     }
 
-    onSubmit = e => {
+    submit = e => {
         e.preventDefault()
 
         const text: string = this.inputText.value.trim()
 
-        if (text) {
-            this.props.send(new Message({ text, chatId: this.props.chatId }))
+        if (text || this.state.imgData) {
+            this.props.send(new Message({ text, imgUrl: this.state.imgData, chatId: this.props.chatId }))
             this.inputText.value = ''
             this.setState({ imgData: null })
         }
@@ -53,17 +51,17 @@ class MessageForm extends React.Component<Props> {
             <div className="message-form-wrapper">
                 {this.state.imgData && <img className="message-form-img" src={this.state.imgData}/>}
                 <EmojiPicker
-                    onSelect={this.onSelectEmoji}
+                    onSelect={this.selectEmoji}
                     ref={ref => this.emojiPicker = ref}/>
                 <input
                     ref={ref => this.inputImage = ref}
                     type="file"
                     name="image"
                     accept="image/*"
-                    onChange={this.onAttachImage}
+                    onChange={this.attachImage}
                     style={{ display: 'none' }}
                 />
-                <form className="message-form" onSubmit={this.onSubmit}>
+                <form className="message-form" onSubmit={this.submit}>
                     <button type="button" onClick={() => this.inputImage.click()} className="button button-send">
                         <ImageIcon/>
                     </button>
@@ -76,7 +74,7 @@ class MessageForm extends React.Component<Props> {
                     <button type="button" onClick={this.showEmojiPicker} className="button button-send">
                         <SmileIcon/>
                     </button>
-                    <button type="submit" onClick={this.onSubmit} className="button button-send">
+                    <button type="submit" onClick={this.submit} className="button button-send">
                         <SendIcon/>
                     </button>
                 </form>

@@ -32,7 +32,7 @@ class ContactMenuItem extends React.Component<Props> {
                         <RemoveIcon onClick={this.onRemoveClick} className="menu-row__remove"/>
                         <p className="menu-row__title">{contact.name}</p>
                         <p className="menu-row__message">
-                            {message ? <p>{message.text}</p> : <i>сообщений нет</i>}
+                            {message ? <p>{message.text || (message.imgUrl && '*изображение*')}</p> : <i>сообщений нет</i>}
                         </p>
                     </div>
                 </div>
