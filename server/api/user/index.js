@@ -1,12 +1,10 @@
 // @flow
 
 import Identicon from 'identicon.js'
-import { readFileSync } from 'fs'
-import rootPath from 'app-root-path'
 
 import UserProfile from '../../models/UserProfile'
 import SocketEvent, { types } from '../../models/SocketEvent'
-import { userModel } from '../mongodb'
+import { userModel, avatarsModel } from '../mongodb'
 
 import socketManager from '../../socket'
 
@@ -15,7 +13,7 @@ export default class UserAPI {
         return userModel.get(gid)
     }
 
-    static fetchBy(key: string, query: string, options? = { limit: 10, offset: 0 }): Promise<Array<UserProfile>> {
+    static fetchBy(key: string, query: string, options?: Object = { limit: 10, offset: 0 }): Promise<Array<UserProfile>> {
         return userModel.findAll(key, query, options)
     }
 
@@ -31,9 +29,10 @@ export default class UserAPI {
         })
     }
 
-    static async getAvatar(gid: string): Buffer {
+    static async getAvatar(gid: string): Promise<Buffer> {
         try {
-            return readFileSync(`${rootPath}/static/avatars/${gid}.jpg`)
+            const { data } = await avatarsModel.get(Number(gid), true)
+            return Buffer.from(data, 'base64')
         } catch (e) {
             gid = (Math.pow(Number(gid), (Math.floor(Math.sqrt(15 - gid.length))))).toString()
             const img = 'data:image/jpg;base64,' + new Identicon(gid, 150).toString()
@@ -47,6 +46,9 @@ export default class UserAPI {
             throw new Error('No file or size of file so large')
         }
 
-        return files.avatar.mv(`${rootPath}/static/avatars/${gid}.jpg`)
+        return avatarsModel.updateOrCreate(Number(gid), {
+            _id: Number(gid),
+            data: files.avatar.data.toString('base64')
+        })
     }
 }

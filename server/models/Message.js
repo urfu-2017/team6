@@ -6,28 +6,31 @@ interface MessageType {
     _id: number,
     chatId: number,
     text: string,
-    imageUrl: string,
+    imgUrl: string,
     authorGid: number,
     createdAt: number,
+    reactions: Object
 }
 
 export default class Message implements MessageType {
     _id: number
     chatId: number
     text: string
-    imageUrl: string
+    imgUrl: string
     authorGid: number
     createdAt: number
+    reactions: Object
 
-    constructor({ text, imgUrl, chatId, authorGid, createdAt = Date.now() }: MessageType) {
+    constructor({ text, imgUrl, chatId, reactions = {}, authorGid, createdAt = Date.now() }: MessageType) {
         this.text = text
         this.imgUrl = imgUrl
         this.chatId = chatId
         this.createdAt = createdAt
+        this.reactions = reactions
         this.setAuthorGid(authorGid)
     }
 
-    setAuthorGid(gid) {
+    setAuthorGid(gid: number) {
         if (gid) {
             this.authorGid = gid
             this._id = computeId(gid, this.createdAt)

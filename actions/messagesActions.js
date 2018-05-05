@@ -10,8 +10,9 @@ export const SEND_REQUEST = 'messages.SEND_REQUEST'
 export const SEND_SUCCESS = 'messages.SEND_SUCCESS'
 export const SEND_FAILED = 'messages.SEND_FAILED'
 
-export const EDIT_ACTION = 'messages.SEND_ACTION'
-export const EDIT_SUCCESS = 'messages.SEND_SUCCESS'
+export const EDIT_ACTION = 'messages.EDIT_ACTION'
+export const EDIT_REQUEST = 'messages.EDIT_REQUEST'
+export const EDIT_SUCCESS = 'messages.EDIT_SUCCESS'
 export const EDIT_FAILED = 'messages.EDIT_FAILED'
 
 export const REMOVE_ACTION = 'messages.REMOVE_ACTION'

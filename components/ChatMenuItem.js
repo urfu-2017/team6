@@ -32,12 +32,10 @@ export class ChatItem extends React.Component<Props> {
                 <p className="menu-row__title">
                     <span><GroupIcon/> {chat.common.name}</span>
                 </p>
-                <div className="menu-row__message">
-                    {message
-                        ? <p><img className="menu-row__message_author" src={avatarByGid(message.authorGid, modified)}/>{message.text || (message.imgUrl && '*изображение*')}</p>
-                        : <i>сообщений нет</i>
-                    }
-                </div>
+                <p className="menu-row__message">
+                    {message && <img className="menu-row__message_author" src={avatarByGid(message.authorGid, modified)}/>}
+                    {message ? <span>{message.text || (message.imgUrl && '*изображение*')}</span> : <i>сообщений нет</i> }
+                </p>
             </div>
         )
     }

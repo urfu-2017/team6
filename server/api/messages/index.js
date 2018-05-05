@@ -29,9 +29,13 @@ export default class MessagesAPI {
         })
     }
 
-    // TODO: edit message
-    // static edit(message: Message): Promise<void> {
-    // }
+    static edit(message: Message): Promise<void> {
+        return messageModel.updateOrCreate(message._id, message).then(() => {
+            socketManager.sendEvent(`chat_${message.chatId}`,
+                new SocketEvent(socketEventTypes.CHAT_EVENT, new Event(eventTypes.EDIT_MESSAGE, message))
+            )
+        })
+    }
 
     // TODO: delete message
     // static delete(message: Message): Promise<void> {
@@ -42,7 +46,7 @@ export default class MessagesAPI {
         return metascraper({ html, url })
     }
 
-    static async uploadImage(file: string): string {
+    static async uploadImage(file: string): Promise<string> {
         const time = Date.now()
         const path = `${rootPath}/static/images/`
         const optionalObj = { fileName: `${time}`, type: 'jpg' }

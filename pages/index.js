@@ -32,7 +32,6 @@ export default class Main extends React.Component<Props> {
                         <meta charSet="utf-8" />
                         <meta name="viewport" content="width=device-width, initial-scale=1" />
                         <title>Kilogram Messenger</title>
-                        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css"/>
                         <link rel="stylesheet" href="/static/styles/main.css"/>
                         <link rel="stylesheet" href="/static/styles/emoji.css"/>
                     </Head>

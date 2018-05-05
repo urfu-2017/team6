@@ -97,6 +97,7 @@ export const addContacts = async ({ user, body: contacts }: {
 export const findContactByName = async ({ user, query: { name } }: {
     user: UserProfile,
     name: string,
+    query: Object
 }, res: Object) => {
     try {
         const users: Array<UserProfile> = await UserAPI.fetchBy('user.name', name)
@@ -156,6 +157,6 @@ export const uploadAvatar = async ({ params: { gid }, files }: {
         await UserAPI.uploadAvatar(gid, files)
         return res.sendStatus(OK)
     } catch (e) {
-        return res.sendStatus(INTERNAL_SERVER_ERROR)
+        return res.status(INTERNAL_SERVER_ERROR)
     }
 }
