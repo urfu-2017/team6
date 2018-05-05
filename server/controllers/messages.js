@@ -43,8 +43,7 @@ export const fetchMessages = async ({ params: { chatId }, query: { limit, offset
 }
 
 export const fetchAllMessages = async ({ body: ids }: {
-    ids: Array<number>,
-    body: Array<number>
+    ids: Array<number>
 }, res: Object) => {
     try {
         const response: Object = {}
@@ -87,6 +86,18 @@ export const getMeta = async ({ body: { url } }: {
     try {
         const metaData: Object = await MessagesAPI.getMeta(url)
         return res.status(OK).json(metaData)
+    } catch (e) {
+        return res.sendStatus(INTERNAL_SERVER_ERROR)
+    }
+}
+
+export const uploadImage = async ({ body: file }: {
+    file: string,
+}, res: Object) => {
+    try {
+        return res.status(OK).json({
+            url: await MessagesAPI.uploadImage(file)
+        })
     } catch (e) {
         return res.sendStatus(INTERNAL_SERVER_ERROR)
     }

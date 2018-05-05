@@ -1,6 +1,8 @@
 // @flow
 
 import Identicon from 'identicon.js'
+import { readFileSync } from 'fs'
+import rootPath from 'app-root-path'
 
 import UserProfile from '../../models/UserProfile'
 import SocketEvent, { types } from '../../models/SocketEvent'
@@ -11,6 +13,10 @@ import socketManager from '../../socket'
 export default class UserAPI {
     static fetch(gid: number): Promise<UserProfile> {
         return userModel.get(gid)
+    }
+
+    static fetchBy(key: string, query: string, options? = { limit: 10, offset: 0 }): Promise<Array<UserProfile>> {
+        return userModel.findAll(key, query, options)
     }
 
     static update(profile: UserProfile, broadcast?: boolean): Promise<void> {
@@ -26,10 +32,21 @@ export default class UserAPI {
     }
 
     static async getAvatar(gid: string): Buffer {
-        gid = (Number(gid) * Math.pow(10, (15 - gid.length))).toString()
-        const img = 'data:image/jpg;base64,' + new Identicon(gid, 150).toString()
-        const data = img.replace(/^data:image\/\w+;base64,/, '')
+        try {
+            return readFileSync(`${rootPath}/static/avatars/${gid}.jpg`)
+        } catch (e) {
+            gid = (Math.pow(Number(gid), (Math.floor(Math.sqrt(15 - gid.length))))).toString()
+            const img = 'data:image/jpg;base64,' + new Identicon(gid, 150).toString()
+            const data = img.replace(/^data:image\/\w+;base64,/, '')
+            return Buffer.from(data, 'base64')
+        }
+    }
 
-        return Buffer.from(data, 'base64')
+    static async uploadAvatar(gid: string, files: Object) {
+        if (!files.avatar || files.avatar.truncated) {
+            throw new Error('No file or size of file so large')
+        }
+
+        return files.avatar.mv(`${rootPath}/static/avatars/${gid}.jpg`)
     }
 }

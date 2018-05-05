@@ -1,60 +1,95 @@
-import { select, put, call, takeLatest } from 'redux-saga/effects'
-import { OK } from 'http-status-codes'
+import { select, put, takeLatest } from 'redux-saga/effects'
 
-import API from '../api'
+import { BASE_URL } from '../api'
 
 import * as chatsActions from '../actions/chatsActions'
 import * as actions from '../actions/messagesActions'
+import { statuses as status } from '../reducers/messagesReducer'
 
 import UserInfo from '../server/models/UserInfo'
 import Message from '../server/models/Message'
 import Event, { types } from '../server/models/Event'
+import computeId from '../server/utils/cantor-pairing'
+import UserProfile from '../server/models/UserProfile'
 
-const fetchAllMessages = function * ({ payload } : {
-    payload: Object
-}) {
-    const response: Object = yield call(API.fetchAllMessages, Object.keys(payload))
-    yield put({ type: actions.FETCH_ALL_SUCCESS, payload: response })
-}
-
-const socketEvent = function * ({ payload: event } : {
-    event: Event,
-    payload: Event
-}) {
-    switch (event.type) {
+const mapSocketEventToAction = (type): string => {
+    switch (type) {
         case types.NEW_MESSAGE:
-            yield put({ type: actions.SOCKET_NEW_MESSAGE, payload: event.payload })
-            break
+            return actions.SOCKET_NEW_MESSAGE
         case types.EDIT_MESSAGE:
-            yield put({ type: actions.SOCKET_EDIT_MESSAGE, payload: event.payload })
-            break
+            return actions.SOCKET_EDIT_MESSAGE
         case types.DELETE_MESSAGE:
-            yield put({ type: actions.SOCKET_DELETE_MESSAGE, payload: event.payload })
-            break
+            return actions.SOCKET_DELETE_MESSAGE
         default: break
     }
 }
 
-const sendMessage = function * ({ payload } : {
-    payload: Message
+const fetchAllMessages = function * ({ payload } : {
+    payload: Object
+}) {
+    const session: UserProfile = yield select(state => state.session)
+    const body: number[] = session.contacts
+        .map(gid => computeId(gid, session.user.gid))
+        .concat(Object.keys(payload))
+
+    yield put({
+        type: actions.FETCH_ALL_REQUEST,
+        meta: {
+            offline: {
+                effect: {
+                    url: `${BASE_URL}/messages`,
+                    method: 'POST',
+                    credentials: 'include',
+                    body: JSON.stringify(body)
+                },
+                commit: {
+                    type: actions.FETCH_ALL_SUCCESS
+                }
+            }
+        }
+    })
+}
+
+const sendMessage = function * ({ payload: message } : {
+    message: Message
 }) {
     const user: UserInfo = yield select(state => state.session.user)
-    const messages: Object = yield select(state => state.messages)
-    payload.setAuthorGid(user.gid)
+    message.setAuthorGid(user.gid)
 
-    yield put({ type: actions.SEND_SUCCESS, payload })
+    yield put({
+        type: actions.SEND_REQUEST,
+        payload: { ...message, status: status.PENDING },
+        meta: {
+            offline: {
+                effect: {
+                    url: `${BASE_URL}/messages/${message.chatId}`,
+                    method: 'PUT',
+                    credentials: 'include',
+                    body: JSON.stringify(message)
+                },
+                commit: {
+                    type: actions.SEND_SUCCESS,
+                    payload: { ...message, status: status.OK }
+                },
+                rollback: {
+                    type: actions.SEND_FAILED,
+                    payload: { ...message, status: status.FAILED }
+                }
+            }
+        }
+    })
+}
 
-    const response = yield call(API.addMessage, payload)
-
-    if (response.status !== OK) {
-        yield put({ type: actions.SEND_FAILED, payload: messages })
-    }
+const socketEvent = function * ({ payload: event } : {
+    event: Event
+}) {
+    yield put({ type: mapSocketEventToAction(event.type), payload: event.payload })
 }
 
 const messagesSagas = function * () {
     yield takeLatest(chatsActions.FETCH_ALL_SUCCESS, fetchAllMessages)
-    yield takeLatest(chatsActions.SOCKET_EVENT_ACTION, socketEvent)
     yield takeLatest(actions.SEND_ACTION, sendMessage)
+    yield takeLatest(chatsActions.SOCKET_EVENT_ACTION, socketEvent)
 }
 
 export default messagesSagas

@@ -34,6 +34,14 @@ class Entity<T> {
             .exec()
     }
 
+    findAll(key: string, query: string, { limit, offset }): Promise<Array<T>> {
+        return this.Model.find()
+            .regex(key, new RegExp(query, 'i'))
+            .skip(offset)
+            .limit(limit)
+            .exec()
+    }
+
     async get(_id: number): Promise<T> {
         const key = `${this.Model.collection.name}_${_id}`
         const cached = LRUCache.get(key)
@@ -106,6 +114,7 @@ export const chatModel: Entity<Chat> = Entity.create('chat', 'chats', mongoose.S
 export const messageModel: Entity<Message> = Entity.create('message', 'messages', mongoose.Schema({
     _id: Number,
     text: String,
+    imgUrl: String,
     chatId: { type: Number, index: true },
     authorGid: Number,
     createdAt: Number

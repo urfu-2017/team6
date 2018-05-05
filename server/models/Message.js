@@ -4,21 +4,24 @@ import computeId from '../utils/cantor-pairing'
 
 interface MessageType {
     _id: number,
-    text: string,
     chatId: number,
+    text: string,
+    imageUrl: string,
     authorGid: number,
-    createdAt: number
+    createdAt: number,
 }
 
 export default class Message implements MessageType {
     _id: number
-    text: string
     chatId: number
+    text: string
+    imageUrl: string
     authorGid: number
     createdAt: number
 
-    constructor({ text, chatId, authorGid, createdAt = Date.now() }: MessageType) {
+    constructor({ text, imgUrl, chatId, authorGid, createdAt = Date.now() }: MessageType) {
         this.text = text
+        this.imgUrl = imgUrl
         this.chatId = chatId
         this.createdAt = createdAt
         this.setAuthorGid(authorGid)
