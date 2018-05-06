@@ -782,6 +782,10 @@ code {
     flex-direction: row-reverse;
 }
 
+.message-right .message-box__reactions {
+    flex-direction: row-reverse;
+}
+
 @media only
 screen and (max-device-width: 1024px),
 screen and (max-width: 1024px) {
