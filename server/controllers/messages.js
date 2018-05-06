@@ -17,7 +17,7 @@ export const addMessage = async ({ user, body }: {
 
         return res.sendStatus(OK)
     } catch (e) {
-        return res.sendStatus(INTERNAL_SERVER_ERROR)
+        return res.status(INTERNAL_SERVER_ERROR).send(e)
     }
 }
 
@@ -48,7 +48,7 @@ export const fetchAllMessages = async ({ body: ids }: {
     try {
         const response: Object = {}
         await Promise.all(ids.map(id => MessagesAPI.fetch(id)
-            .then(messages => response[id] = messages)))
+            .then(messages => response[id] = messages.reverse())))
 
         return res.status(OK).json(response)
     } catch (e) {
@@ -64,7 +64,7 @@ export const editMessage = async ({ body }: {
 
         return res.sendStatus(OK)
     } catch (e) {
-        return res.sendStatus(INTERNAL_SERVER_ERROR)
+        return res.status(INTERNAL_SERVER_ERROR).send(e)
     }
 }
 
@@ -76,7 +76,7 @@ export const deleteMessage = async ({ body }: {
 
         return res.sendStatus(OK)
     } catch (e) {
-        return res.sendStatus(INTERNAL_SERVER_ERROR)
+        return res.status(INTERNAL_SERVER_ERROR).send(e)
     }
 }
 
