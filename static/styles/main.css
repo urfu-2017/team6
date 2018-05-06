@@ -330,7 +330,7 @@ code {
 
 .message-box {
     margin: 8px 0;
-    padding: 0 10px;
+    padding: 0 12px;
     background: #fff;
     border-radius: 0 10px 10px 10px;
     box-shadow: 0 1px 1px 0 #00000024;
@@ -339,7 +339,7 @@ code {
 .message-box__text {
     padding: 8px 0;
     font-size: 10pt;
-    word-break: break-all;
+    word-break: normal;
 }
 
 .message__avatar {
@@ -749,14 +749,14 @@ code {
 }
 
 .message-box__reactions {
-    display: inline-flex;
-    flex-direction: row-reverse;
-    max-width: 210px;
-    overflow-x: scroll;
-    margin-bottom: -20px;
+    display: flex;
+    flex-wrap: wrap-reverse;
+    margin-bottom: -5px;
+    max-width: 60%;
 }
 
 .message-box__reactions span {
+    display: inline-block;
     cursor: pointer;
     border-radius: 5px;
     background: #788ea766;
