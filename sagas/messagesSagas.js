@@ -131,7 +131,7 @@ const socketNewMessage = function * ({ payload: message } : {
             icon: avatarByGid(message.authorGid),
             tag: String(message.chatId),
             renotify: true,
-            vibrate: [200, 100, 200, 100, 200, 100, 200]
+            vibrate: [400, 200, 400]
         })
     }
 }

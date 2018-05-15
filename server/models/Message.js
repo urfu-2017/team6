@@ -9,7 +9,8 @@ interface MessageType {
     imgUrl: string,
     authorGid: number,
     createdAt: number,
-    reactions: Object
+    reactions: Object,
+    forwarded: Object[]
 }
 
 export default class Message implements MessageType {
@@ -20,13 +21,15 @@ export default class Message implements MessageType {
     authorGid: number
     createdAt: number
     reactions: Object
+    forwarded: Object[]
 
-    constructor({ text, imgUrl, chatId, reactions = {}, authorGid, createdAt = Date.now() }: MessageType) {
+    constructor({ text, imgUrl, chatId, reactions = {}, authorGid, createdAt = Date.now(), forwarded = [] }: MessageType) {
         this.text = text
         this.imgUrl = imgUrl
         this.chatId = chatId
         this.createdAt = createdAt
         this.reactions = reactions
+        this.forwarded = forwarded
         this.setAuthorGid(authorGid)
     }
 

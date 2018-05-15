@@ -1,19 +1,22 @@
 import React from 'react'
-import { connect, connectAdvanced } from 'react-redux'
+import { connect } from 'react-redux'
 import SendIcon from 'react-icons/lib/md/send'
 import SmileIcon from 'react-icons/lib/fa/smile-o'
 import ImageIcon from 'react-icons/lib/io/image'
-import Dropzone from 'react-dropzone'
+import RemoveIcon from 'react-icons/lib/md/clear'
 
 import EmojiPicker from './EmojiPicker'
 import Message from '../server/models/Message'
-import { SEND_ACTION } from '../actions/messagesActions'
+import { FORWARD_RESET, SEND_ACTION } from '../actions/messagesActions'
 
 import ImageCompressor from '../utils/image-compressor'
+import avatarByGid from '../utils/avatarByGid'
 
 type Props = {
     chatId: number,
-    send: Function
+    forwarded: Message[],
+    send: Function,
+    resetForwarded: Function
 }
 
 type State = {
@@ -24,8 +27,8 @@ class MessageForm extends React.Component<Props, State> {
     state = { imgData: null }
 
     compressor = new ImageCompressor(
-        document.createElement('canvas'), // eslint-disable-line
-        document.createElement('img') // eslint-disable-line
+        document.createElement('canvas'),
+        document.createElement('img')
     )
 
     showEmojiPicker = e => {
@@ -48,9 +51,17 @@ class MessageForm extends React.Component<Props, State> {
 
         const text: string = this.inputText.value.trim()
 
-        if (text || this.state.imgData) {
-            this.props.send(new Message({ text, imgUrl: this.state.imgData, chatId: this.props.chatId }))
+        if (text || this.state.imgData || this.props.forwarded.length > 0) {
+            const message: Message = new Message({
+                text,
+                imgUrl: this.state.imgData,
+                chatId: this.props.chatId,
+                forwarded: this.props.forwarded
+            })
+
+            this.props.send(message)
             this.inputText.value = ''
+            this.props.resetForwarded()
             this.setState({ imgData: null })
         }
     }
@@ -70,6 +81,19 @@ class MessageForm extends React.Component<Props, State> {
                     onChange={event => this.attachImage(event.target.files[0])}
                     style={{ display: 'none' }}
                 />
+                {Boolean(this.props.forwarded.length) && (
+                    <div className="forwarded">
+                        {this.props.forwarded.length === 1 ? (
+                            <div className="forwarded__message">
+                                <img src={avatarByGid(this.props.forwarded[0].authorGid)}/>
+                                <p>{this.props.forwarded[0].text || (this.props.forwarded[0].forwarded.length > 0 && '*вложения*')}</p>
+                            </div>
+                        ) : (
+                            <p>Пересылаемых сообщений: {this.props.forwarded.length}</p>
+                        )}
+                        <span onClick={this.props.resetForwarded}><RemoveIcon/></span>
+                    </div>
+                )}
                 <form className="message-form" onSubmit={this.submit}>
                     <button type="button" onClick={() => this.inputImage.click()} className="button button-send">
                         <ImageIcon/>
@@ -93,5 +117,6 @@ class MessageForm extends React.Component<Props, State> {
 }
 
 export default connect(null, dispatch => ({
-    send: (payload: Message) => dispatch({ type: SEND_ACTION, payload })
+    send: (payload: Message) => dispatch({ type: SEND_ACTION, payload }),
+    resetForwarded: () => dispatch({ type: FORWARD_RESET })
 }), null, { withRef: true })(MessageForm)

@@ -7,6 +7,7 @@ import ChatHeader from './ChatHeader'
 import MessageForm from './MessageForm'
 import Chat from '../server/models/Chat'
 import computeId from '../server/utils/cantor-pairing'
+import { FORWARD_ACTION } from '../actions/messagesActions'
 import { SELECT_CHAT_ACTION } from '../actions/uiActions'
 
 type Props = {
@@ -14,19 +15,28 @@ type Props = {
     contacts: number[],
     chat: Chat,
     chatId: number,
+    forwarded: Message[],
     messages: Message[],
-    reset: Function
+    reset: Function,
+    forward: Function
 }
 
-class ChatBody extends React.Component<Props> {
-    state = { dragzone: false }
+type State = {
+    dragzone: boolean,
+    selectedMessages: Message[]
+}
+
+class ChatBody extends React.Component<Props, State> {
+    state = { dragzone: false, selectedMessages: [] }
 
     componentDidMount() {
         this.scrollToBottom()
     }
 
-    componentDidUpdate() {
-        this.scrollToBottom()
+    componentWillReceiveProps(nextProps) {
+        if (this.messagesBody && this.props.messages.length !== nextProps.messages.length) {
+            this.setState({}, this.scrollToBottom)
+        }
     }
 
     scrollToBottom = () => {
@@ -58,12 +68,32 @@ class ChatBody extends React.Component<Props> {
         this.dragzoneHide()
     }
 
+    onSelectMessage = (message: Message, selected: boolean) => {
+        const { selectedMessages } = this.state
+
+        if (selected) {
+            this.setState({ selectedMessages: [...selectedMessages, message] })
+        } else {
+            this.setState({ selectedMessages: selectedMessages.filter(x => x._id !== message._id) })
+        }
+    }
+
+    forwardMessages = () => {
+        this.props.forward(this.state.selectedMessages)
+        this.props.reset()
+
+        this.setState({ selectedMessages: [] })
+    }
+
     render() {
-        const { messages, chat, chatId, gid } = this.props
+        const { messages, chat, chatId, gid, forwarded } = this.props
         if (!chatId || !this.checkDialogExist()) {
             return (
                 <div className="chat">
-                    <span className="chat__not-selected">Выберите диалог для общения</span>
+                    <span className="chat__not-selected">{forwarded.length
+                        ? `Выберите диалог для пересылки сообщений`
+                        : `Выберите диалог для общения`
+                    }</span>
                 </div>
             )
         }
@@ -79,7 +109,12 @@ class ChatBody extends React.Component<Props> {
             >
                 {this.state.dragzone && <div className="message-form-dropzone">Переместите изображение сюда...</div>}
                 <div className="chat">
-                    {chat && <ChatHeader chat={chat} />}
+                    <ChatHeader
+                        title={chat ? chat.common.name : 'Диалог'}
+                        chat={chat}
+                        selectedMessages={this.state.selectedMessages}
+                        forwardMessages={this.forwardMessages}
+                    />
                     <div className="messages" ref={ref => this.messagesBody = ref}>
                         {messages.map(message => (
                             <MessageItem
@@ -87,11 +122,13 @@ class ChatBody extends React.Component<Props> {
                                 mine={message.authorGid === gid}
                                 message={message}
                                 onLoad={this.scrollToBottom}
+                                onSelectMessage={this.onSelectMessage}
                             />
                         ))}
                     </div>
                     <MessageForm
                         ref={ref => ref && (this.messageForm = ref.getWrappedInstance())}
+                        forwarded={forwarded}
                         chatId={chatId}
                     />
                 </div>
@@ -105,7 +142,9 @@ export default connect(state => ({
     contacts: state.session.contacts,
     chat: state.chats[state.ui.selectedChatId],
     chatId: state.ui.selectedChatId,
-    messages: (state.messages[state.ui.selectedChatId] && [...state.messages[state.ui.selectedChatId]]) || []
+    forwarded: state.forwarded,
+    messages: (state.messages[state.ui.selectedChatId] && [...state.messages[state.ui.selectedChatId]]) || [],
 }), dispatch => ({
-    reset: () => dispatch({ type: SELECT_CHAT_ACTION, payload: null })
+    reset: () => dispatch({ type: SELECT_CHAT_ACTION, payload: null }),
+    forward: payload => dispatch({ type: FORWARD_ACTION, payload })
 }))(ChatBody)
