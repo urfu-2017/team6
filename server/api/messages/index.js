@@ -37,9 +37,9 @@ export default class MessagesAPI {
         })
     }
 
-    // TODO: delete message
-    // static delete(message: Message): Promise<void> {
-    // }
+    static delete(message: Message): Promise<void> {
+        return message // TODO delete
+    }
 
     static async getMeta(targetUrl: string): Promise<Object> {
         const { body: html, url } = await got(targetUrl)
