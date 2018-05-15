@@ -36,7 +36,7 @@ export default (state: StateType = {}, { type, payload }: ActionType): StateType
         case actions.EDIT_FAILED:
         case actions.SOCKET_NEW_MESSAGE:
         case actions.SOCKET_EDIT_MESSAGE:
-            index = newState[payload.chatId].findIndex(x => x.createdAt === payload.createdAt)
+            index = newState[payload.chatId].findIndex(x => x._id === payload._id)
 
             if (index === -1) {
                 newState[payload.chatId].push(payload)
@@ -47,7 +47,7 @@ export default (state: StateType = {}, { type, payload }: ActionType): StateType
             newState[payload.chatId] = newState[payload.chatId].sort((a, b) => a.createdAt - b.createdAt)
             return newState
         case actions.SOCKET_DELETE_MESSAGE:
-            index = newState[payload.chatId].findIndex(x => x.createdAt === payload.createdAt)
+            index = newState[payload.chatId].findIndex(x => x._id === payload._id)
             delete newState[payload.chatId][index]
             return newState
         default:

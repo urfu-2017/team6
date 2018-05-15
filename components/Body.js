@@ -41,6 +41,13 @@ class Body extends React.Component<Props, State> {
         this.props.initialSession(this.props.session)
     }
 
+    componentWillReceiveProps(props) {
+        if (props.online && !this.props.online) {
+            this.socket.connect()
+            this.props.fetchSelf()
+        }
+    }
+
     componentDidMount() {
         const { selectChat, fetchSelf, im, invite } = this.props
 

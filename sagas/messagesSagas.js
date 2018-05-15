@@ -6,11 +6,15 @@ import * as chatsActions from '../actions/chatsActions'
 import * as actions from '../actions/messagesActions'
 import { statuses as status } from '../reducers/messagesReducer'
 
+import ServiceWorkerManager from '../serviceWorker'
+
 import UserInfo from '../server/models/UserInfo'
 import Message from '../server/models/Message'
 import Event, { types } from '../server/models/Event'
 import computeId from '../server/utils/cantor-pairing'
 import UserProfile from '../server/models/UserProfile'
+
+import avatarByGid from '../utils/avatarByGid'
 
 const mapSocketEventToAction = (type): string => {
     switch (type) {
@@ -113,11 +117,31 @@ const socketEvent = function * ({ payload: event } : {
     yield put({ type: mapSocketEventToAction(event.type), payload: event.payload })
 }
 
+const socketNewMessage = function * ({ payload: message } : {
+    message: Message
+}) {
+    const { user } = yield select(state => state.session)
+    const { selectedChatId } = yield select(state => state.ui)
+    const chatsMembers = yield select(state => state.chatsMembers)
+
+    if (message.authorGid !== user.gid && selectedChatId !== message.chatId) {
+        const author = chatsMembers[message.authorGid]
+        ServiceWorkerManager.sendNotification('Новое сообщение', {
+            body: `${author.name}: ${message.text}`,
+            icon: avatarByGid(message.authorGid),
+            tag: String(message.chatId),
+            renotify: true,
+            vibrate: [200, 100, 200, 100, 200, 100, 200]
+        })
+    }
+}
+
 const messagesSagas = function * () {
     yield takeLatest(chatsActions.FETCH_ALL_SUCCESS, fetchAllMessages)
     yield takeLatest(actions.SEND_ACTION, sendMessage)
     yield takeLatest(actions.EDIT_ACTION, editMessage)
     yield takeLatest(chatsActions.SOCKET_EVENT_ACTION, socketEvent)
+    yield takeLatest(actions.SOCKET_NEW_MESSAGE, socketNewMessage)
 }
 
 export default messagesSagas
