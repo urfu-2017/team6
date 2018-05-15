@@ -10,6 +10,8 @@ import Body from '../components/Body'
 import UserProfile from '../server/models/UserProfile'
 import Message from '../server/models/Message'
 
+import ServiceWorkerManager from '../serviceWorker'
+
 type Props = {
     session: UserProfile,
     messages: Array<Message>,
@@ -23,6 +25,11 @@ export default class Main extends React.Component<Props> {
 
     im = this.props.url.query.im ? this.props.url.query.im.replace(' ', '+') : null
     invite = this.props.url.query.invite ? this.props.url.query.invite.replace(' ', '+') : null
+
+    async componentDidMount() {
+        const worker = await navigator.serviceWorker.ready
+        ServiceWorkerManager.attach(worker, Notification.requestPermission)
+    }
 
     render() {
         return (
