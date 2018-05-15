@@ -1,12 +1,13 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import Dropzone from 'react-dropzone'
 import Message from '../server/models/Message'
 import MessageItem from './Message'
 import ChatHeader from './ChatHeader'
 import MessageForm from './MessageForm'
 import Chat from '../server/models/Chat'
 import computeId from '../server/utils/cantor-pairing'
-import {SELECT_CHAT_ACTION} from '../actions/uiActions'
+import { SELECT_CHAT_ACTION } from '../actions/uiActions'
 
 type Props = {
     gid: number,
@@ -18,6 +19,8 @@ type Props = {
 }
 
 class ChatBody extends React.Component<Props> {
+    state = { dragzone: false }
+
     componentDidMount() {
         this.scrollToBottom()
     }
@@ -43,6 +46,18 @@ class ChatBody extends React.Component<Props> {
         return exist || chat
     }
 
+    dragzoneShow = () => !this.state.dragzone && this.setState({ dragzone: true })
+
+    dragzoneHide = () => this.state.dragzone && this.setState({ dragzone: false })
+
+    dropFile = files => {
+        if (this.messageForm) {
+            this.messageForm.attachImage(files[0])
+        }
+
+        this.dragzoneHide()
+    }
+
     render() {
         const { messages, chat, chatId, gid } = this.props
         if (!chatId || !this.checkDialogExist()) {
@@ -54,20 +69,33 @@ class ChatBody extends React.Component<Props> {
         }
 
         return (
-            <div className="chat">
-                {chat && <ChatHeader chat={chat} />}
-                <div className="messages" ref={ref => this.messagesBody = ref}>
-                    {messages.map(message => (
-                        <MessageItem
-                            key={message.createdAt}
-                            mine={message.authorGid === gid}
-                            message={message}
-                            onLoad={this.scrollToBottom}
-                        />
-                    ))}
+            <Dropzone
+                disableClick
+                accept=".jpeg,.jpg,.png,.gif,.bmp"
+                onDrop={this.dropFile}
+                onDragEnter={this.dragzoneShow}
+                onDragLeave={this.dragzoneHide}
+                className="dropzone"
+            >
+                {this.state.dragzone && <div className="message-form-dropzone">Переместите изображение сюда...</div>}
+                <div className="chat">
+                    {chat && <ChatHeader chat={chat} />}
+                    <div className="messages" ref={ref => this.messagesBody = ref}>
+                        {messages.map(message => (
+                            <MessageItem
+                                key={message.createdAt}
+                                mine={message.authorGid === gid}
+                                message={message}
+                                onLoad={this.scrollToBottom}
+                            />
+                        ))}
+                    </div>
+                    <MessageForm
+                        ref={ref => ref && (this.messageForm = ref.getWrappedInstance())}
+                        chatId={chatId}
+                    />
                 </div>
-                <MessageForm chatId={chatId}/>
-            </div>
+            </Dropzone>
         )
     }
 }

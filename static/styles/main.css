@@ -680,6 +680,11 @@ code {
     min-width: 100px;
 }
 
+.dropzone {
+    height: 100%;
+    position: relative;
+}
+
 .message-form-dropzone {
     position: absolute;
     background: #dfe4e9c4;
@@ -760,7 +765,7 @@ code {
     cursor: pointer;
     border-radius: 5px;
     background: #788ea766;
-    margin: 0 2px;
+    margin: 1px 2px;
     font-size: 10pt;
     color: #f2f6fb;
     min-width: 30px;
