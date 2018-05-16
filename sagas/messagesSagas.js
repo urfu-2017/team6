@@ -124,7 +124,7 @@ const socketNewMessage = function * ({ payload: message } : {
     const { selectedChatId } = yield select(state => state.ui)
     const chatsMembers = yield select(state => state.chatsMembers)
 
-    if (message.authorGid !== user.gid && selectedChatId !== message.chatId) {
+    if (message.authorGid !== user.gid && (selectedChatId !== message.chatId || !document.hasFocus())) {
         const author = chatsMembers[message.authorGid]
         ServiceWorkerManager.sendNotification('Новое сообщение', {
             body: `${author.name}: ${message.text}`,

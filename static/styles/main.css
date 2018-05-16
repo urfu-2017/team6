@@ -299,7 +299,7 @@ code {
     height: 100%;
     overflow-y: auto;
     background-position-y: -54px;
-    background: url('/static/img/bg-chat.jpg') fixed;
+    background: url('/img/bg-chat.jpg') fixed;
 }
 
 .messages .message:first-child{
