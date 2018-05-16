@@ -24,6 +24,7 @@ export default class Message implements MessageType {
     forwarded: Object[]
 
     constructor({ text, imgUrl, chatId, reactions = {}, authorGid, createdAt = Date.now(), forwarded = [] }: MessageType) {
+        this._id = computeId(authorGid + chatId, createdAt)
         this.text = text
         this.imgUrl = imgUrl
         this.chatId = chatId
@@ -36,7 +37,7 @@ export default class Message implements MessageType {
     setAuthorGid(gid: number) {
         if (gid) {
             this.authorGid = gid
-            this._id = computeId(gid, this.createdAt)
+            this._id = computeId(gid + this.chatId, this.createdAt)
         }
     }
 }

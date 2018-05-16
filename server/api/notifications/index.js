@@ -52,8 +52,8 @@ export default class NotificationsAPI {
         const notification = {
             notification: { title,
                 body: message.text ? message.text.slice(0, 150) : '*вложение*',
-                icon: `${BASE_URL}/${avatarByGid(message.authorGid)}`,
-                click_action: `${BASE_URL}/im?${message.chatId}` // eslint-disable-line
+                icon: `${BASE_URL}/img/kettlebell.png`,
+                click_action: `${BASE_URL}/?im=${message.chatId}` // eslint-disable-line
             },
             registration_ids: tokens // eslint-disable-line
         }
