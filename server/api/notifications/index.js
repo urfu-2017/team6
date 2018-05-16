@@ -4,9 +4,9 @@ import fetch from 'node-fetch'
 import SocketManager from '../../socket'
 import Message from '../../models/Message'
 import { chatModel, pushTokensModel } from '../mongodb'
+import avatarByGid from '../../utils/avatarByGid'
 import { decode } from '../../utils/cantor-pairing'
 import config from '../../config'
-import avatarByGid from '../../../utils/avatarByGid'
 
 const PUSH_OPTIONS = {
     method: 'POST',
