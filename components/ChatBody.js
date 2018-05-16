@@ -31,7 +31,7 @@ class ChatBody extends React.Component<Props, State> {
 
     componentWillReceiveProps(nextProps) {
         if (this.messagesBody && (this.props.messages.length !== nextProps.messages.length || this.props.chatId !== nextProps.chatId)) {
-            this.scrollToBottom()
+            this.setState({}, this.scrollToBottom)
         }
     }
 
