@@ -29,14 +29,15 @@ type State = {
 class ChatBody extends React.Component<Props, State> {
     state = { dragzone: false, selectedMessages: [] }
 
-    componentDidMount() {
-        this.scrollToBottom()
+    componentWillReceiveProps(nextProps) {
+        if (this.messagesBody && (this.props.messages.length !== nextProps.messages.length || this.props.chatId !== nextProps.chatId)) {
+            this.scrollToBottom()
+        }
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (this.messagesBody && this.props.messages.length !== nextProps.messages.length) {
-            this.setState({}, this.scrollToBottom)
-        }
+    mountMessageBody = ref => {
+        this.messagesBody = ref
+        this.scrollToBottom()
     }
 
     scrollToBottom = () => {
@@ -115,10 +116,10 @@ class ChatBody extends React.Component<Props, State> {
                         selectedMessages={this.state.selectedMessages}
                         forwardMessages={this.forwardMessages}
                     />
-                    <div className="messages" ref={ref => this.messagesBody = ref}>
+                    <div className="messages" ref={this.mountMessageBody}>
                         {messages.map(message => (
                             <MessageItem
-                                key={message.createdAt}
+                                key={message._id}
                                 mine={message.authorGid === gid}
                                 message={message}
                                 onLoad={this.scrollToBottom}
@@ -143,7 +144,7 @@ export default connect(state => ({
     chat: state.chats[state.ui.selectedChatId],
     chatId: state.ui.selectedChatId,
     forwarded: state.forwarded,
-    messages: (state.messages[state.ui.selectedChatId] && [...state.messages[state.ui.selectedChatId]]) || [],
+    messages: (state.messages[state.ui.selectedChatId] && [...state.messages[state.ui.selectedChatId]]) || []
 }), dispatch => ({
     reset: () => dispatch({ type: SELECT_CHAT_ACTION, payload: null }),
     forward: payload => dispatch({ type: FORWARD_ACTION, payload })

@@ -42,7 +42,7 @@ const markdownOptions = {
 class MessageItem extends React.Component<Props, State> {
     state = { metadata: [], selected: false }
 
-    showEmojiPicker = () => this.emojiPicker.toggle()
+    showEmojiPicker = e => this.emojiPicker.toggle() && e.stopPropagation()
 
     selectMessage = () => {
         const selected = !this.state.selected

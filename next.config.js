@@ -9,8 +9,7 @@ module.exports = withOffline({
         '**/.next/bundles/pages/*.js',
         '**/.next/chunks/**/*.js',
         '/manifest.json',
-        '**/.next/app.js',
-        '/'
+        '**/.next/app.js'
     ],
     webpack: config => {
         config.plugins = config.plugins.filter(plugin => plugin.constructor.name !== 'UglifyJsPlugin')

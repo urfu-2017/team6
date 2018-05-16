@@ -39,6 +39,7 @@ export default class Main extends React.Component<Props> {
                         <meta charSet="utf-8" />
                         <meta name="viewport" content="width=device-width, initial-scale=1" />
                         <title>Kilogram Messenger</title>
+                        <link rel="shortcut icon" type="image/png" href="/img/kettlebell.png"/>
                         <link rel="manifest" href="/manifest.json"/>
                         <link rel="stylesheet" href="/styles/main.css"/>
                         <link rel="stylesheet" href="/styles/emoji.css"/>
