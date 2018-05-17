@@ -34,7 +34,9 @@ class Body extends React.Component<Props, State> {
     state = { connected: false }
 
     componentWillMount() {
-        this.props.initialSession(this.props.session)
+        if (typeof this.props.session === 'object') {
+            this.props.initialSession(this.props.session)
+        }
     }
 
     componentWillReceiveProps(props) {

@@ -19,7 +19,7 @@ type Props = {
 }
 
 export default class Main extends React.Component<Props> {
-    static async getInitialProps({ req }) {
+    static getInitialProps({ req }) {
         return { session: req.user }
     }
 
