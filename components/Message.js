@@ -136,7 +136,7 @@ class MessageItem extends React.Component<Props, State> {
     renderStaticGeomap = ({ latitude, longitude }) => {
         return (
             <a onClick={e => e.stopPropagation()} target="_blank" href={`https://yandex.ru/maps/?ll=${longitude},${latitude}&z=17`}>
-                <img className="message-geomap" src={`https://static-maps.yandex.ru/1.x/?ll=${longitude},${latitude}&size=300,170&z=17&l=map&pt=${longitude},${latitude},comma`}/>
+                <img onLoad={this.props.onLoad} className="message-geomap" src={`https://static-maps.yandex.ru/1.x/?ll=${longitude},${latitude}&size=300,170&z=17&l=map&pt=${longitude},${latitude},comma`}/>
             </a>
         )
     }
