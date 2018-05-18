@@ -348,6 +348,7 @@ code {
     display: flex;
     align-items: start;
     padding: 0 6px;
+    cursor: pointer;
 }
 
 .message__avatar img {

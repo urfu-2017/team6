@@ -145,8 +145,11 @@ class MessageItem extends React.Component<Props, State> {
                 style={{ opacity: message.status === status.PENDING ? 0.5 : 1 }}
                 className={messageClassName}
             >
-                <div className="message__avatar" onClick={() => this.props.showProfile(author)}>
-                    <img src={avatarByGid(message.authorGid, modified)} title={author.name}/>
+                <div className="message__avatar">
+                    <img onClick={() => this.props.showProfile(author)}
+                        src={avatarByGid(message.authorGid, modified)}
+                        title={author.name}
+                    />
                 </div>
                 <div className="message-box__body">
                     {reactions.length > 0 && (
@@ -192,8 +195,8 @@ class MessageItem extends React.Component<Props, State> {
                                 </div>
                             )}
                         </div>
-                        <span className="message-emoji-button" onClick={this.showEmojiPicker}><HrundelIcon/></span>
-                        <span className="message-emoji-button" onClick={this.replyTo}><ForwardIcon/></span>
+                        <span className="message-emoji-button"><HrundelIcon onClick={this.showEmojiPicker} /></span>
+                        <span className="message-emoji-button"><ForwardIcon onClick={this.replyTo}/></span>
                         <div className="message-emoji-picker">
                             <EmojiPicker
                                 onSelect={emoji => this.addReaction(emoji.native)}
