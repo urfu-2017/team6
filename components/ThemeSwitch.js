@@ -1,13 +1,16 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 
-class ThemeSwitch extends Component {
+type Props = {
+    preserveRasters: boolean,
+    storeKey: string
+}
+
+class ThemeSwitch extends Component<Props> {
     constructor(props) {
         super(props)
 
-        this.css = `
-        html { filter: invert(100%); background: #fefefe; }
-        * { background-color: inherit }
-        `
+        this.css = `html { filter: invert(100%); background: #fefefe; } * { background-color: inherit }`
 
         if (this.props.preserveRasters) {
             this.css += 'img:not([src*=".svg"]), video, [style*="url("] { filter: invert(100%) }'
@@ -23,11 +26,13 @@ class ThemeSwitch extends Component {
     }
 
     isDeclarationSupported(property, value) {
-        const prop = property + ':'
-        const el = document.createElement('test')
-        const mStyle = el.style
-        el.style.cssText = prop + value
-        return mStyle[property]
+        if (typeof window !== 'undefined') {
+            const prop = property + ':'
+            const el = document.createElement('test')
+            const mStyle = el.style
+            el.style.cssText = prop + value
+            return mStyle[property]
+        }
     }
 
     toggle() {
@@ -37,17 +42,17 @@ class ThemeSwitch extends Component {
     }
 
     componentDidMount() {
-        if (this.props.store) {
+        if (typeof localStorage !== 'undefined') {
             this.setState({
                 supported: this.isDeclarationSupported('filter', 'invert(100%)'),
-                active: this.props.store.getItem(this.props.storeKey) || false
+                active: localStorage.getItem(this.props.storeKey) || false
             })
         }
     }
 
     componentDidUpdate() {
-        if (this.props.store) {
-            this.props.store.setItem(this.props.storeKey, this.state.active)
+        if (typeof localStorage !== 'undefined') {
+            localStorage.setItem(this.props.storeKey, this.state.active)
         }
     }
 
@@ -68,9 +73,7 @@ class ThemeSwitch extends Component {
     }
 }
 
-ThemeSwitch.defaultProps = {
+export default connect(() => ({
     preserveRasters: true,
     storeKey: 'ThemeSwitch'
-}
-
-export default ThemeSwitch
+}))(ThemeSwitch)

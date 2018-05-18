@@ -28,7 +28,7 @@ class ProfileCard extends React.Component<Props> {
                     <p className="profile-card__body_bio">{user.bio}</p>
                     <p className="profile-card__body_email">{user.email}</p>
                 </div>
-                <ThemeSwitch></ThemeSwitch>
+                <ThemeSwitch/>
             </div>
         )
     }
