@@ -12,7 +12,7 @@ import avatarByGid from '../utils/avatarByGid'
 import { metaParse } from '../utils/metaparse'
 import { SHOW_PROFILE_MODAL } from '../actions/uiActions'
 import { statuses as status } from '../reducers/messagesReducer'
-import { EDIT_ACTION } from '../actions/messagesActions'
+import { EDIT_ACTION, FORWARD_ACTION, FORWARD_RESET } from '../actions/messagesActions'
 import ForwardedMessage from './ForwardedMessage'
 
 type Props = {
@@ -21,10 +21,13 @@ type Props = {
     modified: number,
     message: Message,
     mine: Boolean,
+    forwarded: Message[],
     showProfile: Function,
     onLoad: Function,
     updateMessage: Function,
-    onSelectMessage: Function
+    onSelectMessage: Function,
+    forward: Function,
+    forwardReset: Function
 }
 
 type State = {
@@ -42,11 +45,21 @@ const markdownOptions = {
 class MessageItem extends React.Component<Props, State> {
     state = { metadata: [], selected: false }
 
-    showEmojiPicker = e => {
-        e.stopPropagation()
+    async componentDidMount() {
+        const response = await metaParse(this.props.message)
 
-        this.emojiPicker.toggle()
+        if (response) {
+            this.setState({ metadata: response }, this.props.onLoad)
+        }
     }
+
+    componentWillUnmount() {
+        if (this.forwardReply && this.props.forwarded.length > 0) {
+            this.props.forwardReset()
+        }
+    }
+
+    showEmojiPicker = () => this.emojiPicker.toggle()
 
     selectMessage = () => {
         const selected = !this.state.selected
@@ -56,6 +69,11 @@ class MessageItem extends React.Component<Props, State> {
         if (this.props.onSelectMessage) {
             this.props.onSelectMessage(this.props.message, selected)
         }
+    }
+
+    replyTo = () => {
+        this.props.forward(this.props.message)
+        this.forwardReply = true
     }
 
     reactionInfo = emoji => {
@@ -87,14 +105,6 @@ class MessageItem extends React.Component<Props, State> {
             reactions[emoji] = [...reactors, gid]
             message.reactions = reactions
             this.props.updateMessage(message)
-        }
-    }
-
-    async componentDidMount() {
-        const response = await metaParse(this.props.message)
-
-        if (response) {
-            this.setState({ metadata: response }, this.props.onLoad)
         }
     }
 
@@ -134,7 +144,6 @@ class MessageItem extends React.Component<Props, State> {
             <div
                 style={{ opacity: message.status === status.PENDING ? 0.5 : 1 }}
                 className={messageClassName}
-                onClick={this.selectMessage}
             >
                 <div className="message__avatar" onClick={() => this.props.showProfile(author)}>
                     <img src={avatarByGid(message.authorGid, modified)} title={author.name}/>
@@ -156,7 +165,7 @@ class MessageItem extends React.Component<Props, State> {
                         </div>
                     )}
                     <div className="message-wrapper">
-                        <div className="message-box">
+                        <div className="message-box" onClick={this.selectMessage}>
                             {message.text && (
                                 <div className="message-box__text">
                                     <MarkdownRenderer
@@ -184,7 +193,7 @@ class MessageItem extends React.Component<Props, State> {
                             )}
                         </div>
                         <span className="message-emoji-button" onClick={this.showEmojiPicker}><HrundelIcon/></span>
-                        <span className="message-emoji-button"><ForwardIcon/></span>
+                        <span className="message-emoji-button" onClick={this.replyTo}><ForwardIcon/></span>
                         <div className="message-emoji-picker">
                             <EmojiPicker
                                 onSelect={emoji => this.addReaction(emoji.native)}
@@ -201,8 +210,11 @@ class MessageItem extends React.Component<Props, State> {
 export default connect(state => ({
     gid: state.session.user.gid,
     users: state.chatsMembers,
-    modified: state.session.modified
+    modified: state.session.modified,
+    forwarded: state.forwarded
 }), dispatch => ({
     showProfile: payload => dispatch({ type: SHOW_PROFILE_MODAL, payload }),
-    updateMessage: payload => dispatch({ type: EDIT_ACTION, payload })
+    updateMessage: payload => dispatch({ type: EDIT_ACTION, payload }),
+    forward: message => dispatch({ type: FORWARD_ACTION, payload: [message] }),
+    forwardReset: () => dispatch({ type: FORWARD_RESET })
 }))(MessageItem)

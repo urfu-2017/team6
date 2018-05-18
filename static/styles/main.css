@@ -318,11 +318,6 @@ code {
     transition: all .15s;
     display: flex;
     padding: 0 18px;
-    cursor: pointer;
-}
-
-.message:hover {
-    background-color: #00000005;
 }
 
 .message-right {
@@ -340,6 +335,7 @@ code {
     background: #fff;
     border-radius: 0 10px 10px 10px;
     box-shadow: 0 1px 1px 0 #00000024;
+    cursor: pointer;
 }
 
 .message-box__text p {

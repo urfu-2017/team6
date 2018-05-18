@@ -1,6 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { REQUEST_TOO_LONG, OK } from 'http-status-codes'
+import { OK } from 'http-status-codes'
 import Modal from 'react-responsive-modal'
 import { Dot } from 'react-animated-dots'
 
@@ -51,7 +51,7 @@ class UserProfileModal extends React.Component<Props, State> {
         return (
             <Modal onClose={this.props.closeModal} open={true}>
                 <div className="modal-content">
-                    <p className="modal-content_title">{user.name}</p>
+                    <p className="modal-content_title">{user.name || 'Безымянный пользователь'}</p>
                     <div className="modal-user-profile">
                         {user.gid === this.props.gid ? (
                             <div style={{ position: 'relative' }}>

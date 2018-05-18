@@ -86,7 +86,7 @@ class MessageForm extends React.Component<Props, State> {
                         {this.props.forwarded.length === 1 ? (
                             <div className="forwarded__message">
                                 <img src={avatarByGid(this.props.forwarded[0].authorGid)}/>
-                                <p>{this.props.forwarded[0].text || (this.props.forwarded[0].forwarded.length > 0 && '*вложения*')}</p>
+                                <p>{this.props.forwarded[0].text || '*вложение*'}</p>
                             </div>
                         ) : (
                             <p>Пересылаемых сообщений: {this.props.forwarded.length}</p>

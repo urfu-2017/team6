@@ -19,7 +19,8 @@ export default app => app
     .use(cookieParser())
     .use(cookieSession({
         name: 'session',
-        secret: generateToken(16)
+        secret: generateToken(16),
+        maxAge: 365 * 24 * 60 * 60 * 1000
     }))
     .use(passport.initialize())
     .use(passport.session())
