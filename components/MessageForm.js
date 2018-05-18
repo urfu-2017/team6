@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import SendIcon from 'react-icons/lib/md/send'
 import SmileIcon from 'react-icons/lib/fa/smile-o'
 import ImageIcon from 'react-icons/lib/io/image'
+import GeoIcon from 'react-icons/lib/fa/map-marker'
 import RemoveIcon from 'react-icons/lib/md/clear'
 
 import EmojiPicker from './EmojiPicker'
@@ -113,6 +114,9 @@ class MessageForm extends React.Component<Props, State> {
                 <form className="message-form" onSubmit={this.submit}>
                     <button type="button" onClick={() => this.inputImage.click()} className="button button-send">
                         <ImageIcon/>
+                    </button>
+                    <button type="button" className="button button-send">
+                        <GeoIcon/>
                     </button>
                     <input
                         type="text"

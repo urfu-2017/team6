@@ -399,11 +399,13 @@ code {
     background: #fff;
     box-shadow: 5px -5px 10px 0 #0000000d;
     display: flex;
+    padding: 0 8px;
+    box-sizing: border-box;
 }
 
 .message-form__input {
     width: 100%;
-    padding: 4px 16px 2px 0;
+    padding: 4px 16px 2px;
     color: #363636;
     font-weight: 100;
     font-size: 10pt;
@@ -442,10 +444,11 @@ code {
 .button-send {
     transition: all .2s;
     background: #fff;
-    font-size: 20pt;
-    padding: 0 15px;
+    font-size: 18pt;
     color: #cfcfcf;
     cursor: pointer;
+    margin: 0;
+    padding: 0 6px;
 }
 
 .button-send:hover {
@@ -453,7 +456,6 @@ code {
 }
 
 .button-send:active {
-    font-size: 19pt;
     color: #cfcfcf;
 }
 
