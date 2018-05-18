@@ -14,6 +14,7 @@ import avatarByGid from '../utils/avatarByGid'
 
 type Props = {
     chatId: number,
+    users: Object,
     forwarded: Message[],
     send: Function,
     resetForwarded: Function
@@ -66,6 +67,33 @@ class MessageForm extends React.Component<Props, State> {
         }
     }
 
+    renderForwarded = () => {
+        const count = this.props.forwarded.length
+        if (count === 0) {
+            return null
+        }
+
+        const message = this.props.forwarded[0]
+        const author = this.props.users[message.authorGid] || {}
+
+        return (
+            <div className="forwarded">
+                {count === 1 ? (
+                    <div className="forwarded__message">
+                        <img src={avatarByGid(message.authorGid)}/>
+                        <p style={{ color: '#7790a9', fontWeight: 400 }}>
+                            {(author.name || 'Безымянный пользователь') + ':'}
+                        </p>
+                        <p>{message.text || '*вложение*'}</p>
+                    </div>
+                ) : (
+                    <p>Пересылаемых сообщений: {count}</p>
+                )}
+                <span onClick={this.props.resetForwarded}><RemoveIcon/></span>
+            </div>
+        )
+    }
+
     render() {
         return (
             <div className="message-form-wrapper">
@@ -81,19 +109,7 @@ class MessageForm extends React.Component<Props, State> {
                     onChange={event => this.attachImage(event.target.files[0])}
                     style={{ display: 'none' }}
                 />
-                {Boolean(this.props.forwarded.length) && (
-                    <div className="forwarded">
-                        {this.props.forwarded.length === 1 ? (
-                            <div className="forwarded__message">
-                                <img src={avatarByGid(this.props.forwarded[0].authorGid)}/>
-                                <p>{this.props.forwarded[0].text || '*вложение*'}</p>
-                            </div>
-                        ) : (
-                            <p>Пересылаемых сообщений: {this.props.forwarded.length}</p>
-                        )}
-                        <span onClick={this.props.resetForwarded}><RemoveIcon/></span>
-                    </div>
-                )}
+                {this.renderForwarded()}
                 <form className="message-form" onSubmit={this.submit}>
                     <button type="button" onClick={() => this.inputImage.click()} className="button button-send">
                         <ImageIcon/>
@@ -116,7 +132,9 @@ class MessageForm extends React.Component<Props, State> {
     }
 }
 
-export default connect(null, dispatch => ({
+export default connect(state => ({
+    users: state.chatsMembers
+}), dispatch => ({
     send: (payload: Message) => dispatch({ type: SEND_ACTION, payload }),
     resetForwarded: () => dispatch({ type: FORWARD_RESET })
 }), null, { withRef: true })(MessageForm)
