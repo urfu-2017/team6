@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 
 import UserInfo from '../server/models/UserInfo'
 import avatarByGid from '../utils/avatarByGid'
+import ThemeSwitch from './ThemeSwitch'
 
 import { SHOW_PROFILE_MODAL } from '../actions/uiActions'
 
@@ -18,15 +19,16 @@ class ProfileCard extends React.Component<Props> {
     render() {
         const { user, modified } = this.props
         return (
-            <div onClick={this.onShowProfile} className="profile-card">
-                <div className="profile-card__avatar">
+            <div className="profile-card">
+                <div onClick={this.onShowProfile} className="profile-card__avatar">
                     <img src={avatarByGid(user.gid, modified)}/>
                 </div>
-                <div className="profile-card__body">
+                <div onClick={this.onShowProfile} className="profile-card__body">
                     <p className="profile-card__body_name">{user.name}</p>
                     <p className="profile-card__body_bio">{user.bio}</p>
                     <p className="profile-card__body_email">{user.email}</p>
                 </div>
+                <ThemeSwitch></ThemeSwitch>
             </div>
         )
     }
