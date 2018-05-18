@@ -26,7 +26,7 @@ type State = {
 }
 
 class MessageForm extends React.Component<Props, State> {
-    state = { imgData: null }
+    state = { imgData: null, geoData: null }
 
     compressor = new ImageCompressor(
         document.createElement('canvas'),
@@ -58,13 +58,25 @@ class MessageForm extends React.Component<Props, State> {
                 text,
                 imgUrl: this.state.imgData,
                 chatId: this.props.chatId,
-                forwarded: this.props.forwarded
+                forwarded: this.props.forwarded,
+                geodata: this.state.geoData
             })
 
             this.props.send(message)
             this.inputText.value = ''
             this.props.resetForwarded()
-            this.setState({ imgData: null })
+            this.setState({ imgData: null, geoData: null })
+        }
+    }
+
+    attachGeoPosition = () => {
+        if (!this.state.geoData && 'geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(position => {
+                const { latitude, longitude } = position.coords
+                this.setState({ geoData: { latitude, longitude } })
+            })
+        } else {
+            this.setState({ geoData: null })
         }
     }
 
@@ -115,7 +127,12 @@ class MessageForm extends React.Component<Props, State> {
                     <button type="button" onClick={() => this.inputImage.click()} className="button button-send">
                         <ImageIcon/>
                     </button>
-                    <button type="button" className="button button-send">
+                    <button
+                        style={this.state.geoData && { color: '#e47373' }}
+                        type="button"
+                        onClick={this.attachGeoPosition}
+                        className="button button-send"
+                    >
                         <GeoIcon/>
                     </button>
                     <input

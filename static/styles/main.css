@@ -917,6 +917,11 @@ code {
     border-left: 2px solid #cddcea;
 }
 
+.message-geomap {
+    margin: 0 -12px -3px -12px;
+    border-radius: 0 0 10px 10px;
+}
+
 @media only
 screen and (max-device-width: 1024px),
 screen and (max-width: 1024px) {

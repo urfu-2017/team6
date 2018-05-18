@@ -133,6 +133,14 @@ class MessageItem extends React.Component<Props, State> {
         </a>
     )
 
+    renderStaticGeomap = ({ latitude, longitude }) => {
+        return (
+            <a onClick={e => e.stopPropagation()} target="_blank" href={`https://yandex.ru/maps/?ll=${longitude},${latitude}&z=17`}>
+                <img className="message-geomap" src={`https://static-maps.yandex.ru/1.x/?ll=${longitude},${latitude}&size=300,170&z=17&l=map&pt=${longitude},${latitude},comma`}/>
+            </a>
+        )
+    }
+
     render() {
         const { message, users, modified } = this.props
         const { metadata, selected } = this.state
@@ -194,6 +202,7 @@ class MessageItem extends React.Component<Props, State> {
                                     ))}
                                 </div>
                             )}
+                            {message.geodata && this.renderStaticGeomap(message.geodata)}
                         </div>
                         <span className="message-emoji-button"><HrundelIcon onClick={this.showEmojiPicker} /></span>
                         <span className="message-emoji-button"><ForwardIcon onClick={this.replyTo}/></span>
