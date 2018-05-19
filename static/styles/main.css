@@ -3,6 +3,7 @@
 }
 
 html, body {
+    transition: all .5s;
     background: #d9dee4;
     font-family: sans-serif;
     font-weight: 100;
