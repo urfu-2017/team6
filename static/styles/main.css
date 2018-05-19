@@ -582,6 +582,21 @@ code {
     -ms-text-overflow: ellipsis;
 }
 
+.profile-card__body_switcher {
+    color: #608fc7;
+    font-weight: 400;
+    font-size: 8pt;
+    margin-top: 3px;
+    border-bottom: 1px dashed #688ec8;
+    display: inline;
+    cursor: pointer;
+}
+
+.profile-card__body_switcher:hover {
+    color: #86a1b4;
+    border-bottom: 1px dashed #86a1b4;
+}
+
 .message-form-wrapper {
     height: auto;
     position: relative;

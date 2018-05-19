@@ -18,6 +18,7 @@ import * as uiActions from '../actions/uiActions'
 type Props = {
     im: number,
     invite: number,
+    theme: boolean,
     restored: boolean,
     online: boolean,
     session: UserProfile,
@@ -63,6 +64,7 @@ class Body extends React.Component<Props, State> {
     render() {
         return (
             <div>
+                {this.props.theme && <link rel="stylesheet" href="/styles/dark.css"/>}
                 {(!this.state.connected || !this.props.online) && (
                     <div className="line-offline">
                         <span>Нет подключения
@@ -89,6 +91,7 @@ class Body extends React.Component<Props, State> {
 export const socketClient = () => Body.SOCKET_CLIENT
 
 export default connect(state => ({
+    theme: state.theme,
     online: state.offline.online
 }), dispatch => ({
     initialSession: payload => dispatch({ type: userActions.INITIAL_SESSION_ACTION, payload }),
