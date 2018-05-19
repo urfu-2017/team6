@@ -2,7 +2,8 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 type Props = {
-    preserveRasters: boolean
+    preserveRasters: boolean,
+    storeKey: string
 }
 
 class ThemeSwitch extends React.Component<Props> {
@@ -31,6 +32,21 @@ class ThemeSwitch extends React.Component<Props> {
         })
     }
 
+    componentDidMount() {
+        if (localStorage) {
+            console.info(localStorage[this.props.storeKey])
+            this.setState({
+                active: localStorage[this.props.storeKey] === 'true' || false
+            })
+        }
+    }
+
+    componentDidUpdate() {
+        if (localStorage) {
+            localStorage[this.props.storeKey] = this.state.active
+        }
+    }
+
     render() {
         return (
             <div>
@@ -46,5 +62,6 @@ class ThemeSwitch extends React.Component<Props> {
 }
 
 export default connect(() => ({
-    preserveRasters: true
+    preserveRasters: true,
+    storeKey: 'ThemeSwitch'
 }))(ThemeSwitch)
