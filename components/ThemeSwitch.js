@@ -2,8 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 
 type Props = {
-    preserveRasters: boolean,
-    storeKey: string
+    preserveRasters: boolean
 }
 
 class ThemeSwitch extends React.Component<Props> {
@@ -32,28 +31,14 @@ class ThemeSwitch extends React.Component<Props> {
         })
     }
 
-    componentDidMount() {
-        if (typeof localStorage !== 'undefined') {
-            this.setState({
-                active: localStorage.getItem(this.props.storeKey) || false
-            })
-        }
-    }
-
-    componentDidUpdate() {
-        if (typeof localStorage !== 'undefined') {
-            localStorage.setItem(this.props.storeKey, this.state.active)
-        }
-    }
-
     render() {
         return (
             <div>
                 <button className="profile-card__theme-switch-img" aria-pressed={this.state.active} onClick={this.toggle}>
                 </button>
                 <style media="screen">
-                    {this.state.active ? this.cssOff : this.cssOn}
-                    {this.state.active ? this.imgOff : this.imgOn}
+                    {this.state.active ? this.cssOn : this.cssOff}
+                    {this.state.active ? this.imgOn : this.imgOff}
                 </style>
             </div>
         )
@@ -61,6 +46,5 @@ class ThemeSwitch extends React.Component<Props> {
 }
 
 export default connect(() => ({
-    preserveRasters: true,
-    storeKey: 'ThemeSwitch'
+    preserveRasters: true
 }))(ThemeSwitch)
