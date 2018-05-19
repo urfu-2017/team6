@@ -52,8 +52,8 @@ class ThemeSwitch extends React.Component<Props> {
                 <button className="profile-card__theme-switch-img" aria-pressed={this.state.active} onClick={this.toggle}>
                 </button>
                 <style media="screen">
-                    {this.state.active ? this.cssOn : this.cssOff}
-                    {this.state.active ? this.imgOn : this.imgOff}
+                    {this.state.active ? this.cssOff : this.cssOn}
+                    {this.state.active ? this.imgOff : this.imgOn}
                 </style>
             </div>
         )
