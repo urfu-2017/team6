@@ -4,6 +4,7 @@ import SendIcon from 'react-icons/lib/md/send'
 import SmileIcon from 'react-icons/lib/fa/smile-o'
 import ImageIcon from 'react-icons/lib/io/image'
 import GeoIcon from 'react-icons/lib/fa/map-marker'
+import MicroIcon from 'react-icons/lib/fa/microphone'
 import RemoveIcon from 'react-icons/lib/md/clear'
 
 import EmojiPicker from './EmojiPicker'
@@ -22,16 +23,50 @@ type Props = {
 }
 
 type State = {
-    imgData: string
+    imgData: string,
+    geoData: Object,
+    textEntered: boolean,
+    recognition: boolean
 }
 
 class MessageForm extends React.Component<Props, State> {
-    state = { imgData: null, geoData: null }
+    state = { textEntered: false, recognition: false, imgData: null, geoData: null }
+
+    componentDidMount() {
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+        this.recognition = new SpeechRecognition()
+        this.recognition.lang = 'ru-RU'
+        this.recognition.interimResults = true
+        this.recognition.onstart = () => this.setState({ recognition: true })
+        this.recognition.onend = () => this.setState({ recognition: false })
+        this.recognition.onresult = e => {
+            this.inputText.value = e.results[e.resultIndex][0].transcript
+
+            if (!this.state.textEntered) {
+                this.setState({ textEntered: true })
+            }
+        }
+    }
 
     compressor = new ImageCompressor(
         document.createElement('canvas'),
         document.createElement('img')
     )
+
+    onChangeText = e => {
+        const text = e.target.value
+
+        if (!text && this.state.textEntered) {
+            this.setState({ textEntered: false })
+            return
+        }
+
+        if (text && !this.state.textEntered) {
+            this.setState({ textEntered: true })
+        }
+    }
+
+    speechRecognizeStart = () => this.recognition.start()
 
     showEmojiPicker = e => {
         e.preventDefault()
@@ -44,8 +79,7 @@ class MessageForm extends React.Component<Props, State> {
         try {
             const imgSrc = URL.createObjectURL(image)
             this.compressor.run(imgSrc, imgData => this.setState({ imgData }))
-        } catch (e) {
-        }
+        } catch (e) {}
     }
 
     submit = e => {
@@ -65,7 +99,8 @@ class MessageForm extends React.Component<Props, State> {
             this.props.send(message)
             this.inputText.value = ''
             this.props.resetForwarded()
-            this.setState({ imgData: null, geoData: null })
+
+            this.setState({ textEntered: false, recognition: false, imgData: null, geoData: null })
         }
     }
 
@@ -128,25 +163,35 @@ class MessageForm extends React.Component<Props, State> {
                         <ImageIcon/>
                     </button>
                     <button
-                        style={this.state.geoData && { color: '#e47373' }}
                         type="button"
                         onClick={this.attachGeoPosition}
                         className="button button-send"
                     >
-                        <GeoIcon/>
+                        <GeoIcon style={this.state.geoData && { color: '#e47373' }}/>
                     </button>
                     <input
                         type="text"
                         className="message-form__input"
                         placeholder="Введите сообщение..."
+                        onChange={this.onChangeText}
                         ref={ref => this.inputText = ref}
                     />
                     <button type="button" onClick={this.showEmojiPicker} className="button button-send">
                         <SmileIcon/>
                     </button>
-                    <button type="submit" onClick={this.submit} className="button button-send">
-                        <SendIcon/>
-                    </button>
+                    {this.state.textEntered ? (
+                        <button type="submit" onClick={this.submit} className="button button-send">
+                            <SendIcon/>
+                        </button>
+                    ) : (
+                        <button
+                            type="submit"
+                            onClick={this.speechRecognizeStart}
+                            className="button button-send"
+                        >
+                            <MicroIcon style={this.state.recognition && { color: '#e47373' }}/>
+                        </button>
+                    )}
                 </form>
             </div>
         )
