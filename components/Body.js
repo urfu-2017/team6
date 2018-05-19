@@ -18,6 +18,7 @@ import * as uiActions from '../actions/uiActions'
 type Props = {
     im: number,
     invite: number,
+    theme: boolean,
     restored: boolean,
     online: boolean,
     session: UserProfile,
@@ -30,24 +31,31 @@ type State = {
     connected: boolean
 }
 
-export let socket
-
 class Body extends React.Component<Props, State> {
     state = { connected: false }
 
-    updateState = () => this.setState({ connected: !this.state.connected })
-
     componentWillMount() {
-        this.props.initialSession(this.props.session)
+        if (typeof this.props.session === 'object') {
+            this.props.initialSession(this.props.session)
+        }
+    }
+
+    componentWillReceiveProps(props) {
+        if (props.online && !this.props.online) {
+            this.props.fetchSelf()
+        }
     }
 
     componentDidMount() {
         const { selectChat, fetchSelf, im, invite } = this.props
 
-        this.socket = io()
-        socket = this.socket
-        socket.on('connect', this.updateState)
-        socket.on('disconnect', this.updateState)
+        Body.SOCKET_CLIENT = io({
+            reconnection: true,
+            reconnectionDelay: 500
+        })
+
+        Body.SOCKET_CLIENT.on('connect', () => this.setState({ connected: true }))
+        Body.SOCKET_CLIENT.on('disconnect', () => this.setState({ connected: false }))
 
         fetchSelf(invite)
         selectChat(im || invite)
@@ -56,6 +64,7 @@ class Body extends React.Component<Props, State> {
     render() {
         return (
             <div>
+                {this.props.theme && <link rel="stylesheet" href="/styles/dark.css"/>}
                 {(!this.state.connected || !this.props.online) && (
                     <div className="line-offline">
                         <span>Нет подключения
@@ -79,7 +88,10 @@ class Body extends React.Component<Props, State> {
     }
 }
 
+export const socketClient = () => Body.SOCKET_CLIENT
+
 export default connect(state => ({
+    theme: state.theme,
     online: state.offline.online
 }), dispatch => ({
     initialSession: payload => dispatch({ type: userActions.INITIAL_SESSION_ACTION, payload }),

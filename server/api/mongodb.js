@@ -27,7 +27,7 @@ class Entity<T> {
 
     getAll({ limit, offset, where = {} }): Promise<Array<T>> {
         return this.Model.find(where)
-            .sort({ createdAt: 1 })
+            .sort({ createdAt: -1 })
             .skip(offset)
             .limit(limit)
             .exec()
@@ -119,12 +119,19 @@ export const messageModel: Entity<Message> = Entity.create('message', 'messages'
     chatId: { type: Number, index: true },
     authorGid: Number,
     createdAt: Number,
-    reactions: mongoose.Schema.Types.Mixed
+    reactions: mongoose.Schema.Types.Mixed,
+    forwarded: [mongoose.Schema.Types.Mixed],
+    geodata: mongoose.Schema.Types.Mixed
 }))
 
-export const avatarsModel: Entity<Message> = Entity.create('avatar', 'avatars', mongoose.Schema({
+export const avatarsModel: Entity<{ data: string }> = Entity.create('avatar', 'avatars', mongoose.Schema({
     _id: Number,
     data: String
+}))
+
+export const pushTokensModel: Entity<Message> = Entity.create('pushToken', 'pushTokens', mongoose.Schema({
+    _id: Number,
+    tokens: [{ type: String, unique: true }]
 }))
 
 export const connect = () => mongoose.connect(config.MONGODB_URL, { autoReconnect: true })
