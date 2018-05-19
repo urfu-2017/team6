@@ -1,5 +1,4 @@
 import React from 'react'
-import { connect } from 'react-redux'
 
 type Props = {
     preserveRasters: boolean,
@@ -34,7 +33,6 @@ class ThemeSwitch extends React.Component<Props> {
 
     componentDidMount() {
         if (localStorage) {
-            console.info(localStorage[this.props.storeKey])
             this.setState({
                 active: localStorage[this.props.storeKey] === 'true' || false
             })
@@ -61,7 +59,9 @@ class ThemeSwitch extends React.Component<Props> {
     }
 }
 
-export default connect(() => ({
+ThemeSwitch.defaultProps = {
     preserveRasters: true,
     storeKey: 'ThemeSwitch'
-}))(ThemeSwitch)
+}
+
+export default ThemeSwitch
