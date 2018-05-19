@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 
 type Props = {
@@ -6,33 +6,24 @@ type Props = {
     storeKey: string
 }
 
-class ThemeSwitch extends Component<Props> {
+class ThemeSwitch extends React.Component<Props> {
     constructor(props) {
         super(props)
 
-        this.css = `html { filter: invert(100%); background: #fefefe; } * { background-color: inherit }`
+        this.cssOff = ``
+        this.cssOn = `html { filter: invert(100%); background: #fefefe; } * { background-color: inherit }`
+        this.imgOff = `.profile-card__theme-switch-img { background-image: url('../static/img/day.png'); }`
+        this.imgOn = `.profile-card__theme-switch-img { background-image: url('../static/img/night.png'); height: 35px; margin-left: 3px;}`
 
         if (this.props.preserveRasters) {
             this.css += 'img:not([src*=".svg"]), video, [style*="url("] { filter: invert(100%) }'
         }
-
-        this.supported = this.isDeclarationSupported('filter', 'invert(100%)')
 
         this.state = {
             active: false
         }
 
         this.toggle = this.toggle.bind(this)
-    }
-
-    isDeclarationSupported(property, value) {
-        if (typeof window !== 'undefined') {
-            const prop = property + ':'
-            const el = document.createElement('test')
-            const mStyle = el.style
-            el.style.cssText = prop + value
-            return mStyle[property]
-        }
     }
 
     toggle() {
@@ -44,7 +35,6 @@ class ThemeSwitch extends Component<Props> {
     componentDidMount() {
         if (typeof localStorage !== 'undefined') {
             this.setState({
-                supported: this.isDeclarationSupported('filter', 'invert(100%)'),
                 active: localStorage.getItem(this.props.storeKey) || false
             })
         }
@@ -57,16 +47,13 @@ class ThemeSwitch extends Component<Props> {
     }
 
     render() {
-        if (!this.supported) {
-            return null
-        }
-
         return (
             <div>
                 <button className="profile-card__theme-switch-img" aria-pressed={this.state.active} onClick={this.toggle}>
                 </button>
-                <style media={this.state.active ? 'screen' : 'none'}>
-                    {this.state.active ? this.css.trim() : this.css}
+                <style media="screen">
+                    {this.state.active ? this.cssOn : this.cssOff}
+                    {this.state.active ? this.imgOn : this.imgOff}
                 </style>
             </div>
         )
