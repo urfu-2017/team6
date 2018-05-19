@@ -40,12 +40,18 @@ class MessageForm extends React.Component<Props, State> {
         this.recognition.onstart = () => this.setState({ recognition: true })
         this.recognition.onend = () => this.setState({ recognition: false })
         this.recognition.onresult = e => {
-            this.inputText.value = e.results[e.resultIndex][0].transcript
+            if (this.state.recognition) {
+                this.inputText.value = e.results[e.resultIndex][0].transcript
 
-            if (!this.state.textEntered) {
-                this.setState({ textEntered: true })
+                if (!this.state.textEntered) {
+                    this.setState({ textEntered: true })
+                }
             }
         }
+    }
+
+    componentDidUpdate() {
+        this.inputText.focus()
     }
 
     compressor = new ImageCompressor(
@@ -97,6 +103,11 @@ class MessageForm extends React.Component<Props, State> {
             })
 
             this.props.send(message)
+
+            if (this.state.recognition) {
+                this.recognition.stop()
+            }
+
             this.inputText.value = ''
             this.props.resetForwarded()
 
@@ -185,7 +196,7 @@ class MessageForm extends React.Component<Props, State> {
                         </button>
                     ) : (
                         <button
-                            type="submit"
+                            type="button"
                             onClick={this.speechRecognizeStart}
                             className="button button-send"
                         >
