@@ -15,7 +15,7 @@ class ThemeSwitch extends React.Component<Props> {
         this.imgOn = `.profile-card__theme-switch-img { background-image: url('../static/img/night.png'); height: 35px; margin-left: 3px;}`
 
         if (this.props.preserveRasters) {
-            this.css += 'img:not([src*=".svg"]), video, [style*="url("] { filter: invert(100%) }'
+            this.cssOn += 'img:not([src*=".svg"]), video, [style*="url("] { filter: invert(100%) }'
         }
 
         this.state = {
