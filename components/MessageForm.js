@@ -34,18 +34,24 @@ class MessageForm extends React.Component<Props, State> {
 
     componentDidMount() {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
-        this.recognition = new SpeechRecognition()
-        this.recognition.lang = 'ru-RU'
-        this.recognition.interimResults = true
-        this.recognition.onstart = () => this.setState({ recognition: true })
-        this.recognition.onend = () => this.setState({ recognition: false })
-        this.recognition.onresult = e => {
-            if (this.state.recognition) {
-                this.inputText.value = e.results[e.resultIndex][0].transcript
+        if (SpeechRecognition) {
+            this.recognition = new SpeechRecognition()
+            this.recognition.lang = 'ru-RU'
+            this.recognition.interimResults = true
+            this.recognition.onstart = () => this.setState({ recognition: true })
+            this.recognition.onend = () => this.setState({ recognition: false })
+            this.recognition.onresult = e => {
+                if (this.state.recognition) {
+                    this.inputText.value = e.results[e.resultIndex][0].transcript
 
-                if (!this.state.textEntered) {
-                    this.setState({ textEntered: true })
+                    if (!this.state.textEntered) {
+                        this.setState({ textEntered: true })
+                    }
                 }
+            }
+        } else {
+            this.recognition = {
+                start: () => alert('Сервис недоступен') // eslint-disable-line
             }
         }
     }
